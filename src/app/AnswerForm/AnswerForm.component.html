@@ -3,5 +3,5 @@
 </ActionBar>
 
 <StackLayout class="page">
-    <Button text="Chat" [nsRouterLink]="['/chat']" class="btn btn-primary btn-active" col="1"></Button>
+    <Button text="Chat" (tap)="routeToChat()" class="btn btn-primary btn-active" col="1"></Button>
 </StackLayout>

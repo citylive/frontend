@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { RouterExtensions } from "nativescript-angular/router";
+import { NavigationExtras } from "@angular/router";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -13,7 +15,7 @@ import { Component, OnInit } from "@angular/core";
     templateUrl: "./AnswerForm.component.html"
 })
 export class AnswerFormComponent implements OnInit {
-    constructor() {
+    constructor(private router:RouterExtensions) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -24,4 +26,14 @@ export class AnswerFormComponent implements OnInit {
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
     }
+
+    routeToChat(){
+        const navigationExtras: NavigationExtras = {
+            queryParams: {
+                topic: 'soumyadip12345'
+            }   
+        };
+        this.router.navigate(["/chat"], navigationExtras);
+    }
+
 }

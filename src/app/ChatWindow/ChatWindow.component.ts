@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -13,15 +14,25 @@ import { Component, OnInit } from "@angular/core";
     templateUrl: "./ChatWindow.component.html"
 })
 export class ChatWindowComponent implements OnInit {
-    constructor() {
+
+    currentTopic;
+
+    constructor(private route:ActivatedRoute) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
+       console.log("constructor")
     }
 
     ngOnInit(): void {
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
+       console.log('Initing');
+       this.route.queryParams.subscribe(params => {
+        this.currentTopic= params.topic;
+        console.log(this.currentTopic);
+
+    });
     }
 }
