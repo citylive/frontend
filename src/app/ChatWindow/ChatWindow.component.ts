@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import * as firebase from 'nativescript-plugin-firebase';
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -13,7 +14,7 @@ import { ActivatedRoute } from "@angular/router";
     moduleId: module.id,
     templateUrl: "./ChatWindow.component.html"
 })
-export class ChatWindowComponent implements OnInit {
+export class ChatWindowComponent implements OnInit,OnDestroy {
 
     currentTopic;
 
@@ -32,7 +33,24 @@ export class ChatWindowComponent implements OnInit {
        this.route.queryParams.subscribe(params => {
         this.currentTopic= params.topic;
         console.log(this.currentTopic);
+        firebase.subscribeToTopic(this.currentTopic)
+        .then(()=>{
+            console.log("subscribed");
+        })
+        .catch(error=>{
+            console.log(error);
+        })
 
     });
+    }
+
+    ngOnDestroy(){
+        firebase.unsubscribeFromTopic(this.currentTopic)
+        .then(()=>{
+            console.log("unsubscribed");
+        })
+        .catch(error=>{
+            console.log(error);
+        })
     }
 }
