@@ -1,0 +1,38 @@
+<FlexboxLayout class="page">
+
+    <StackLayout height="30%" class="image">
+        <Image src="~/app/images/cityscape.png" stretch="aspectFit"></Image>
+    </StackLayout>
+    
+    <StackLayout class="form">
+        <StackLayout class="input-field">
+            <TextField [(ngModule)]="email" class="input" [hint]="isLogin?'Email/UserName':'Email'" keyboardType="email" autocorrect="false" autocapitalizationType="none"></TextField>
+        </StackLayout>
+        
+        <StackLayout class="input-field">
+            <TextField [(ngModel)]="pwd" secure="true" class="input" hint="Password" autocorrect="false" autocapitalizationType="none"></TextField>
+        </StackLayout>
+
+        <StackLayout class="input-field">
+            <TextField [(ngModel)]='cnfpwd' secure="true" *ngIf="!isLogin" class="input" hint="Confirm Password" autocorrect="false" autocapitalizationType="none"></TextField>
+        </StackLayout>
+
+        <StackLayout class="input-field">
+            <TextField [(ngModel)]='usernm' *ngIf="!isLogin" class="input" hint="UserName" autocorrect="false" autocapitalizationType="none"></TextField>
+        </StackLayout>
+
+        <StackLayout class="input-field">
+            <TextField [(ngModel)]='otp' *ngIf="!isLogin" class="input" hint="OTP" keyboardType="number" autocorrect="false" autocapitalizationType="none"></TextField>
+        </StackLayout>
+
+    
+        <Button [text]="!isLogin?'Sign Up':'Login'" class="btn btn-primary" (tap)="onLoginRegister()"></Button>
+    </StackLayout>
+
+    <StackLayout orientation="horizontal" class="accOptions">
+        <Label [text]="isLogin?'Don’t have an account?':'Already have an account?'"></Label>
+        <Label class="font-weight-bold" fontAttributes="Bold" [text]="isLogin?' Sign Up':' Login'" (tap)="loginRegToogle()"></Label>
+    </StackLayout>
+    
+
+</FlexboxLayout>

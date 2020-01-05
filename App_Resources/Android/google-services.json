@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "507601832765",
+    "firebase_url": "https://citylive-cb784.firebaseio.com",
+    "project_id": "citylive-cb784",
+    "storage_bucket": "citylive-cb784.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507601832765:android:eda8fb287c52fb5f2b1354",
+        "android_client_info": {
+          "package_name": "com.citylive.ver1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507601832765-3349r6cdb3vkfng740a11isdhmmffu5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD98TlJcqaWA5KTzueoVFsgQa8wFgHxBDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507601832765-3349r6cdb3vkfng740a11isdhmmffu5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

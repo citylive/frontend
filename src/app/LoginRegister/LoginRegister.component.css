@@ -1,0 +1,21 @@
+.page {
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+  }
+  .image{
+      padding-top: 10%;
+      height: 30%;
+  }
+  .form {
+      height: 50%;
+    vertical-align: middle;
+  }
+
+  .input-field{
+      width: 90%;
+  }
+
+  .accOptions{
+      display: flex;
+  }
