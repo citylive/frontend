@@ -3,7 +3,6 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { LauncherComponent } from "./Launcher/Launcher.component";
 import { AnswerFormComponent } from "./AnswerForm/AnswerForm.component";
 import { ChatWindowComponent } from "./ChatWindow/ChatWindow.component";
 import { LoginRegisterComponent } from "./LoginRegister/LoginRegister.component";
@@ -29,7 +28,6 @@ import { NativeScriptFormsModule } from "nativescript-angular/forms";
     ],
     declarations: [
         AppComponent,
-        LauncherComponent,
         AnswerFormComponent,
         ChatWindowComponent,
         LoginRegisterComponent,

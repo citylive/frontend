@@ -3,5 +3,12 @@
 </ActionBar>
 
 <StackLayout class="page">
-    <Button text="Aanswer" [nsRouterLink]="['/answer']" class="btn btn-primary btn-active" col="1"></Button>
+    <TextView hint="Enter your Query..." 
+          text="tvtext">
+    </TextView>
+    <StackLayout orientation="horizontal" class="accOptions">
+        <Label [text]=" 'Current Location is : Latitude- '+latitude"></Label>
+        <Label [text]="'Longitude- '+longitude"></Label>
+    </StackLayout>
+    <Button text="Ask Question" [nsRouterLink]="['/answer']" class="btn btn-primary btn-active" col="1"></Button>
 </StackLayout>

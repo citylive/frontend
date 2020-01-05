@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import * as firebase from 'nativescript-plugin-firebase';
+import * as geolocation from "nativescript-geolocation";
+import { Accuracy } from "tns-core-modules/ui/enums";
 
 @Component({
   selector: "ns-app",
@@ -28,6 +30,15 @@ export class AppComponent implements OnInit {
       .catch(error => {
         console.log('[Firebase] Initialize', { error });
       });
+
+      geolocation.enableLocationRequest(true,true)
+       .then(()=>{
+            geolocation.watchLocation(location=>{
+                console.log(location.latitude,location.longitude)
+            },error=>{
+
+            },{updateDistance: 5, minimumUpdateTime:1000,desiredAccuracy:Accuracy.high,iosAllowsBackgroundLocationUpdates:true,iosPausesLocationUpdatesAutomatically:false});
+       });
 
   }
 
