@@ -9,40 +9,43 @@
   }
   .image{
       padding-top: 50%;
-      height: 25%;
+      height: 20%;
   }
 
   .app-title{
     font-family: 'SuezOne-Regular';
-    color: cyan;
+    color: rgb(5, 158, 120);
     font-size: 70%;
   }
 
   .app-title-small{
     font-family: 'SuezOne-Regular';
     color: wheat;
-    font-size: 30%;
+    font-size: 35%;
     text-align: center;
   }
 
   .form {
-      height: 50%;
-    vertical-align: middle;
+    height: 60%;
+    /* vertical-align: middle; */
   }
 
   .input-field{
       width: 90%;
-      color: white !important;
+      padding-left: 10px;
+      font-size: 30%;
   }
 
   .accOptions{
       display: flex;
-      color: azure;
+      color: #ffffff;
+      font-size: 20px;
       /* font-family: 'Suez One', serif; */
   }
 
   .login-button{
-      width: 60%;
+      width: 50%;
       border-radius: 50%;
-      font-size: 15%;
+      font-size: 18px;
+      background-color: #555555;
   }

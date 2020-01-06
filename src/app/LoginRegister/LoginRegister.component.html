@@ -8,7 +8,10 @@
     <StackLayout class="form">
         <StackLayout class="input-field">
             <TextField
-             style.placeholderColor="white"
+            style.fontSize="18px"
+            style.height="10%"
+            style.color="white" 
+            style.placeholderColor="#ccccccee"
              [(ngModel)]="email" 
              class="input" 
              [hint]="isLogin?'Email/UserName':'Email'" 
@@ -21,7 +24,10 @@
         
         <StackLayout class="input-field">
             <TextField 
-            style.placeholderColor="white" 
+            style.fontSize="18px"
+            style.height="10%"
+            style.color="white" 
+            style.placeholderColor="#ccccccee" 
             [(ngModel)]='usernm' 
             *ngIf="!isLogin" 
             class="input" 
@@ -31,19 +37,26 @@
         </StackLayout>
         
         <StackLayout class="input-field">
-            <TextField 
-            style.placeholderColor="white" 
+            <TextField
+            style.fontSize="18px"
+            style.height="10%"
+            style.color="white" 
+            style.placeholderColor="#ccccccee" 
             [(ngModel)]="pwd" 
             secure="true" 
             class="input" 
             hint="Password" 
             autocorrect="false" 
-            autocapitalizationType="none"></TextField>
+            autocapitalizationType="none"></TextField
+            >
         </StackLayout>
 
         <StackLayout class="input-field">
             <TextField 
-            style.placeholderColor="white" 
+            style.fontSize="18px"
+            style.height="10%"
+            style.color="white" 
+            style.placeholderColor="#ccccccee"
             [(ngModel)]='cnfpwd' 
             secure="true" 
             *ngIf="!isLogin" 
