@@ -9,6 +9,9 @@ import { LoginRegisterComponent } from "./LoginRegister/LoginRegister.component"
 import { QuestionFormComponent } from "./QuestionForm/QuestionForm.component";
 import { WelcomeComponent } from "./Welcome/Welcome.component";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
+import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
+import { HttpService } from "./Services/http.service";
+import { AuthorizeRegisterService } from "./Services/authorize-register.service";
 
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
@@ -24,7 +27,8 @@ import { NativeScriptFormsModule } from "nativescript-angular/forms";
     imports: [
         NativeScriptModule,
         AppRoutingModule,
-        NativeScriptFormsModule
+        NativeScriptFormsModule,
+        NativeScriptHttpClientModule
     ],
     declarations: [
         AppComponent,
@@ -35,7 +39,7 @@ import { NativeScriptFormsModule } from "nativescript-angular/forms";
         WelcomeComponent
        
     ],
-    providers: [],
+    providers: [HttpService,AuthorizeRegisterService],
     schemas: [
         NO_ERRORS_SCHEMA
     ]

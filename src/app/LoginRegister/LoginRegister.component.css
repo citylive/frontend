@@ -2,11 +2,29 @@
     height: 100%;
     align-items: center;
     flex-direction: column;
+    background-image: url('~/app/images/citybgsmall.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 15%;
   }
   .image{
-      padding-top: 10%;
-      height: 30%;
+      padding-top: 50%;
+      height: 25%;
   }
+
+  .app-title{
+    font-family: 'SuezOne-Regular';
+    color: cyan;
+    font-size: 70%;
+  }
+
+  .app-title-small{
+    font-family: 'SuezOne-Regular';
+    color: wheat;
+    font-size: 30%;
+    text-align: center;
+  }
+
   .form {
       height: 50%;
     vertical-align: middle;
@@ -14,8 +32,17 @@
 
   .input-field{
       width: 90%;
+      color: white !important;
   }
 
   .accOptions{
       display: flex;
+      color: azure;
+      /* font-family: 'Suez One', serif; */
+  }
+
+  .login-button{
+      width: 60%;
+      border-radius: 50%;
+      font-size: 15%;
   }

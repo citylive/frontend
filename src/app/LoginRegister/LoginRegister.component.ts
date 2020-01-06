@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
+import { AuthorizeRegisterService } from "../Services/authorize-register.service";
+
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -23,7 +25,7 @@ export class LoginRegisterComponent implements OnInit {
     usernm='';
     otp='';
 
-    constructor(private router:RouterExtensions) {
+    constructor(private router:RouterExtensions,private authRegSvc:AuthorizeRegisterService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -40,14 +42,65 @@ export class LoginRegisterComponent implements OnInit {
     }
 
     loginRegToogle(){
-        console.log(this.isLogin);
         this.isLogin=!this.isLogin;
+        this.pwd='';
+        this.usernm='';
+        this.email='';
+        this.cnfpwd='';
     }
 
     onLoginRegister(){
-        console.log(this.email,this.pwd);
-        const LS = require( "nativescript-localstorage" );
-        LS.setItem('IsAlreadyLoggedIn', 'loggedIn');
-        this.router.navigate(['/welcome']);
+        if(this.isLogin){
+
+            if(this.email == '' || this.pwd == ''){
+                return;
+            }
+
+            this.authRegSvc.checkCredentials(this.email,this.pwd).subscribe(data=>{
+                // this.authRegSvc.checkCredentialsWrong().subscribe(data=>{
+                if(data.response === 'success'){
+                    const LS = require( "nativescript-localstorage" );
+                    LS.setItem('IsAlreadyLoggedIn', 'loggedIn');
+                    this.router.navigate(['/welcome']);
+                }
+                else{
+                    var Toast = require("nativescript-toast");
+                    var toast = Toast.makeText(data.response);
+                    toast.show();
+                }
+            })
+        }
+        else{
+            console.log(this.email,this.pwd,this.usernm,this.cnfpwd);
+            if(this.email == '' || this.pwd == '' || this.usernm == '' || this.cnfpwd == ''){
+                var Toast = require("nativescript-toast");
+                var toast = Toast.makeText("Fields can't be blank");
+                toast.show();
+                return;
+            }
+            else if(this.pwd != this.cnfpwd){
+                var Toast = require("nativescript-toast");
+                var toast = Toast.makeText("Passwords don't match");
+                toast.show();
+                return;
+            }
+            else{
+                this.authRegSvc.registerUser({email:this.email,username:this.usernm,password:this.pwd}).subscribe(data => {
+                    if(data.response === 'success'){
+                        var Toast = require("nativescript-toast");
+                        var toast = Toast.makeText("Registered. Please Login to continue.");
+                        toast.show();
+                        this.isLogin=true;
+                        this.pwd='';
+                    }
+                    else{
+                        var Toast = require("nativescript-toast");
+                        var toast = Toast.makeText(data.response);
+                        toast.show();
+                    }
+                })
+            }
+        }
+        
     }
 }
