@@ -73,7 +73,7 @@ export class AppComponent implements OnInit,OnDestroy {
     const context = application.android.context;
     const intent = new android.content.Intent();
     intent.setClassName(context, 'com.citylive.ver1.ForegroundService');
-    context.startForegroundService(intent);
+    const id=context.startForegroundService(intent);
     }
 
   startLocationWatcher(){
