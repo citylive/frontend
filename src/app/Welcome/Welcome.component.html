@@ -1,8 +1,47 @@
-<ActionBar class="action-bar">
-    <Label class="action-bar-title" text="Welcome"></Label>
+<!-- <ActionBar [title]="'Welcome, '+loggedInUser" class="action-bar">
 </ActionBar>
 
 <StackLayout class="page">
     <Button text="Logout" (tap)="logOut()" class="btn btn-primary btn-active" col="1"></Button>
     <Button text="Ask a question" (tap)="askQuestion()" class="btn btn-primary btn-active" col="1"></Button>
-</StackLayout>
+
+    <HomePage></HomePage>
+    <Messages></Messages>
+    <Profile></Profile>
+
+</StackLayout> -->
+
+<BottomNavigation selectedIndex="0">
+
+    <TabStrip>
+        <TabStripItem>
+            <Label text="Home"></Label>
+            <Image src="~/app/images/home.png"></Image>
+        </TabStripItem>
+        <TabStripItem class="special">
+            <Label text="Messages"></Label>
+            <Image src="~/app/images/chat.png"></Image>
+        </TabStripItem>
+        <TabStripItem class="special">
+            <Label [text]="loggedInUser"></Label>
+            <Image src="~/app/images/profile.png"></Image>
+        </TabStripItem>
+    </TabStrip>
+
+    <TabContentItem>
+        <GridLayout>
+            <HomePage></HomePage>
+        </GridLayout>
+    </TabContentItem>
+    <TabContentItem>
+        <GridLayout>
+            <Messages></Messages>
+        </GridLayout>
+    </TabContentItem>
+    <TabContentItem>
+        <GridLayout>
+            <Profile></Profile>
+        </GridLayout>
+    </TabContentItem>
+
+</BottomNavigation>

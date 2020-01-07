@@ -1,11 +1,20 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
 import * as firebase from 'nativescript-plugin-firebase';
 import * as geolocation from "nativescript-geolocation";
 import { Accuracy } from "tns-core-modules/ui/enums";
-import { setInterval, clearInterval } from "tns-core-modules/timer";
+import { setInterval, clearInterval ,setTimeout} from "tns-core-modules/timer";
 import * as application from "tns-core-modules/application";
 import { HttpService } from "./Services/http.service";
 import { AuthorizeRegisterService } from "./Services/authorize-register.service";
+import { NavigationExtras } from "@angular/router";
+import { RouterExtensions } from "nativescript-angular/router";
+import { QuestionStateService } from "./Services/question.state.service";
+
+import { CardView } from '@nstudio/nativescript-cardview';
+import { registerElement } from 'nativescript-angular';
+
+registerElement('CardView', () => CardView as any);
+
 
 @Component({
   selector: "ns-app",
@@ -19,7 +28,7 @@ export class AppComponent implements OnInit,OnDestroy {
     lon:0
   }
 
-  constructor(private authReg:AuthorizeRegisterService){
+  constructor(private ngZone: NgZone,private authReg:AuthorizeRegisterService,private router:RouterExtensions,private quesState:QuestionStateService){
 
   }
 
@@ -59,13 +68,17 @@ export class AppComponent implements OnInit,OnDestroy {
   }
 
   onReceivedMessage(message){
-        if(message.foreground){
-            console.log("Should add notif");
-        }
-        else{
-            console.log("open answerPage");
-        }
-        console.log(message.data);
+
+          if(message.data.type === 'ques'){
+            console.log('is ques');
+            this.quesState.addQues({
+              question:"this is new ques",
+              by:"Soumyadip"
+            });
+          }
+          else if(message.data.type === 'chat'){
+            console.log('is chat s');
+          }
   }
 
 

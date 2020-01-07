@@ -1,0 +1,12 @@
+.messageTop{
+    background-color: white;
+}
+
+.MessageCard{
+    height: 100vh;
+    margin: 8vh;
+    margin-bottom: 0;
+    border-radius: 3vh;
+    background-color: white;
+	color:black;
+}

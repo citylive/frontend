@@ -1,0 +1,7 @@
+<ScrollView class="messageTop">
+    <StackLayout>
+        <StackLayout androidElevation="14" class="MessageCard" (tap)="changeArr()" *ngFor="let item of this.pendingQuestions"> 
+            <Label  text="{{item.name}}"  fontSize="36"></Label>
+        </StackLayout>
+    </StackLayout>
+</ScrollView>

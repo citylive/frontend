@@ -1,0 +1,12 @@
+.page{
+    height: 100%;
+}
+
+TabStrip{
+    background-color: rgba(255, 255, 255, 0.3);
+    font-size: 12vh;
+}
+
+TabStripItem:active {
+    color: rgb(6, 106, 236);
+} 

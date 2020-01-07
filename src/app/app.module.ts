@@ -12,6 +12,10 @@ import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 import { HttpService } from "./Services/http.service";
 import { AuthorizeRegisterService } from "./Services/authorize-register.service";
+import { HomePageComponent } from "./homePage/homePage.component";
+import { MessagesComponent } from "./Messages/Messages.component";
+import { ProfileComponent } from "./Profile/Profile.component";
+import { QuestionStateService } from "./Services/question.state.service";
 
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
@@ -36,10 +40,17 @@ import { AuthorizeRegisterService } from "./Services/authorize-register.service"
         ChatWindowComponent,
         LoginRegisterComponent,
         QuestionFormComponent,
-        WelcomeComponent
+        WelcomeComponent,
+        HomePageComponent,
+        MessagesComponent,
+        ProfileComponent
        
     ],
-    providers: [HttpService,AuthorizeRegisterService],
+    providers: [
+        HttpService,
+        AuthorizeRegisterService,
+        QuestionStateService
+    ],
     schemas: [
         NO_ERRORS_SCHEMA
     ]

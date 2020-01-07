@@ -59,4 +59,10 @@ export class AuthorizeRegisterService {
         });
     }
 
+    setDeviceId(usernm,id){
+        return of({
+            response:"success"
+        });
+    }
+
 }
