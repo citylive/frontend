@@ -63,7 +63,6 @@ export class AppComponent implements OnInit,OnDestroy {
       });
 
       firebase.addOnMessageReceivedCallback((message: firebase.Message) => {
-            console.log('message receive enabled');
             this.onReceivedMessage(message);
           })
 
@@ -89,7 +88,6 @@ export class AppComponent implements OnInit,OnDestroy {
             });
           }
           else if(message.data.type === 'chat'){
-            console.log('is chat s');
             this.msgCountState.addMsgCount(message.data.topic);
           }
   }
@@ -164,12 +162,12 @@ export class AppComponent implements OnInit,OnDestroy {
     let quesStr:string=JSON.stringify(this.quesState.getAllNewQues());
     let newNotifStr:string=JSON.stringify(this.quesState.getnewNotif());
 
-    let msgCountMapStr:string=JSON.stringify(this.msgCountState.getAllMsgCount());
+    let msgCountMapStr:string=JSON.stringify(Array.from(this.msgCountState.getAllMsgCount().entries()));;
 
     var LS = require( "nativescript-localstorage" );
     LS.setItem('currentQueries',quesStr);
     LS.setItem('newNotif',newNotifStr);
-    LS.setItem('msgCountMap',newNotifStr);
+    LS.setItem('msgCountMap',msgCountMapStr);
   }
 
 }

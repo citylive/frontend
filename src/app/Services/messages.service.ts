@@ -66,20 +66,20 @@ export class MessageService {
         }]);
     }
 
-    getTopics(user:User){
+    getTopics(user:string){
         console.log(user);
         let url='./MockUps/true.json';
         // return this.http.getData(url);
         return of([{
             topic:"soumyadip12345",
             question:"This is a Question",
-            by:"this is Ad content",
+            by:"soumyadc",
             closed:false
         },
         {
-            topic:"soumyadip12345",
+            topic:"soumyadip1234",
             question:"This is a closed Question",
-            by:"this is Ad content",
+            by:"sd",
             closed:true
         }]);
     }
@@ -87,7 +87,7 @@ export class MessageService {
     askQuestion(question:Question){
         console.log(question);
         return of({
-            topicId:"soumyadip12345"
+            topicId:"soumyadip1234"
         });
     }
 

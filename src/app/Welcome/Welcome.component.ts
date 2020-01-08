@@ -26,6 +26,8 @@ export class WelcomeComponent implements OnInit{
         qst$;
         quesState$;
         showLoader=true;
+        boldMsg=true;
+        
         
     constructor(private router:RouterExtensions,private authReg:AuthorizeRegisterService,private quesState:QuestionStateService) {
         /* ***********************************************************

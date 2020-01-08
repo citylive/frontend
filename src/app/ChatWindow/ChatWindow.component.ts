@@ -16,7 +16,7 @@ import { RouterExtensions } from "nativescript-angular";
     templateUrl: "./ChatWindow.component.html",
     styleUrls: ["./ChatWindow.component.css"]
 })
-export class ChatWindowComponent implements OnInit,OnDestroy {
+export class ChatWindowComponent implements OnInit {
 
     currentTopic;
 
@@ -46,7 +46,7 @@ export class ChatWindowComponent implements OnInit,OnDestroy {
     });
     }
 
-    ngOnDestroy(){
+    unsubTopic(){
         firebase.unsubscribeFromTopic(this.currentTopic)
         .then(()=>{
             console.log("unsubscribed");

@@ -1,12 +1,53 @@
+.topMsg{
+    height: 100%;
+    background-image: url('~/app/images/citylineBG.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.headMsg{
+    height: 4%;
+    width: 90%;
+    margin: 5;
+    color: #34fdce;
+}
+
 .messageTop{
-    background-color: white;
+    height: 44%;
+    margin-top: 0;
 }
 
 .MessageCard{
     height: 100vh;
     margin: 8vh;
+    padding: 10;
     margin-bottom: 0;
     border-radius: 3vh;
-    background-color: white;
-	color:black;
+    background-color: rgba(255, 255, 255, 0.1);
+	color:white;
+}
+
+.noMessgTxt{
+    text-align: center;
+    height: 30;
+    width: 30;
+    margin-top: 30;
+    border-radius: 20;
+    background-color: #34fdce;
+    color: white;
+}
+
+.ownQuestion{
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    border-width: 1;
+}
+
+.questionText{
+    width: 80%;
+}
+
+.noMessg{
+    width: 20%;
+    text-align: center;
 }

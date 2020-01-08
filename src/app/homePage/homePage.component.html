@@ -6,7 +6,7 @@
 
         <AbsoluteLayout width="47%" height="110"  (tap)="askQuestion()" androidElevation="14" class="QuesCard topitem"> 
             <Label width="100%" height=100 class="font-weight-bold askLabel" text="Know More around you." textWrap="true" fontSize="20"></Label>
-            <StackLayout width="100%" height=50 top="60" orientation="horizontal"> 
+            <StackLayout width="100%" height=50 top="55" orientation="horizontal"> 
                 <Label class="askLabel askNow" text="Ask now" textWrap="true" fontSize="15"></Label>
                 <Image class="askIcon" src="~/app/images/request.png" (tap)="remQuery(ind)"></Image>
             </StackLayout>
@@ -17,7 +17,7 @@
         <!-- Help button -->
         <AbsoluteLayout width="47%" height="110" *ngIf="!showQues" androidElevation="14" class="QuesCard topitem" (tap)="showQues=true;resetNotifCount()"> 
             <Label width="100%" height=100 class="font-weight-bold askLabel" textWrap="true" [text]="'Help People around you. ('+val+')'" fontSize="20"></Label>
-            <StackLayout width="100%" height=50 top="60" orientation="horizontal"> 
+            <StackLayout width="100%" height=50 top="55" orientation="horizontal"> 
                 <Label class="askLabel askNow msgCount" [text]="newNotif>0?newNotif+' new.':''" textWrap="true" fontSize="15"></Label>
                 <Image class="askIcon" src="~/app/images/messages.png" (tap)="remQuery(ind)"></Image>
             </StackLayout>
@@ -27,7 +27,7 @@
         <!-- feed button -->
         <AbsoluteLayout width="47%" height="110" *ngIf="showQues" androidElevation="14" class="QuesCard topitem" (tap)="showQues=false;resetNotifCount();fetchLatestAds()"> 
             <Label  width="100%" height=100 class="font-weight-bold askLabel" text="What's happening nearby." textWrap="true" fontSize="20"></Label>
-            <StackLayout width="100%" height=50 top="60" orientation="horizontal"> 
+            <StackLayout width="100%" height=50 top="55" orientation="horizontal"> 
                 <Label class="askLabel askNow" text="Explore." textWrap="true" fontSize="15"></Label>
                 <Image class="askIcon" src="~/app/images/live.png" (tap)="remQuery(ind)"></Image>
             </StackLayout>

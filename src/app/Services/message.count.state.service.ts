@@ -26,9 +26,12 @@ export class MsgCountStateService {
         var LS = require( "nativescript-localstorage" );
         let msgCounts=LS.getItem('msgCountMap');
         if(msgCounts && msgCounts!=''){
-            this.msgCountMap=JSON.parse(msgCounts);
+            console.log('from store',msgCounts);
+            this.msgCountMap=new Map(JSON.parse(msgCounts));
+            console.log('from store map',this.msgCountMap);
         }
         else{
+            console.log('Not setting from store');
             this.msgCountMap=new Map([]);
         }
         
@@ -42,6 +45,7 @@ export class MsgCountStateService {
     //         newArr.splice(0,0,ques);
     //         newArrObj=Object.assign({},quesArr,{quesArray:newArr})
     //     })
+    console.log("addingCount",topic,this.msgCountMap);
         if(this.msgCountMap.has(topic)){
             let currCount=this.msgCountMap.get(topic);
             this.msgCountMap.set(topic,currCount+1);
@@ -58,7 +62,7 @@ export class MsgCountStateService {
     this.msgCountMap.delete(topic);
    }
 
-   getAllMsgCount(){
+   getAllMsgCount():Map<string,number>{
          return this.msgCountMap;
    }
 

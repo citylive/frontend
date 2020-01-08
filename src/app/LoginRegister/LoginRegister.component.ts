@@ -58,9 +58,9 @@ export class LoginRegisterComponent implements OnInit {
 
             this.authRegSvc.checkCredentials(this.email,this.pwd).subscribe(data=>{
                 // this.authRegSvc.checkCredentialsWrong().subscribe(data=>{
-                if(data.response === 'success'){
+                if(data.response !== 'failure'){
                     const LS = require( "nativescript-localstorage" );
-                    LS.setItem('LoggedInUser', this.email);
+                    LS.setItem('LoggedInUser', data.response);
                     LS.setItem('IsAlreadyLoggedIn', 'loggedIn');
                     this.router.navigate(['/welcome']);
                 }
