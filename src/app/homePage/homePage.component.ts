@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { QuestionStateService, IQuestionArray, IQuestion } from "../Services/question.state.service";
+import {setTimeout} from "tns-core-modules/timer";
 import {map} from 'rxjs/operators'
 
 /* ***********************************************************
@@ -28,21 +29,28 @@ export class HomePageComponent implements OnInit {
         by: "this is new ques"
       }];
 
+    gotNewQues=false;
+
     constructor(private quesState:QuestionStateService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
        this.qst$=quesState.$quesList;
 
-       this.quesState$ =this.qst$.pipe(map((ques:IQuestionArray)=>{
-           return ques.quesArray;
-       }));
+       this.qst$.subscribe(data=>{
+          this.changeToggle();
+          console.log('change happened');
+       });
 
-       this.quesState$.subscribe((data:IQuestion[])=>{
-           console.log("got data",data);
-           this.pendingQuestions=data;
-           console.log("pendingQues",this.pendingQuestions[0].question,this.pendingQuestions.length);
-       })
+      //  this.quesState$ =this.qst$.pipe(map((ques:IQuestionArray)=>{
+      //      return ques.quesArray;
+      //  }));
+
+      //  this.quesState$.subscribe((data:IQuestion[])=>{
+      //      console.log("got data",data);
+      //     //  this.pendingQuestions=data;
+      //     //  console.log("pendingQues",this.pendingQuestions[0].question,this.pendingQuestions.length);
+      //  })
     }
 
     ngOnInit(): void {
@@ -51,19 +59,20 @@ export class HomePageComponent implements OnInit {
         *************************************************************/
     }
 
+    changeToggle(){
+      this.gotNewQues=true;
+    }
+    
+
     changeArr(){
-        this.pendingQuestions=[{
-            question: "soumyadip12345",
-        by: "this is new ques"
-      }, {
-        question: "soumyadip12345",
-        by: "this is new ques"
-      },
-      {question: "soumyadip12345",
-      by: "this is new ques"
-    }, {
-      question: "soumyadip12345",
-      by: "this is new ques"
-    }];
+      //   this.pendingQuestions=[...this.pendingQuestions,{
+      //       question: "soumyadip12345",
+      //   by: "this is new ques"
+      // }];
+      this.gotNewQues=false;
+      console.log("changing Array")
+      this.pendingQuestions=this.quesState.getAllNewQues();
+      console.log(this.pendingQuestions)
+
     }
 }

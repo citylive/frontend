@@ -4,6 +4,7 @@ import { User } from "./Models";
 
 import { Observable,of,BehaviorSubject } from "rxjs";
 import 'rxjs/add/observable/of';
+import {map} from 'rxjs/operators'
 
 export interface IQuestion{
     question:string,
@@ -15,40 +16,61 @@ export interface IQuestionArray{
 }
 
 const initialState:IQuestionArray={
-    quesArray:[]
+    quesArray:[{
+        question: "soumyadip12345",
+        by: "this is new ques"
+      }, {
+        question: "soumyadip12345",
+        by: "this is new ques"
+      }]
 }
 
 
 @Injectable()
 export class QuestionStateService {
     
-    quesList:BehaviorSubject<IQuestionArray>=new BehaviorSubject(initialState);
-    $quesList:Observable<IQuestionArray>=this.quesList.asObservable();
+    quesListArr=[{
+        question: "soumyadip12345",
+        by: "this is new ques"
+      }, {
+        question: "soumyadip12345",
+        by: "this is new ques"
+      }];
+    num=0;
+    quesList:BehaviorSubject<any>=new BehaviorSubject(this.num);
+    $quesList:Observable<any>=this.quesList.asObservable();
 
     constructor(){
         this.$quesList.subscribe(data=>{});
     }
 
-   addQues(ques:IQuestion){
-       console.log('setting');
-        let newArrObj;
-       this.$quesList.subscribe((quesArr:IQuestionArray)=>{
-           let newArr=quesArr.quesArray.slice();
-            newArr.splice(0,0,ques);
-            newArrObj=Object.assign({},quesArr,{quesArray:newArr})
-        })
-       this.quesList.next(newArrObj);
-       console.log(newArrObj);
+   addQues(ques){
+       //console.log('setting');
+    //     let newArrObj;
+    //    this.$quesList.subscribe((quesArr:any)=>{
+    //        let newArr=quesArr.quesArray.slice();
+    //         newArr.splice(0,0,ques);
+    //         newArrObj=Object.assign({},quesArr,{quesArray:newArr})
+    //     })
+        this.quesListArr=[...this.quesListArr,ques];
+        console.log('array add',this.quesListArr,ques);
+        this.num++;
+       this.quesList.next(this.num);
+       //console.log(newArrObj);
    }
 
    remQues(index:number){
     let newArrObj;
-    this.$quesList.subscribe((quesArr:IQuestionArray)=>{
+    this.$quesList.subscribe((quesArr:any)=>{
         let newArr=quesArr.quesArray.slice();
          newArr.splice(index,1);
          newArrObj=Object.assign({},quesArr,{quesArray:newArr})
      })
     this.quesList.next(newArrObj);
+   }
+
+   getAllNewQues():any[]{
+         return this.quesListArr;
    }
 
 }

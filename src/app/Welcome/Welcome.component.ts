@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as firebase from 'nativescript-plugin-firebase';
 import { AuthorizeRegisterService } from "../Services/authorize-register.service";
-import { QuestionStateService } from "../Services/question.state.service";
+import { QuestionStateService, IQuestionArray, IQuestion } from "../Services/question.state.service";
 import {map} from 'rxjs/operators'
 import { Subscription } from "rxjs";
 
@@ -23,12 +23,25 @@ export class WelcomeComponent implements OnInit{
 
         LS = require( "nativescript-localstorage" );
         loggedInUser;
-        
+        qst$;
+        quesState$;
         
     constructor(private router:RouterExtensions,private authReg:AuthorizeRegisterService,private quesState:QuestionStateService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
+
+    //    this.qst$=quesState.$quesList;
+
+    //    this.quesState$ =this.qst$.pipe(map((ques:IQuestionArray)=>{
+    //          return ques.quesArray;
+    //      }));
+  
+    //      this.quesState$.subscribe((data:IQuestion[])=>{
+    //          console.log("got data",data);
+    //         //  this.pendingQuestions=data;
+    //         //  console.log("pendingQues",this.pendingQuestions[0].question,this.pendingQuestions.length);
+    //      })
     }
 
 

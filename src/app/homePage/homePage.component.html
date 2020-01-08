@@ -1,7 +1,17 @@
-<ScrollView class="messageTop">
-    <StackLayout>
-        <StackLayout androidElevation="14" class="MessageCard" (tap)="changeArr()" *ngFor="let item of this.pendingQuestions"> 
-            <Label  text="{{item.name}}"  fontSize="36"></Label>
+<StackLayout>
+    <StackLayout orientation="horizontal">
+        <StackLayout androidElevation="14" class="MessageCard topitem"> 
+            <Label  text="Ask Ques"  fontSize="36"></Label>
+        </StackLayout>
+        <StackLayout androidElevation="14" class="MessageCard topitem" (tap)="changeArr()"> 
+            <Label  text="{{gotNewQues}}"  fontSize="36"></Label>
         </StackLayout>
     </StackLayout>
-</ScrollView>
+    <ScrollView class="messageTop">
+        <StackLayout>
+            <StackLayout androidElevation="14" class="MessageCard" (tap)="changeArr()" *ngFor="let item of this.pendingQuestions"> 
+                <Label  text="{{item.question}}"  fontSize="36"></Label>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</StackLayout>
