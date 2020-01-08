@@ -16,6 +16,10 @@ import { HomePageComponent } from "./homePage/homePage.component";
 import { MessagesComponent } from "./Messages/Messages.component";
 import { ProfileComponent } from "./Profile/Profile.component";
 import { QuestionStateService } from "./Services/question.state.service";
+import { MessageService } from "./Services/messages.service";
+import { RouteReuseStrategy } from "@angular/router";
+import { CacheRouteReuseStrategy } from "./Services/route-reuse.strategy";
+import { MsgCountStateService } from "./Services/message.count.state.service";
 
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
@@ -49,7 +53,12 @@ import { QuestionStateService } from "./Services/question.state.service";
     providers: [
         HttpService,
         AuthorizeRegisterService,
-        QuestionStateService
+        QuestionStateService,
+        MessageService,
+        MsgCountStateService
+        // {provide: RouteReuseStrategy,
+        // useClass: CacheRouteReuseStrategy
+        // }
     ],
     schemas: [
         NO_ERRORS_SCHEMA

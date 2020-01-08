@@ -1,7 +1,10 @@
-import { Component, OnInit } from "@angular/core";
-import { QuestionStateService, IQuestionArray, IQuestion } from "../Services/question.state.service";
+import { Component, OnInit, NgZone } from "@angular/core";
+import { QuestionStateService, IQuestion } from "../Services/question.state.service";
 import {setTimeout} from "tns-core-modules/timer";
 import {map} from 'rxjs/operators'
+import { MessageService } from "../Services/messages.service";
+import { NavigationExtras } from "@angular/router";
+import { RouterExtensions } from "nativescript-angular";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -20,28 +23,19 @@ export class HomePageComponent implements OnInit {
 
     qst$;
     quesState$;
-    val="value"
-    pendingQuestions:IQuestion[]=[{
-        question: "soumyadip12345",
-        by: "this is new ques"
-      }, {
-        question: "soumyadip12345",
-        by: "this is new ques"
-      }];
+    val=0;
+    pendingQuestions:IQuestion[]=[];
+    userAds=[];
 
     gotNewQues=false;
+    showQues=false;
+    newNotif=-1;
 
-    constructor(private quesState:QuestionStateService) {
+    constructor(private ngZone: NgZone ,private quesState:QuestionStateService, private msgSvc:MessageService,private router:RouterExtensions) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
-       this.qst$=quesState.$quesList;
-
-       this.qst$.subscribe(data=>{
-          this.changeToggle();
-          console.log('change happened');
-       });
-
+      
       //  this.quesState$ =this.qst$.pipe(map((ques:IQuestionArray)=>{
       //      return ques.quesArray;
       //  }));
@@ -57,12 +51,49 @@ export class HomePageComponent implements OnInit {
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
+       console.log('init home');
+
+       this.qst$=this.quesState.$quesList;
+
+       this.qst$.subscribe(data=>{
+          this.ngZone.run(()=>{
+            this.changeToggle();
+          })
+          console.log('change happened');
+       });
+
+       this.fetchLatestAds();
+       
+
+    }
+
+    fetchLatestAds(){
+      var LS = require( "nativescript-localstorage" );
+        let loggedInUser = LS.getItem('LoggedInUser');
+       this.msgSvc.getAdMessages(loggedInUser).subscribe(ads=>{
+         this.userAds=ads;
+       })
     }
 
     changeToggle(){
-      this.gotNewQues=true;
+      this.newNotif=this.quesState.getnewNotif();
+      this.val=this.quesState.getNewQuesCount();
+      this.pendingQuestions=this.quesState.getAllNewQues();
+    }
+
+    answerQuestion(index){
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+            topic: this.pendingQuestions[index].topic
+        }   
+    };
+    this.remQuery(index);
+    this.router.navigate(["/answer"], navigationExtras);
     }
     
+    askQuestion(){
+      this.router.navigate(["/ask"]);
+    }
 
     changeArr(){
       //   this.pendingQuestions=[...this.pendingQuestions,{
@@ -74,5 +105,16 @@ export class HomePageComponent implements OnInit {
       this.pendingQuestions=this.quesState.getAllNewQues();
       console.log(this.pendingQuestions)
 
+    }
+
+    remQuery(ind){
+      this.quesState.remQues(ind);
+      this.pendingQuestions=this.quesState.getAllNewQues();
+      
+    }
+
+    resetNotifCount(){
+      this.newNotif=0;
+      this.quesState.resetNewNotif();
     }
 }

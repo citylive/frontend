@@ -1,9 +1,91 @@
-.page{
+.LoadingPage{
     height: 100%;
+
+    background-image: url('~/app/images/citylineBG.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.liveText{
+    width: 175;
+    text-align: center;
+    margin-top: 200;
+    font-family: 'SuezOne-Regular';
+    margin-bottom: 10;
+}
+.loader{
+    width: 175;
+}
+
+.cv-lbl{
+    height: 25;
+    width: 25;
+    margin: 5;
+    border-radius: 15;
+    border-color:black;
+    border-width: 2;
+    background-color: teal;
+    overflow: hidden;
+
+    animation-name: scale;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+}
+
+.cv-lbl1{
+
+    background-color: #009688;
+}
+
+.cv-lbl2{
+    background-color: #42b1a7;
+
+}
+
+.cv-lbl3{
+    background-color: #009688;
+
+}
+
+.cv-lbl4{
+    background-color: #64ffdb;
+
+}
+
+.cv-lbl5{
+    background-color:  #009687;
+
+}
+
+
+
+ @keyframes scale {
+      0% {
+          transform: scale(0.3);
+      }
+      10%,
+      10% {
+        transform: scale(0.5);
+      }
+      100%, 100% {
+        transform: scale(1);
+      }
+    }
+
+
+@keyframes rotate{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
 }
 
 TabStrip{
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.3) !important;
     font-size: 12vh;
 }
 

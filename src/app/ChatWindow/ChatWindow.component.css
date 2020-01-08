@@ -1,0 +1,6 @@
+.ChatPage{
+    height: 100%;
+    background-image: url('~/app/images/citylineBG.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+}

@@ -12,7 +12,8 @@ import { NavigationExtras, ActivatedRoute } from "@angular/router";
 @Component({
     selector: "AnswerForm",
     moduleId: module.id,
-    templateUrl: "./AnswerForm.component.html"
+    templateUrl: "./AnswerForm.component.html",
+    styleUrls: ["./AnswerForm.component.css"]
 })
 export class AnswerFormComponent implements OnInit {
     currentTopic;
@@ -40,6 +41,10 @@ export class AnswerFormComponent implements OnInit {
             }   
         };
         this.router.navigate(["/chat"], navigationExtras);
+    }
+
+    goBack(){
+        this.router.navigate(["/welcome"]);
     }
 
 }

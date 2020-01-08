@@ -1,14 +1,40 @@
-<ActionBar class="action-bar">
-    <Label class="action-bar-title" text="Ask"></Label>
+<ActionBar title="Ask a Question">
+    <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" (tap)="goBack()"></NavigationButton>
 </ActionBar>
 
-<StackLayout class="page">
-    <TextView hint="Enter your Query..." 
-          text="tvtext">
+
+<StackLayout class="QuestionPage">
+
+    <!-- QuestionBox -->
+    <TextView
+        class="questionBox" 
+        hint="Enter your Query..." 
+        [(ngModel)]="question"
+        fontSize="15"
+        maxLength="100">
     </TextView>
-    <StackLayout orientation="horizontal" class="accOptions">
-        <Label [text]=" 'Current Location is : Latitude- '+latitude"></Label>
-        <Label [text]="'Longitude- '+longitude"></Label>
+
+    <!-- Char count -->
+    <Label class="charCount" [text]="question.length+'/100'"></Label>
+
+    <!-- Location -->
+    <StackLayout orientation="horizontal" class="location">
+        <Label fontSize="15" [text]=" 'Latitude- '+latitude"></Label>
+        <Label fontSize="15" [text]="'Longitude- '+longitude"></Label>
     </StackLayout>
-    <Button text="Ask Question" [nsRouterLink]="['/answer']" class="btn btn-primary btn-active" col="1"></Button>
+
+    <Button text="Ask Question" (tap)="askQuestion()" class="btn btn-primary btn-active askButton" col="1"></Button>
+
+    <Label class="suggText" text="Suggestions" fontSize="15"></Label>
+
+    <!-- Suggestion Questions -->
+    <ScrollView class="FeedTop">
+        <StackLayout>
+            <StackLayout orientation="horizontal" class="suggestCard" (tap)="question = item" *ngFor="let item of this.suggestionQuestions">
+                    <Label textWrap="true" text="{{item}}"  fontSize="18"></Label>
+                
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+
 </StackLayout>

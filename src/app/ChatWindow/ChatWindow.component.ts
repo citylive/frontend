@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import * as firebase from 'nativescript-plugin-firebase';
+import { RouterExtensions } from "nativescript-angular";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -12,13 +13,14 @@ import * as firebase from 'nativescript-plugin-firebase';
 @Component({
     selector: "ChatWindow",
     moduleId: module.id,
-    templateUrl: "./ChatWindow.component.html"
+    templateUrl: "./ChatWindow.component.html",
+    styleUrls: ["./ChatWindow.component.css"]
 })
 export class ChatWindowComponent implements OnInit,OnDestroy {
 
     currentTopic;
 
-    constructor(private route:ActivatedRoute) {
+    constructor(private route:ActivatedRoute,private router:RouterExtensions) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -52,5 +54,10 @@ export class ChatWindowComponent implements OnInit,OnDestroy {
         .catch(error=>{
             console.log(error);
         })
+    }
+
+    
+    goBack(){
+        this.router.navigateByUrl("/welcome");
     }
 }

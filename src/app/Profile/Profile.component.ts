@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { RouterExtensions } from "nativescript-angular";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -13,7 +14,8 @@ import { Component, OnInit } from "@angular/core";
     templateUrl: "./Profile.component.html"
 })
 export class ProfileComponent implements OnInit {
-    constructor() {
+    LS = require( "nativescript-localstorage" );
+    constructor(private router:RouterExtensions) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -24,4 +26,14 @@ export class ProfileComponent implements OnInit {
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
     }
+    logOut(){
+        console.log('setting values');
+        this.LS.setItem('LoggedInUser','');
+        this.LS.setItem('currentQueries','');
+        this.LS.setItem('msgCountMap','');
+        this.LS.setItem('newNotif','');
+        this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
+        this.router.navigate(['/login']);
+    }
+
 }

@@ -12,6 +12,7 @@ import { QuestionStateService } from "./Services/question.state.service";
 
 import { CardView } from '@nstudio/nativescript-cardview';
 import { registerElement } from 'nativescript-angular';
+import { MsgCountStateService } from "./Services/message.count.state.service";
 
 registerElement('CardView', () => CardView as any);
 
@@ -28,7 +29,9 @@ export class AppComponent implements OnInit,OnDestroy {
     lon:0
   }
 
-  constructor(private ngZone: NgZone,private authReg:AuthorizeRegisterService,private router:RouterExtensions,private quesState:QuestionStateService){
+  constructor(private ngZone: NgZone,
+    private authReg:AuthorizeRegisterService,private router:RouterExtensions,
+    private quesState:QuestionStateService,private msgCountState:MsgCountStateService){
 
   }
 
@@ -36,18 +39,21 @@ export class AppComponent implements OnInit,OnDestroy {
 
     this.startLocationWatcher();
     this.startForegroundService();
+    this.quesState.setFromStorage();
+    this.msgCountState.setFromStorage();
 
     firebase.init({
       showNotifications: true,
       showNotificationsWhenInForeground: true,
+      
 
       onPushTokenReceivedCallback: (token) => {
         console.log('[Firebase] onPushTokenReceivedCallback:', { token });
       },
 
-      onMessageReceivedCallback: (message: firebase.Message) => {
-        this.onReceivedMessage(message);
-      }
+      // onMessageReceivedCallback: (message: firebase.Message) => {
+      //   this.onReceivedMessage(message);
+      // }
     })
       .then(() => {
         console.log('[Firebase] Initialized');
@@ -55,6 +61,11 @@ export class AppComponent implements OnInit,OnDestroy {
       .catch(error => {
         console.log('[Firebase] Initialize', { error });
       });
+
+      firebase.addOnMessageReceivedCallback((message: firebase.Message) => {
+            console.log('message receive enabled');
+            this.onReceivedMessage(message);
+          })
 
       geolocation.enableLocationRequest(true,true)
        .then(()=>{
@@ -72,12 +83,14 @@ export class AppComponent implements OnInit,OnDestroy {
           if(message.data.type === 'ques'){
             console.log('is ques');
             this.quesState.addQues({
-              question:"this is new ques",
-              by:"Soumyadip"
+              question:message.data.question,
+              by:message.data.by,
+              topic:message.data.topic
             });
           }
           else if(message.data.type === 'chat'){
             console.log('is chat s');
+            this.msgCountState.addMsgCount(message.data.topic);
           }
   }
 
@@ -147,7 +160,16 @@ export class AppComponent implements OnInit,OnDestroy {
 }
 
   ngOnDestroy(){
-    
+    console.log('destroyed');
+    let quesStr:string=JSON.stringify(this.quesState.getAllNewQues());
+    let newNotifStr:string=JSON.stringify(this.quesState.getnewNotif());
+
+    let msgCountMapStr:string=JSON.stringify(this.msgCountState.getAllMsgCount());
+
+    var LS = require( "nativescript-localstorage" );
+    LS.setItem('currentQueries',quesStr);
+    LS.setItem('newNotif',newNotifStr);
+    LS.setItem('msgCountMap',newNotifStr);
   }
 
 }

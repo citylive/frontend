@@ -10,7 +10,7 @@ import { QuestionFormComponent } from "./QuestionForm/QuestionForm.component";
 
 
 const routes: Routes = [
-    { path: "", redirectTo: "/login", pathMatch: "full" },
+    { path: "", redirectTo: "/welcome", pathMatch: "full" },
     { path: "welcome", component: WelcomeComponent },
     { path: "answer", component: AnswerFormComponent },
     { path: "chat", component: ChatWindowComponent },

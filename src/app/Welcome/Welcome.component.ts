@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as firebase from 'nativescript-plugin-firebase';
 import { AuthorizeRegisterService } from "../Services/authorize-register.service";
-import { QuestionStateService, IQuestionArray, IQuestion } from "../Services/question.state.service";
+import { QuestionStateService, IQuestion } from "../Services/question.state.service";
 import {map} from 'rxjs/operators'
 import { Subscription } from "rxjs";
 
@@ -25,6 +25,7 @@ export class WelcomeComponent implements OnInit{
         loggedInUser;
         qst$;
         quesState$;
+        showLoader=true;
         
     constructor(private router:RouterExtensions,private authReg:AuthorizeRegisterService,private quesState:QuestionStateService) {
         /* ***********************************************************
@@ -49,10 +50,25 @@ export class WelcomeComponent implements OnInit{
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
+       this.showLoader=true;
         var LS = require( "nativescript-localstorage" );
         this.loggedInUser = LS.getItem('LoggedInUser');
-        console.log('oninit',this.loggedInUser);
-        this.setDeviceId();
+        if(this.loggedInUser && this.loggedInUser!='' && this.loggedInUser!=null){
+            this.setDeviceId();
+            setTimeout(()=>{
+                this.showLoader=false;
+            },2000);
+        }
+        else{
+            this.LS.setItem('LoggedInUser','');
+            this.LS.setItem('currentQueries','');
+            this.LS.setItem('msgCountMap','');
+            this.LS.setItem('newNotif','');
+            this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
+            this.router.navigate(['/login']);
+        }
+        
+        // this.quesState.setFromStorage();
 
 
     }
@@ -77,12 +93,7 @@ export class WelcomeComponent implements OnInit{
         });
     }
 
-    logOut(){
-        
-        this.LS.setItem('LoggedInUser','');
-        this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
-        this.router.navigate(['/login']);
-    }
+    
 
     askQuestion(){
         this.router.navigate(['/ask']);

@@ -6,17 +6,13 @@ import { Observable,of,BehaviorSubject } from "rxjs";
 import 'rxjs/add/observable/of';
 import {map} from 'rxjs/operators'
 
-export interface IQuestion{
-    question:string,
-    by:string,
-    topic:string
-}
+
 
 
 @Injectable()
-export class QuestionStateService {
+export class MsgCountStateService {
     
-    quesListArr:IQuestion[]=[];
+    msgCountMap:Map<string,number>=new Map([]);
     newNotif=0;
     quesList:BehaviorSubject<any>=new BehaviorSubject(this.newNotif);
     $quesList:Observable<any>=this.quesList.asObservable();
@@ -28,23 +24,17 @@ export class QuestionStateService {
 
     setFromStorage(){
         var LS = require( "nativescript-localstorage" );
-        let questions=LS.getItem('currentQueries');
-        let notif=LS.getItem('newNotif');
-        if(questions && questions!=''){
-            this.quesListArr=JSON.parse(questions);
+        let msgCounts=LS.getItem('msgCountMap');
+        if(msgCounts && msgCounts!=''){
+            this.msgCountMap=JSON.parse(msgCounts);
         }
         else{
-            this.quesListArr=[];
+            this.msgCountMap=new Map([]);
         }
-        if(notif && notif!=''){
-            this.newNotif=JSON.parse(notif);
-        }
-        else{
-            this.newNotif=0;
-        }
+        
     }
 
-   addQues(ques:IQuestion){
+   addMsgCount(topic:string){
        //console.log('setting');
     //     let newArrObj;
     //    this.$quesList.subscribe((quesArr:any)=>{
@@ -52,24 +42,28 @@ export class QuestionStateService {
     //         newArr.splice(0,0,ques);
     //         newArrObj=Object.assign({},quesArr,{quesArray:newArr})
     //     })
-        this.quesListArr.splice(0,0,ques);
+        if(this.msgCountMap.has(topic)){
+            let currCount=this.msgCountMap.get(topic);
+            this.msgCountMap.set(topic,currCount+1);
+        }
+        else{
+            this.msgCountMap.set(topic,1);
+        }
         this.newNotif++;
-       this.quesList.next(this.newNotif);
+        this.quesList.next(this.newNotif);
        //console.log(newArrObj);
    }
 
-   remQues(index:number){
-    let newArrObj;
-    this.quesListArr.splice(index,1);
-    this.quesList.next(newArrObj);
+   remMsgTopic(topic:string){
+    this.msgCountMap.delete(topic);
    }
 
-   getAllNewQues():IQuestion[]{
-         return this.quesListArr;
+   getAllMsgCount(){
+         return this.msgCountMap;
    }
 
-   getNewQuesCount(){
-       return this.quesListArr.length;
+   resetMsgTopic(topic:string){
+    this.msgCountMap.set(topic,0);
    }
 
    getnewNotif(){
