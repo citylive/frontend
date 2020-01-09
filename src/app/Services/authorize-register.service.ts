@@ -26,7 +26,7 @@ export class AuthorizeRegisterService {
         });
     }
 
-    updateLocation(lat:number,long:number){
+    updateLocation(lat:number,long:number,user:string){
         console.log(lat,long);
         let url='./MockUps/true.json';
         // return this.http.getData(url);
@@ -62,6 +62,16 @@ export class AuthorizeRegisterService {
     setDeviceId(usernm,id){
         return of({
             response:"success"
+        });
+    }
+
+    getUser(usernm:string){
+        return of({
+            response:{
+                username:"soumyadc",
+                email:"soumya.c11@gmail.com",
+                currentLocation:"Kadubeesanahalli,Bangalore"
+            }
         });
     }
 

@@ -1,3 +1,25 @@
-<StackLayout>
-    <Button text="Logout" (tap)="logOut()" class="btn btn-primary btn-active" col="1"></Button>
+<StackLayout class="profileTop">
+
+    <StackLayout orientation="horizontal" class="profRowCard" > 
+        <Image class="profIcon" src="~/app/images/usern.png"></Image>
+        <Label class="profLabel" textWrap="true" text="{{user.username}}"  fontSize="18"></Label>
+ 
+         
+    </StackLayout>
+
+    <StackLayout orientation="horizontal" class="profRowCard"> 
+        <Image class="profIcon" src="~/app/images/mail.png"></Image>
+        <Label class="profLabel" textWrap="true" text="{{user.email}}"  fontSize="18"></Label>
+ 
+    </StackLayout>
+
+    <StackLayout orientation="horizontal" class="profRowCard"> 
+        <Image class="profIcon" src="~/app/images/pinn.png"></Image>
+        <Label class="profLabel" textWrap="true" text="{{user.currentLocation}}"  fontSize="18"></Label>
+  
+    </StackLayout>
+
+
+
+    <Button text="Logout" (tap)="logOut()" class="btn btn-primary btn-active btnLogout" col="1"></Button>
 </StackLayout>

@@ -1,0 +1,31 @@
+.profileTop{
+    height: 100%;
+    padding-top: 10%;
+    background-image: url('~/app/images/citylineBG.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.profRowCard{
+    height: 100;
+    width: 90%;
+}
+
+.profIcon{
+    height: 60;
+    width: 20%;
+    margin-right: 5%;
+}
+
+.profLabel{
+    height: 30;
+    width: 75%;
+}
+
+.btnLogout{
+    margin-top: 5%;
+    width: 60%;
+    border-color: white;
+    border-width: 1;
+    border-radius: 30;
+}

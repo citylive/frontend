@@ -123,16 +123,19 @@ export class AppComponent implements OnInit,OnDestroy {
       geolocation.getCurrentLocation({ desiredAccuracy: Accuracy.high})
       .then(location=>{
           if(this.isMajorDiff(location.latitude,this.currLocation.lat,location.longitude,this.currLocation.lon)){
-            this.authReg.updateLocation(location.latitude,location.longitude).subscribe(data=>{
-              console.log(data.response);
-              if(data.response === 'success'){
-                this.currLocation={
-                  lat:location.latitude,
-                  lon:location.longitude
-                };
-              }
-            });
-            
+            var LS = require( "nativescript-localstorage" );
+            let loggedInUser = LS.getItem('LoggedInUser');
+            if(loggedInUser && loggedInUser!='' && loggedInUser!=null){
+              this.authReg.updateLocation(location.latitude,location.longitude,loggedInUser).subscribe(data=>{
+                console.log(data.response);
+                if(data.response === 'success'){
+                  this.currLocation={
+                    lat:location.latitude,
+                    lon:location.longitude
+                  };
+                }
+              });
+            } 
           }
       })
     }

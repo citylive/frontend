@@ -69,7 +69,7 @@ export class LoginRegisterComponent implements OnInit {
                 }
                 else{
                     var Toast = require("nativescript-toast");
-                    var toast = Toast.makeText(data.response);
+                    var toast = Toast.makeText("Invalid Credentials");
                     toast.show();
                 }
             })

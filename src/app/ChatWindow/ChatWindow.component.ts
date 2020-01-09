@@ -47,6 +47,10 @@ export class ChatWindowComponent implements OnInit,OnDestroy {
         
     }
 
+    scrollToBottom(){
+        this.scrollView.nativeElement.scrollToVerticalOffset(this.scrollView.nativeElement.scrollableHeight, false);
+    }
+
     ngOnInit(): void {
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
@@ -84,6 +88,7 @@ export class ChatWindowComponent implements OnInit,OnDestroy {
         console.log("new msg rec",newMsg);
         if(newMsg.message.length>0){
             this.messages.push(newMsg);
+            this.scrollToBottom();
         }
     }
 
