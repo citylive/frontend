@@ -66,7 +66,8 @@ export class QuestionFormComponent implements OnInit {
                 if(data.topicId){
                     const navigationExtras: NavigationExtras = {
                         queryParams: {
-                            topic: data.topicId
+                            topic: data.topicId,
+                            question:this.question
                         }   
                     };
                     this.router.navigate(["/chat"], navigationExtras);
@@ -85,6 +86,7 @@ export class QuestionFormComponent implements OnInit {
             LS.setItem('LoggedInUser','');
             LS.setItem('currentQueries','');
             LS.setItem('msgCountMap','');
+            LS.setItem('msgCountMapNotif','');
             LS.setItem('newNotif','');
             LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
             this.router.navigate(['/login']);

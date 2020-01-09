@@ -13,6 +13,7 @@ import { QuestionStateService } from "./Services/question.state.service";
 import { CardView } from '@nstudio/nativescript-cardview';
 import { registerElement } from 'nativescript-angular';
 import { MsgCountStateService } from "./Services/message.count.state.service";
+import { MsgChatStateService } from "./Services/chat.message.state.service";
 
 registerElement('CardView', () => CardView as any);
 
@@ -31,12 +32,13 @@ export class AppComponent implements OnInit,OnDestroy {
 
   constructor(private ngZone: NgZone,
     private authReg:AuthorizeRegisterService,private router:RouterExtensions,
-    private quesState:QuestionStateService,private msgCountState:MsgCountStateService){
+    private quesState:QuestionStateService,private msgCountState:MsgCountStateService,private msgChatState:MsgChatStateService){
 
   }
 
   ngOnInit(): void {
 
+  
     this.startLocationWatcher();
     this.startForegroundService();
     this.quesState.setFromStorage();
@@ -88,7 +90,13 @@ export class AppComponent implements OnInit,OnDestroy {
             });
           }
           else if(message.data.type === 'chat'){
-            this.msgCountState.addMsgCount(message.data.topic);
+            if(this.msgChatState.currTopic == message.data.topic){
+              this.msgChatState.addMsg(message.data.msg,message.data.by,message.data.time);
+            }
+            else{
+              this.msgCountState.addMsgCount(message.data.topic);
+            }
+            
           }
   }
 
@@ -162,12 +170,15 @@ export class AppComponent implements OnInit,OnDestroy {
     let quesStr:string=JSON.stringify(this.quesState.getAllNewQues());
     let newNotifStr:string=JSON.stringify(this.quesState.getnewNotif());
 
-    let msgCountMapStr:string=JSON.stringify(Array.from(this.msgCountState.getAllMsgCount().entries()));;
+    let msgCountMapStr:string=JSON.stringify(Array.from(this.msgCountState.getAllMsgCount().entries()));
+    let newMsgNotifStr:string=JSON.stringify(this.msgCountState.getnewNotif());
 
     var LS = require( "nativescript-localstorage" );
     LS.setItem('currentQueries',quesStr);
     LS.setItem('newNotif',newNotifStr);
+
     LS.setItem('msgCountMap',msgCountMapStr);
+    LS.setItem('msgCountMapNotif',newMsgNotifStr);
   }
 
 }

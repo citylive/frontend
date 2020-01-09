@@ -4,3 +4,62 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+.selfMsg{
+    margin-left: 15%;
+    background-color: rgba(255, 255, 255, 0.11);
+}
+
+.quesMsgPart{
+    padding-bottom: 10;
+    height: 90%;
+    border-bottom-width: 1;
+}
+
+.msgBox{
+    height: 10%;
+    background-color: rgba(255, 255, 255, 0.616);
+}
+.inputBox{
+    height: 60%;
+    width: 60%;
+    padding: 10;
+    background-color: rgba(0, 0, 0, 0.582);
+    border-width: 1;
+    border-color: white;
+    border-radius: 30;
+    vertical-align: bottom;
+}
+
+.sendIcon{
+    height: 60%;
+    width: 15%;
+}
+
+.closeIcon{
+    height: 60%;
+    width: 15%;
+}
+.quest{
+    width: 95%;
+    margin: 7;
+}
+
+.othMsg{
+    margin-right: 15%;
+    background-color: rgba(0, 255, 179, 0.5);
+}
+
+.msgCard{
+    width: 80%;
+    border-radius: 5;
+    padding: 5;
+}
+
+.msgBy{
+    width: 93%;
+}
+
+.rightAlign{
+    text-align: right;
+}

@@ -31,6 +31,7 @@ export class ProfileComponent implements OnInit {
         this.LS.setItem('LoggedInUser','');
         this.LS.setItem('currentQueries','');
         this.LS.setItem('msgCountMap','');
+        this.LS.setItem('msgCountMapNotif','');
         this.LS.setItem('newNotif','');
         this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
         this.router.navigate(['/login']);

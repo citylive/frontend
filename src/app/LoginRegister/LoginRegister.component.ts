@@ -53,6 +53,9 @@ export class LoginRegisterComponent implements OnInit {
         if(this.isLogin){
 
             if(this.email == '' || this.pwd == ''){
+                var Toast = require("nativescript-toast");
+                    var toast = Toast.makeText("Fields can't be Empty!");
+                    toast.show();
                 return;
             }
 

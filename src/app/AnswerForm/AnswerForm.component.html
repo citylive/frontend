@@ -3,5 +3,26 @@
 </ActionBar>
 
 <StackLayout class="AnswerPage">
-    <Button text="Chat" (tap)="routeToChat()" class="btn btn-primary btn-active" col="1"></Button>
+
+    
+
+    <StackLayout class="midPartAns">
+        <Label class="ques" [text]="question+' ?'" textWrap="true" fontSize="18"></Label>
+        <Label class="quesby" [text]="'by '+quesBy"></Label>
+        <!-- QuestionBox -->
+        <TextView
+            class="ansBox" 
+            hint="Enter your Answer..." 
+            [(ngModel)]="answer"
+            fontSize="15"
+            maxLength="100">
+        </TextView>
+
+        <!-- Char count -->
+        <Label class="charCount" [text]="answer.length+'/100'"></Label>
+
+        <Button text="Answer Question" (tap)="AnswerQuestion()" class="btn btn-primary btn-active ansButton" col="1"></Button>
+        <Button text="{{answer.length>0?'Answer in Chat':'Join Chat'}}" (tap)="toChat()" class="btn btn-primary btn-active ansButton" col="1"></Button>
+    </StackLayout>
+    
 </StackLayout>

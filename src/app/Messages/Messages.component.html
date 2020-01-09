@@ -1,12 +1,11 @@
 <StackLayout class="topMsg">
-    <Label class="headMsg" text="Your Discussions" fontSize="18"></Label>
+    <Label class="headMsg" text="Your Questions" fontSize="18"></Label>
     <ScrollView class="messageTop">
         <StackLayout>
             <StackLayout [visibility]="item.by !== loggedInUser ? 'collapse' : 'visible'" orientation="horizontal"  class="MessageCard" *ngFor="let item of this.items;let ind = index"> 
     
                 <StackLayout (tap)="routeToChat(ind)" class="questionText">
                     <Label  text="{{item.question}}" fontSize="20"></Label>
-                    <Label  text="{{item.by == loggedInUser?'Your question':'by '+item.by}}" fontSize="16"></Label>
                 </StackLayout>
                 <StackLayout class="noMessg">
                     <Label *ngIf="item.count>0" class="font-weight-bold noMessgTxt"  text="{{item.count}}" fontSize="20"></Label>
@@ -16,14 +15,14 @@
             
         </StackLayout>
     </ScrollView>
-    <Label class="headMsg" text="Your Questions" fontSize="18"></Label>
+    <Label class="headMsg" text="Your Discussions" fontSize="18"></Label>
     <ScrollView class="messageTop">
         <StackLayout>
             <StackLayout [visibility]="item.by === loggedInUser ? 'collapse' : 'visible'" orientation="horizontal" class="MessageCard" *ngFor="let item of this.items;let ind = index"> 
     
                 <StackLayout (tap)="routeToChat(ind)" class="questionText">
                     <Label  text="{{item.question}}" fontSize="20"></Label>
-                    <Label  text="{{item.by == loggedInUser?'Your question':'by '+item.by}}" fontSize="16"></Label>
+                    <Label  text="by {{item.by}}" fontSize="16"></Label>
                 </StackLayout>
                 <StackLayout class="noMessg">
                     <Label *ngIf="item.count>0" class="font-weight-bold noMessgTxt"  text="{{item.count}}" fontSize="20"></Label>

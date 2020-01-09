@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as firebase from 'nativescript-plugin-firebase';
 import { AuthorizeRegisterService } from "../Services/authorize-register.service";
 import { QuestionStateService, IQuestion } from "../Services/question.state.service";
 import {map} from 'rxjs/operators'
 import { Subscription } from "rxjs";
+import { MsgCountStateService } from "../Services/message.count.state.service";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -24,27 +25,42 @@ export class WelcomeComponent implements OnInit{
         LS = require( "nativescript-localstorage" );
         loggedInUser;
         qst$;
-        quesState$;
+        msgCt$;
         showLoader=true;
-        boldMsg=true;
+
+        msgCountinited=false;
+        msgCount=0;
+        quesCountinited=false;
+        quesCount=0;
+
+        currIndex=0;
         
         
-    constructor(private router:RouterExtensions,private authReg:AuthorizeRegisterService,private quesState:QuestionStateService) {
+    constructor(private ngZone:NgZone,private router:RouterExtensions,private msgCountState:MsgCountStateService,private authReg:AuthorizeRegisterService,private quesState:QuestionStateService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
 
-    //    this.qst$=quesState.$quesList;
+       this.qst$=this.quesState.$quesList;
 
-    //    this.quesState$ =this.qst$.pipe(map((ques:IQuestionArray)=>{
-    //          return ques.quesArray;
-    //      }));
-  
-    //      this.quesState$.subscribe((data:IQuestion[])=>{
-    //          console.log("got data",data);
-    //         //  this.pendingQuestions=data;
-    //         //  console.log("pendingQues",this.pendingQuestions[0].question,this.pendingQuestions.length);
-    //      })
+       this.qst$.subscribe(data=>{
+          this.ngZone.run(()=>{
+            if(this.currIndex !== 0){
+                    this.quesCount=quesState.getnewNotif();
+            }
+          })
+        });
+
+        this.msgCt$=this.msgCountState.$quesList;
+
+       this.msgCt$.subscribe(data=>{
+          this.ngZone.run(()=>{
+            if(this.currIndex !== 1){
+                this.msgCount=msgCountState.getnewNotif();
+            }
+          })
+       });
+
     }
 
 
@@ -73,6 +89,16 @@ export class WelcomeComponent implements OnInit{
         // this.quesState.setFromStorage();
 
 
+    }
+
+    onPageChange(event){
+        this.currIndex=event.newIndex;
+        if(this.currIndex === 0){
+            this.quesCount=0;
+        }
+        else if(this.currIndex === 1){
+            this.msgCount=0;
+        }
     }
 
     setDeviceId(){

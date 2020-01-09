@@ -3,5 +3,38 @@
 </ActionBar>
 
 <StackLayout class="ChatPage">
-    <Label class="action-bar-title" text="Chat"></Label>
+    <StackLayout class="quesMsgPart">
+        <Label class="quest" text="{{question}} ?" textWrap="true" fontSize="20"></Label>
+    <ScrollView #scrollView height="90%" class="msgFeedTop">
+        <StackLayout>
+            <StackLayout *ngFor="let msg of this.messages;let ind = index"> 
+                <Label 
+                [ngClass]="{'rightAlign': loggedInUser == msg.by}" 
+                class="msgBy" text="{{msg.by}}"  fontSize="13">
+                </Label>
+                <StackLayout [ngClass]="{'selfMsg': loggedInUser == msg.by,'othMsg': loggedInUser != msg.by}" class="msgCard">
+                    <Label class="quesLabel" textWrap="true" text="{{msg.message}}"  fontSize="18"></Label>
+                    <Label class="rightAlign" text="{{msg.time}}"  fontSize="13"></Label>
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+    </StackLayout>
+    <StackLayout orientation="horizontal" class="msgBox">
+        <TextField 
+            style.fontSize="18%"
+            style.height="60%"
+            style.color="white" 
+            style.placeholderColor="#ccccccee" 
+            [(ngModel)]='message' 
+            class="inputBox" 
+            (focus)="onKeyBoard($event)"
+            (blur)="offKeyBoard($event)"
+            hint="Type in a message" 
+            autocorrect="false" 
+            autocapitalizationType="none">
+        </TextField>
+        <Image class="sendIcon" src="~/app/images/send.png" (tap)="sendMsg()"></Image>
+        <Image class="closeIcon" src="~/app/images/cross.png" (tap)="onCrossPress()"></Image>
+    </StackLayout>
 </StackLayout>

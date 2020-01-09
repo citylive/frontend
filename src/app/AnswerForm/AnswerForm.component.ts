@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { NavigationExtras, ActivatedRoute } from "@angular/router";
+import { MessageService } from "../Services/messages.service";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -17,27 +18,85 @@ import { NavigationExtras, ActivatedRoute } from "@angular/router";
 })
 export class AnswerFormComponent implements OnInit {
     currentTopic;
+    answer="";
+    loggedInUser;
 
-    constructor(private route:ActivatedRoute,private router:RouterExtensions) {
+    question="";
+    quesBy="";
+
+    constructor(private route:ActivatedRoute,private router:RouterExtensions,private msgSvc:MessageService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
+       
+        
     }
 
     ngOnInit(): void {
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
+       var LS = require( "nativescript-localstorage" );
+        this.loggedInUser = LS.getItem('LoggedInUser');
        this.route.queryParams.subscribe(params => {
         this.currentTopic= params.topic;
+        this.question=params.question;
+        this.quesBy=params.by;
         console.log(this.currentTopic);
        });
+    }
+
+    AnswerQuestion(){
+        if(this.answer.length>0){
+            this.sendAnswer().subscribe(data=>{
+                if(data.response == "success"){
+                    var Toast = require("nativescript-toast");
+                    var toast = Toast.makeText("Answer submitted.");
+                    toast.show();
+                    this.goBack();
+                }
+                else{
+                    var Toast = require("nativescript-toast");
+                    var toast = Toast.makeText("Unable to submit. Please try again!.");
+                    toast.show();
+                }
+            })
+        }
+        else{
+            var Toast = require("nativescript-toast");
+            var toast = Toast.makeText("Answer can't be blank.");
+            toast.show();
+        }
+    }
+
+    sendAnswer(){
+        return this.msgSvc.addAnswer(this.loggedInUser,this.currentTopic,this.answer);
+    }
+
+
+    toChat(){
+        if(this.answer.length==0){
+            this.routeToChat();
+        }
+        else{
+            this.sendAnswer().subscribe(data=>{
+                if(data.response == "success"){
+                this.routeToChat();
+            }
+            else{
+                var Toast = require("nativescript-toast");
+                var toast = Toast.makeText("Unable to submit. Please try again!.");
+                toast.show();
+            }
+        }) 
+        }
     }
 
     routeToChat(){
         const navigationExtras: NavigationExtras = {
             queryParams: {
-                topic: this.currentTopic
+                topic: this.currentTopic,
+                question:this.question
             }   
         };
         this.router.navigate(["/chat"], navigationExtras);

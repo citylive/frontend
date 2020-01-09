@@ -25,7 +25,7 @@ export class MessageService {
         console.log(user);
         let url='./MockUps/true.json';
         // return this.http.getData(url);
-        return of([{
+        return of({response:[{
             imgUrl:"https://i.postimg.cc/q7tbqWKR/lance-anderson-uevmkf-CH98-Q-unsplash.jpg",
             title:"This is an Ad",
             content:"this is Ad content"
@@ -63,14 +63,14 @@ export class MessageService {
             imgUrl:"https://i.postimg.cc/X74kcNNy/pedro-lastra-Nyvq2juw4-o-unsplash.jpg",
             title:"This is an Ad",
             content:"this is Ad contentthis is Ad contentthis is Ad contentthis is Ad contentthis is Ad contentthis is Ad contentthis is Ad "
-        }]);
+        }]});
     }
 
     getTopics(user:string){
         console.log(user);
         let url='./MockUps/true.json';
         // return this.http.getData(url);
-        return of([{
+        return of({response:[{
             topic:"soumyadip12345",
             question:"This is a Question",
             by:"soumyadc",
@@ -81,7 +81,31 @@ export class MessageService {
             question:"This is a closed Question",
             by:"sd",
             closed:true
-        }]);
+        },
+        {
+            topic:"soumyadip123",
+            question:"This is a Question",
+            by:"soumyadc",
+            closed:false
+        },
+        {
+            topic:"soumyadip12",
+            question:"This is a closed Question",
+            by:"sd",
+            closed:true
+        },
+        {
+            topic:"soumyadip1",
+            question:"This is a Question",
+            by:"soumyadc",
+            closed:false
+        },
+        {
+            topic:"soumyadip4",
+            question:"This is a closed Question",
+            by:"sd",
+            closed:true
+        }]});
     }
 
     askQuestion(question:Question){
@@ -91,28 +115,47 @@ export class MessageService {
         });
     }
 
-    checkCredentialsWrong(){
-        return of({
-            response:"Invalid Username/Password"
-        });
-    }
-
-    updateDeviceId(){
+    addAnswer(user:string,topic:string,answer:string){
+        console.log(user,topic,answer);
         return of({
             response:"success"
         });
     }
 
-    getDeviceId(usernm){
-        return of({
-            response:"dxVeB7oD6yI:APA91bFfbrWxZKZoY0XBmQ8TGHu2UMZQcg5GEKol1RBx_A5Cl3A_HHqo46UmBgb1rBEac4noQiY9vv5DvjR5ZFm32W-gr6qIMZ3xZnKzY3HBQODHKebMIWlnhwCff3KiFlj1dCSZEEHP"
-        });
-    }
-
-    setDeviceId(usernm,id){
-        return of({
-            response:"success"
-        });
+    getAllMessages(topic:string){
+        console.log(topic);
+        return of({response:[
+            {
+            message:"soumyadip12345",
+            time:"11:59",
+            by:"soumyadc"
+        },
+        {
+            message:"This is a long message This is a long message This is a long message This is a long message This is a long message This is a long message This is a long message",
+            time:"11:59",
+            by:"sd"
+        },
+        {
+            message:"This is a long message",
+            time:"11:59",
+            by:"sdc"
+        },
+        {
+            message:"This is a long messageThis is a long messageThis is a long messageThis is a long message",
+            time:"11:59",
+            by:"soumya"
+        },
+        {
+            message:"soumyadip12345",
+            time:"11:59",
+            by:"soudc"
+        },
+        {
+            message:"This is a long message",
+            time:"11:59",
+            by:"soumyadc"
+        },
+    ]})
     }
 
 }

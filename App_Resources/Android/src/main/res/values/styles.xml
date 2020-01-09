@@ -10,19 +10,19 @@
         <item name="colorAccent">@color/ns_accent</item>
 
         <item name="android:windowBackground">@drawable/splash_screen</item>
-
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowTranslucentStatus">true</item>
 
     </style>
 
     <style name="LaunchScreenTheme" parent="LaunchScreenThemeBase">
+        
     </style>
 
     <!-- theme to use AFTER launch screen is loaded-->
     <style name="AppThemeBase" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="toolbarStyle">@style/NativeScriptToolbarStyle</item>
-
+    
         <item name="colorPrimary">@color/ns_primary</item>
         <item name="colorPrimaryDark">@color/ns_primaryDark</item>
         <item name="colorAccent">@color/ns_accent</item>
@@ -39,6 +39,7 @@
         <item name="popupTheme">@style/ThemeOverlay.AppCompat</item>
 
     </style>
+    
 
     <style name="NativeScriptToolbarStyle" parent="NativeScriptToolbarStyleBase">
     </style>

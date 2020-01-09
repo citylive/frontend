@@ -20,6 +20,7 @@ import { MessageService } from "./Services/messages.service";
 import { RouteReuseStrategy } from "@angular/router";
 import { CacheRouteReuseStrategy } from "./Services/route-reuse.strategy";
 import { MsgCountStateService } from "./Services/message.count.state.service";
+import { MsgChatStateService } from "./Services/chat.message.state.service";
 
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
@@ -55,7 +56,8 @@ import { MsgCountStateService } from "./Services/message.count.state.service";
         AuthorizeRegisterService,
         QuestionStateService,
         MessageService,
-        MsgCountStateService
+        MsgCountStateService,
+        MsgChatStateService
         // {provide: RouteReuseStrategy,
         // useClass: CacheRouteReuseStrategy
         // }

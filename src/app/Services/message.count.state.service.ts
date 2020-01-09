@@ -25,6 +25,8 @@ export class MsgCountStateService {
     setFromStorage(){
         var LS = require( "nativescript-localstorage" );
         let msgCounts=LS.getItem('msgCountMap');
+        let newNotif=LS.getItem('msgCountMapNotif');
+        console.log('New msg notif count',newNotif)
         if(msgCounts && msgCounts!=''){
             console.log('from store',msgCounts);
             this.msgCountMap=new Map(JSON.parse(msgCounts));
@@ -33,6 +35,14 @@ export class MsgCountStateService {
         else{
             console.log('Not setting from store');
             this.msgCountMap=new Map([]);
+        }
+
+        if(newNotif && newNotif!=''){
+            this.newNotif=JSON.parse(newNotif);
+        }
+        else{
+            console.log('Not setting from store');
+            this.newNotif=0;
         }
         
     }
@@ -59,7 +69,10 @@ export class MsgCountStateService {
    }
 
    remMsgTopic(topic:string){
+    let mnCount=this.msgCountMap.has(topic)?this.msgCountMap.get(topic):0;
+    this.newNotif=this.newNotif-mnCount;
     this.msgCountMap.delete(topic);
+    this.quesList.next(this.newNotif);
    }
 
    getAllMsgCount():Map<string,number>{
@@ -67,7 +80,10 @@ export class MsgCountStateService {
    }
 
    resetMsgTopic(topic:string){
+    let mnCount=this.msgCountMap.has(topic)?this.msgCountMap.get(topic):0;
+    this.newNotif=this.newNotif-mnCount;
     this.msgCountMap.set(topic,0);
+    this.quesList.next(this.newNotif);
    }
 
    getnewNotif(){

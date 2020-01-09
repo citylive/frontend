@@ -29,15 +29,15 @@
     
 </StackLayout>
 
-<BottomNavigation *ngIf="!showLoader" selectedIndex="0">
+<BottomNavigation *ngIf="!showLoader" (selectedIndexChanged)="onPageChange($event)" selectedIndex="0">
 
     <TabStrip >
         <TabStripItem>
-            <Label text="Home"></Label>
+            <Label text="Home {{quesCount>0?'('+quesCount+')':''}}"></Label>
             <Image src="~/app/images/homecol.png"></Image>
         </TabStripItem>
         <TabStripItem class="special">
-            <Label [ngClass]="{'font-weight-bold': boldMsg}" text="Messages"></Label>
+            <Label [ngClass]="{'font-weight-bold': boldMsg}" text="Messages {{msgCount>0?'('+msgCount+')':''}}"></Label>
             <Image src="~/app/images/chatcol.png"></Image>
         </TabStripItem>
         <TabStripItem class="special">

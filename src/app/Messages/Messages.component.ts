@@ -38,7 +38,7 @@ export class MessagesComponent implements OnInit {
        var LS = require( "nativescript-localstorage" );
         this.loggedInUser = LS.getItem('LoggedInUser');
          this.msgSvc.getTopics(this.loggedInUser).subscribe(messages=>{
-            this.items=messages;
+            this.items=messages.response;
          })
          this.msgCt$=this.msgCountState.$quesList;
 
@@ -63,7 +63,8 @@ export class MessagesComponent implements OnInit {
        this.msgCountState.resetMsgTopic(this.items[index].topic);
       const navigationExtras: NavigationExtras = {
           queryParams: {
-              topic: this.items[index].topic
+              topic: this.items[index].topic,
+              question:this.items[index].question
           }   
       };
       this.router.navigate(["/chat"], navigationExtras);

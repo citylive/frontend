@@ -71,7 +71,7 @@ export class HomePageComponent implements OnInit {
       var LS = require( "nativescript-localstorage" );
         let loggedInUser = LS.getItem('LoggedInUser');
        this.msgSvc.getAdMessages(loggedInUser).subscribe(ads=>{
-         this.userAds=ads;
+         this.userAds=ads.response;
        })
     }
 
@@ -84,7 +84,9 @@ export class HomePageComponent implements OnInit {
     answerQuestion(index){
       const navigationExtras: NavigationExtras = {
         queryParams: {
-            topic: this.pendingQuestions[index].topic
+            topic: this.pendingQuestions[index].topic,
+            question:this.pendingQuestions[index].question,
+            by:this.pendingQuestions[index].by
         }   
     };
     this.remQuery(index);
