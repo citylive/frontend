@@ -49,7 +49,7 @@ export class QuestionFormComponent implements OnInit {
     }
 
     goBack(){
-        this.router.navigate(["/welcome"]);
+        this.router.navigate(["/welcome"],{ clearHistory : true });
       }
 
     askQuestion(){
@@ -89,7 +89,7 @@ export class QuestionFormComponent implements OnInit {
             LS.setItem('msgCountMapNotif','');
             LS.setItem('newNotif','');
             LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
-            this.router.navigate(['/login']);
+            this.router.navigate(['/login'],{ replaceUrl: true });
         }
     }  
 }

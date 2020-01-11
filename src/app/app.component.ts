@@ -10,6 +10,7 @@ import { NavigationExtras } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 import { QuestionStateService } from "./Services/question.state.service";
 
+import { Vibrate } from 'nativescript-vibrate';
 import { CardView } from '@nstudio/nativescript-cardview';
 import { registerElement } from 'nativescript-angular';
 import { MsgCountStateService } from "./Services/message.count.state.service";
@@ -80,7 +81,10 @@ export class AppComponent implements OnInit,OnDestroy {
   }
 
   onReceivedMessage(message){
-
+          let vibrator = new Vibrate();
+          if(message.foreground){
+            vibrator.vibrate(500);
+          }
           if(message.data.type === 'ques'){
             console.log('is ques');
             this.quesState.addQues({

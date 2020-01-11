@@ -90,7 +90,43 @@ export class MessageService {
         },
         {
             topic:"soumyadip12",
+            question:"This is a closed Question with very many line of question",
+            by:"sd",
+            closed:true
+        },
+        {
+            topic:"soumyadip1",
+            question:"This is a Question",
+            by:"soumyadc",
+            closed:false
+        },
+        {
+            topic:"soumyadip4",
             question:"This is a closed Question",
+            by:"sd",
+            closed:true
+        },
+        {
+            topic:"soumyadip12",
+            question:"This is a closed Question with very many line of question",
+            by:"sd",
+            closed:true
+        },
+        {
+            topic:"soumyadip1",
+            question:"This is a Question",
+            by:"soumyadc",
+            closed:false
+        },
+        {
+            topic:"soumyadip4",
+            question:"This is a closed Question",
+            by:"sd",
+            closed:true
+        },
+        {
+            topic:"soumyadip12",
+            question:"This is a closed Question with very many line of question",
             by:"sd",
             closed:true
         },
@@ -153,9 +189,31 @@ export class MessageService {
         {
             message:"This is a long message",
             time:"11:59",
+            by:"sd"
+        },
+        {
+            message:"This is a long messageThis is a long messageThis is a long messageThis is a long message",
+            time:"11:59",
+            by:"soumya"
+        },
+        {
+            message:"soumyadip12345",
+            time:"11:59",
+            by:"sd"
+        },
+        {
+            message:"This is a long message",
+            time:"11:59",
             by:"soumyadc"
         },
     ]})
+    }
+
+    unsubFromTopic(usernm,topic){
+        console.log(usernm,topic);
+        return of({
+            response:"success"
+        });
     }
 
 }

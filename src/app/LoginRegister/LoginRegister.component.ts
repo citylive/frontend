@@ -37,7 +37,7 @@ export class LoginRegisterComponent implements OnInit {
         *************************************************************/
        const LS = require( "nativescript-localstorage" );
        if(LS.getItem('IsAlreadyLoggedIn') === 'loggedIn'){
-        this.router.navigate(['/welcome']);
+        this.router.navigate(['/welcome'],{ clearHistory : true });
        }
     }
 
@@ -65,7 +65,7 @@ export class LoginRegisterComponent implements OnInit {
                     const LS = require( "nativescript-localstorage" );
                     LS.setItem('LoggedInUser', data.response);
                     LS.setItem('IsAlreadyLoggedIn', 'loggedIn');
-                    this.router.navigate(['/welcome']);
+                    this.router.navigate(['/welcome'],{ clearHistory : true });
                 }
                 else{
                     var Toast = require("nativescript-toast");

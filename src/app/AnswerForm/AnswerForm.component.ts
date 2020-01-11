@@ -97,13 +97,13 @@ export class AnswerFormComponent implements OnInit {
             queryParams: {
                 topic: this.currentTopic,
                 question:this.question
-            }   
+            }    
         };
         this.router.navigate(["/chat"], navigationExtras);
     }
 
     goBack(){
-        this.router.navigate(["/welcome"]);
+        this.router.navigate(["/welcome"],{ clearHistory : true });
     }
 
 }

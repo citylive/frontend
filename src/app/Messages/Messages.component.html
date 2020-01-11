@@ -1,31 +1,78 @@
+
+<ActionBar *ngIf="selectedInd.size>0" title="Delete {{selectedInd.size}} Item(s)">
+    <!-- <ActionItem (tap)="onDelete()"
+        ios.systemIcon="16" ios.position="right" android.systemIcon="ic_menu_delete"
+        text="Delete" android.position="actionBar"></ActionItem>
+        <ActionItem (tap)="onCancel()"
+        ios.systemIcon="16" ios.position="right" android.systemIcon="ic_menu_close_clear_cancel"
+        text="Cancel" android.position="actionBar"></ActionItem> -->
+        <GridLayout rows="auto" columns="*, 50, 50" class="action-bar-title">
+            <Label row="0" col="0" class="font-weight-bold delActionBar" text="Delete {{selectedInd.size}} Item(s)" fontSize="19"></Label>
+            <Image row="0" col="1"  src="~/app/images/rubbish.png" margin="7" (tap)="onDelete()" class="thumb"></Image>
+            <Image row="0" col="2" src="~/app/images/close.png" margin="7" (tap)="onCancel()" class="thumb"></Image>
+          </GridLayout>
+  </ActionBar>
+
+
+  <ActionBar *ngIf="selectedInd.size==0" [title]="' Welcome to CityLive'" android.icon="~/app/images/town.png" android.iconVisibility="always" class="action-bar">
+  </ActionBar>
+
 <StackLayout class="topMsg">
-    <Label class="headMsg" text="Your Questions" fontSize="18"></Label>
-    <ScrollView class="messageTop">
-        <StackLayout>
-            <StackLayout [visibility]="item.by !== loggedInUser ? 'collapse' : 'visible'" orientation="horizontal"  class="MessageCard" *ngFor="let item of this.items;let ind = index"> 
+
+    <!-- Questions Header -->
+    <StackLayout class="headMsg" orientation="horizontal">
+        <Label width="50%" text="Your Questions" fontSize="18"></Label>
+        <Label class="expandColl fas" (tap)="quesExpanded=!quesExpanded"  text="{{!quesExpanded?'&#xf055;':'&#xf056;'}}" fontSize="20"></Label>
+    </StackLayout>
     
-                <StackLayout (tap)="routeToChat(ind)" class="questionText">
-                    <Label  text="{{item.question}}" fontSize="20"></Label>
+    <!-- Questions Messages -->
+    <ScrollView 
+        [ngClass]="{'expandedMsg': !discExpanded && quesExpanded}"
+        [visibility]="!quesExpanded ? 'collapse' : 'visible'"
+        class="messageTop">
+        <StackLayout>
+            <StackLayout [ngClass]="{'selected font-weight-bold': selectedInd.has(ind)}"
+             (tap)="routeToChat(ind)" 
+            (longPress)="functionWhenLongPress(ind)" 
+            [visibility]="item.by !== loggedInUser ? 'collapse' : 'visible'" orientation="horizontal"  
+            class="MessageCard own" *ngFor="let item of this.items;let ind = index"> 
+    
+                <StackLayout class="questionText">
+                    <Label  text="{{item.question}}" fontSize="16"></Label>
                 </StackLayout>
                 <StackLayout class="noMessg">
-                    <Label *ngIf="item.count>0" class="font-weight-bold noMessgTxt"  text="{{item.count}}" fontSize="20"></Label>
+                    <Label *ngIf="item.count>0 && !selectedInd.has(ind)" class="font-weight-bold own noMessgTxt"  text="{{item.count}}" fontSize="15"></Label>
+                    <Label *ngIf="selectedInd.has(ind)" class="own noMessgTxt fas" text="&#xf00c;" fontSize="16"></Label>
                 </StackLayout>
                 
             </StackLayout>
             
         </StackLayout>
     </ScrollView>
-    <Label class="headMsg" text="Your Discussions" fontSize="18"></Label>
-    <ScrollView class="messageTop">
-        <StackLayout>
-            <StackLayout [visibility]="item.by === loggedInUser ? 'collapse' : 'visible'" orientation="horizontal" class="MessageCard" *ngFor="let item of this.items;let ind = index"> 
+
+    <!-- Discussions header -->
+    <StackLayout class="headMsg" orientation="horizontal">
+        <Label width="50%" text="Your Discussions" fontSize="18"></Label>
+        <Label class="expandColl fas" (tap)="discExpanded=!discExpanded"  text="{{!discExpanded?'&#xf055;':'&#xf056;'}}" fontSize="20"></Label>
+    </StackLayout>
     
-                <StackLayout (tap)="routeToChat(ind)" class="questionText">
-                    <Label  text="{{item.question}}" fontSize="20"></Label>
-                    <Label  text="by {{item.by}}" fontSize="16"></Label>
+    <!-- Discussions Messages -->
+    <ScrollView 
+        [ngClass]="{'expandedMsg': discExpanded && !quesExpanded}"
+        [visibility]="!discExpanded? 'collapse' : 'visible'"
+        class="messageTop">
+        <StackLayout>
+            <StackLayout [ngClass]="{'selected font-weight-bold': selectedInd.has(ind)}"
+            (tap)="routeToChat(ind)" 
+            (longPress)="functionWhenLongPress(ind)" [visibility]="item.by === loggedInUser ? 'collapse' : 'visible'" orientation="horizontal" class="MessageCard" *ngFor="let item of this.items;let ind = index"> 
+    
+                <StackLayout class="questionText">
+                    <Label  text="{{item.question}}" fontSize="16"></Label>
+                    <Label  text="by {{item.by}}" fontSize="12"></Label>
                 </StackLayout>
                 <StackLayout class="noMessg">
-                    <Label *ngIf="item.count>0" class="font-weight-bold noMessgTxt"  text="{{item.count}}" fontSize="20"></Label>
+                    <Label *ngIf="item.count>0  && !selectedInd.has(ind)" class="font-weight-bold noMessgTxt"  text="{{item.count}}" fontSize="15"></Label>
+                    <Label *ngIf="selectedInd.has(ind)" class="noMessgTxt fas"  text="&#xf00c;" fontSize="16"></Label>
                 </StackLayout>
                 
             </StackLayout>

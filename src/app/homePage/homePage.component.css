@@ -11,7 +11,7 @@
 .headerBar{
     padding-left: 10%;
     height: 4%;
-    color: chartreuse;
+    color: #64ffdb;
 }
 .FeedTop{
     height: 72%;
@@ -97,7 +97,7 @@
 }
 
 .askLabel.askNow.msgCount{
-    color: chartreuse;
+    color: #64ffdb;
 }
 
 .adText {

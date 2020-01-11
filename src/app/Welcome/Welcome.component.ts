@@ -83,7 +83,7 @@ export class WelcomeComponent implements OnInit{
             this.LS.setItem('msgCountMap','');
             this.LS.setItem('newNotif','');
             this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
-            this.router.navigate(['/login']);
+            this.router.navigate(['/login'],{ replaceUrl: true });
         }
         
         // this.quesState.setFromStorage();

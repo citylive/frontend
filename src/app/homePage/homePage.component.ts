@@ -87,7 +87,7 @@ export class HomePageComponent implements OnInit {
             topic: this.pendingQuestions[index].topic,
             question:this.pendingQuestions[index].question,
             by:this.pendingQuestions[index].by
-        }   
+        }  ,
     };
     this.remQuery(index);
     this.router.navigate(["/answer"], navigationExtras);

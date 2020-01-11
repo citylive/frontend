@@ -3,6 +3,9 @@ import { MessageService } from "../Services/messages.service";
 import { MsgCountStateService } from "../Services/message.count.state.service";
 import { NavigationExtras } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular";
+import * as dialogs from "tns-core-modules/ui/dialogs";
+import { Vibrate } from 'nativescript-vibrate';
+import * as firebase from 'nativescript-plugin-firebase';
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -23,9 +26,17 @@ export class MessagesComponent implements OnInit {
     msgCt$;
     msgCtState$;
     loggedInUser="";
+    start;
+    end;
 
+    quesExpanded=true;
+    discExpanded=true;
 
-    constructor(private ngZone: NgZone ,private msgSvc:MessageService,private msgCountState:MsgCountStateService,private router:RouterExtensions) {
+    selectedInd:Set<number>=new Set([]);
+    
+
+    constructor(private ngZone: NgZone ,
+        private msgSvc:MessageService,private msgCountState:MsgCountStateService,private router:RouterExtensions) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -37,9 +48,7 @@ export class MessagesComponent implements OnInit {
         *************************************************************/
        var LS = require( "nativescript-localstorage" );
         this.loggedInUser = LS.getItem('LoggedInUser');
-         this.msgSvc.getTopics(this.loggedInUser).subscribe(messages=>{
-            this.items=messages.response;
-         })
+         this.getMessageTopics();
          this.msgCt$=this.msgCountState.$quesList;
 
        this.msgCt$.subscribe(data=>{
@@ -48,6 +57,12 @@ export class MessagesComponent implements OnInit {
           })
           console.log('change happened');
        });
+    }
+
+    getMessageTopics(){
+        this.msgSvc.getTopics(this.loggedInUser).subscribe(messages=>{
+            this.items=messages.response;
+         })
     }
 
     setmsgCount(){
@@ -60,6 +75,10 @@ export class MessagesComponent implements OnInit {
     }
 
     routeToChat(index){
+        if(this.selectedInd.size>0){
+            this.functionWhenLongPress(index);
+            return;
+        }
        this.msgCountState.resetMsgTopic(this.items[index].topic);
       const navigationExtras: NavigationExtras = {
           queryParams: {
@@ -69,4 +88,64 @@ export class MessagesComponent implements OnInit {
       };
       this.router.navigate(["/chat"], navigationExtras);
   }
+
+
+  functionWhenLongPress(index) {
+    // your things to do when long pressed
+    console.log("long press");
+    if(this.selectedInd.has(index)){
+        this.selectedInd.size==1?this.selectedInd.clear():this.selectedInd.delete(index);
+        
+    }
+    else{
+        let vibrator = new Vibrate();
+        vibrator.vibrate(50);
+        this.selectedInd.add(index);
+    }
+    
+  }
+
+  onDelete(){
+    dialogs.confirm({
+        title: "Delete Selected Discussions?",
+        message: "Are you sure you want to delete and unsubscribe from the discussion?",
+        okButtonText: "Delete",
+        cancelButtonText: "Cancel",
+    }).then(result => {
+        // result argument is boolean
+        if(result != undefined){
+            if(result){
+                this.selectedInd.forEach(index=>{
+                    this.msgSvc.unsubFromTopic(this.loggedInUser,this.items[index].topic).subscribe(data=>{
+                        if(data.response === 'success'){
+                            firebase.unsubscribeFromTopic(this.items[index].topic)
+                            .then(()=>{
+                                this.selectedInd.delete(index);
+                                if(this.selectedInd.size==0){
+                                this.getMessageTopics();
+                            }
+                            })
+
+                        }
+                        else{
+                            var Toast = require("nativescript-toast");
+                            var toast = Toast.makeText("Unable to delete.Please try again later!");
+                            toast.show();
+                        }
+                    });
+                  
+                })
+            }
+        }
+        
+    });
+     
+  }
+
+  onCancel(){
+    this.selectedInd.clear();
+  }
+
+
+
 }

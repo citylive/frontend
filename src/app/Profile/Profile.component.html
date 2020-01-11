@@ -19,6 +19,18 @@
   
     </StackLayout>
 
+    <ScrollView class="profRowCard">
+        <StackLayout orientation="horizontal" > 
+            <Image class="profIcon" src="~/app/images/device.png"></Image>
+            <StackLayout class="profLabel device" > 
+                <TextField [editable]="devIdEditable" (tap)="devIdEditable=true;" width=100% textWrap="true" text="{{deviceId}} "  fontSize="18"></TextField>
+                <Label *ngIf="!devIdEditable" (tap)="devIdEditable=true;" textWrap="true" text="Tap to edit"  fontSize="12"></Label>
+          
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+    
+
 
 
     <Button text="Logout" (tap)="logOut()" class="btn btn-primary btn-active btnLogout" col="1"></Button>

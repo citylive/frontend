@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import * as firebase from 'nativescript-plugin-firebase';
 import { RouterExtensions } from "nativescript-angular";
 import { MessageService } from "../Services/messages.service";
 import { MsgChatStateService } from "../Services/chat.message.state.service";
 import * as dialogs from "tns-core-modules/ui/dialogs";
+import {screen} from "tns-core-modules/platform/platform"
+import { setInterval } from "tns-core-modules/timer/timer";
 
 
 /* ***********************************************************
@@ -14,21 +16,46 @@ import * as dialogs from "tns-core-modules/ui/dialogs";
 * Note that this simply points the path to the page module file. If you move the page, you need to update the route too.
 *************************************************************/
 
+
+
 @Component({
     selector: "ChatWindow",
     moduleId: module.id,
     templateUrl: "./ChatWindow.component.html",
     styleUrls: ["./ChatWindow.component.css"]
 })
-export class ChatWindowComponent implements OnInit,OnDestroy {
+export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
 
     currentTopic;
     messages=[];
     loggedInUser="";
     question="";
     message="";
+    unreadCount=0;
+
+    timerset;
+    initTextTop=0;
+    messagesHgt=0;
+    disclaimerHgt=0;
+
+    lastScrollY=0;
+    lastScrollX=0;
+
+    scrollListener;
+    remToBottomListener;
+
+    isBottomScroll=false;
+
+    keyBoardHeight=300;
+
+    scrolledToBottom=true;
+
+    loadingMsges=true;
+
+   
 
     @ViewChild("scrollView", { static: false }) scrollView: ElementRef;
+    @ViewChild("textInp", { static: false }) textInp: ElementRef;
 
     constructor(private ngZone:NgZone,private route:ActivatedRoute,private router:RouterExtensions,private msgsvc:MessageService,private msgState:MsgChatStateService) {
         /* ***********************************************************
@@ -36,25 +63,19 @@ export class ChatWindowComponent implements OnInit,OnDestroy {
         *************************************************************/
        console.log("constructor")
        
+       
     }
-    onKeyBoard(){
-        console.log("keyboard",this.scrollView.nativeElement);
-        
-    }
-
-    offKeyBoard(){
-        console.log("No keyboard");
-        
-    }
-
-    scrollToBottom(){
-        this.scrollView.nativeElement.scrollToVerticalOffset(this.scrollView.nativeElement.scrollableHeight, false);
-    }
-
+    
     ngOnInit(): void {
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
+    //    let that = this;
+       
+    //    application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
+    //         that.offKeyBoard();    
+    //         data.cancel = true; // prevents default back button behavior   
+    //   });
         console.log('Initing');
         var LS = require( "nativescript-localstorage" );
         this.loggedInUser = LS.getItem('LoggedInUser');
@@ -80,15 +101,81 @@ export class ChatWindowComponent implements OnInit,OnDestroy {
            });
         this.msgsvc.getAllMessages(this.currentTopic).subscribe(data=>{
             this.messages=data.response;
+            setTimeout(()=>{
+                this.scrollToBottom();
+                this.loadingMsges=false;
+            },1500);
         })
     }
+
+    ngAfterViewInit(){
+        // this.initTextTop=this.textInp.nativeElement.getLocationOnScreen().y;
+        this.keyboardSizer();
+    }
+
+
+    keyboardSizer(){
+        console.log("Sizing Keyboardd",screen.mainScreen.widthDIPs);
+        this.keyBoardHeight=Math.min(Math.round(screen.mainScreen.widthDIPs*0.85),450);
+    }
+
+    offKeyBoard(){
+        this.messagesHgt=0;
+        this.disclaimerHgt=0;
+    }
+
+    scrollToBottom(){
+        setTimeout(()=>{
+            this.unreadCount=0;
+            this.scrollView.nativeElement.scrollToVerticalOffset(this.scrollView.nativeElement.scrollableHeight, false);
+            
+            // this.scrolledToBottom=true;
+            // this.isBottomScroll=true;
+            // clearInterval(this.remToBottomListener);
+            // this.remToBottomListener=setTimeout(()=>{
+            //     this.isBottomScroll=false;
+            // },100)
+        },150);
+        
+    }
+
+    onBackPressed(){
+        console.log("back");
+    }
+
+    textfieldTapped(){
+        this.disclaimerHgt=this.keyBoardHeight;
+        let txtBoxTop=this.textInp.nativeElement.getLocationOnScreen().y;
+        let scrollBoxTop=this.scrollView.nativeElement.getLocationOnScreen().y;
+        if(txtBoxTop==this.initTextTop){
+            this.messagesHgt=txtBoxTop-scrollBoxTop-this.keyBoardHeight;
+        }
+        this.scrollToBottom();
+
+    }
+
+    onScroll(event){
+        clearInterval(this.scrollListener);
+        this.scrollListener=setInterval(()=>{
+            console.log(event.scrollY,this.scrollView.nativeElement.scrollableHeight);
+            this.scrolledToBottom=Math.abs(event.scrollY - this.scrollView.nativeElement.scrollableHeight)<3;
+            clearInterval(this.scrollListener);
+        },20);
+        
+    }
+
 
     addNextMsg(){
         let newMsg=this.msgState.newMsg;
         console.log("new msg rec",newMsg);
-        if(newMsg.message.length>0){
+        if(newMsg.message.length>0 && newMsg.by != this.loggedInUser ){
             this.messages.push(newMsg);
-            this.scrollToBottom();
+            // this.scrollToBottom();
+            if(this.scrolledToBottom){
+                // this.scrolledToBottom=false;
+                this.scrollToBottom();
+            }
+            this.unreadCount++;
         }
     }
 
@@ -125,23 +212,45 @@ export class ChatWindowComponent implements OnInit,OnDestroy {
                 toast.show();
             }
             else{
+                let dateTime = new Date();
+                let dateStr=dateTime.toLocaleTimeString('en-US', { hour12: false }).slice(0,5);
+                this.messages.push({
+                    message:this.message,
+                    by:this.loggedInUser,
+                    time:dateStr
+                })
+                    this.scrollToBottom();
                 this.message="";
             }
         })
     }
 
     unsubTopic(){
-        firebase.unsubscribeFromTopic(this.currentTopic)
-        .then(()=>{
-            console.log("unsubscribed");
-        })
-        .catch(error=>{
-            console.log(error);
-        })
+        this.msgsvc.unsubFromTopic(this.loggedInUser,this.currentTopic).subscribe(data=>{
+            if(data.response === 'success'){
+                firebase.unsubscribeFromTopic(this.currentTopic)
+                .then(()=>{
+                    console.log("unsubscribed");
+                    var Toast = require("nativescript-toast");
+                    var toast = Toast.makeText("Discussion Exited!");
+                    toast.show();
+                    this.goBack();
+                })
+                .catch(error=>{
+                    console.log(error);
+                })
+            }
+            else{
+                var Toast = require("nativescript-toast");
+                var toast = Toast.makeText("Unable to delete.Please try again later!");
+                toast.show();
+            }
+        });
     }
 
     ngOnDestroy(){
         this.msgState.resetTopic();
+        clearInterval(this.timerset);
     }
     
     goBack(){

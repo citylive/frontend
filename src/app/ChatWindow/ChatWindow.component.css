@@ -1,5 +1,4 @@
 .ChatPage{
-    height: 100%;
     background-image: url('~/app/images/citylineBG.jpg');
     background-repeat: no-repeat;
     background-position: center;
@@ -7,38 +6,70 @@
 
 .selfMsg{
     margin-left: 15%;
-    background-color: rgba(255, 255, 255, 0.11);
+    background-color: rgba(34, 96, 138, 0.9);
 }
 
 .quesMsgPart{
     padding-bottom: 10;
-    height: 90%;
-    border-bottom-width: 1;
+    border-bottom-width: 0;
+}
+
+.quesLabel{
+    width: 94%;
+    margin-bottom: 6;
+    color: #34fdce;
 }
 
 .msgBox{
-    height: 10%;
+    width: 100%;
+    height: 65;
+    /* padding-left: 170%; */
+    margin-top: 0;
     background-color: rgba(255, 255, 255, 0.616);
-}
-.inputBox{
-    height: 60%;
-    width: 60%;
-    padding: 10;
-    background-color: rgba(0, 0, 0, 0.582);
     border-width: 1;
     border-color: white;
-    border-radius: 30;
+    border-radius: 35;
+}
+
+.hintTextMsg{
+    margin-left: 7%;
+    margin-top: 15;
+    width: 65%;
+}
+
+.msgText{
+    width: 100%;
+    
+}
+.inputBox{
+    margin-left: 2%;
+    margin-right: 2%;
+    width: 70%;
+    padding: 0;
+    padding-left: 10;
+    padding-top: 20;
+    
+    margin: 0;
+            background-color: rgba(0, 0, 0, 0);
+    /* background-color: blueviolet; */
     vertical-align: bottom;
+    border-width: 0;
 }
 
 .sendIcon{
-    height: 60%;
-    width: 15%;
+    height: 30;
+    width: 30;
+
 }
 
 .closeIcon{
-    height: 60%;
-    width: 15%;
+    height: 30;
+    width: 30;
+}
+
+.msgButtons{
+    
+    width: 12%;
 }
 .quest{
     width: 95%;
@@ -47,19 +78,70 @@
 
 .othMsg{
     margin-right: 15%;
-    background-color: rgba(0, 255, 179, 0.5);
+    background-color: rgba(194, 158, 1, 0.9);
 }
 
 .msgCard{
+    margin-bottom: 6;
     width: 80%;
     border-radius: 5;
     padding: 5;
+    padding-top: 0;
+    padding-bottom: 1;
+}
+
+.msgCard:after {
+	content: '';
+	border: 20px solid transparent;
+	border-left-color: #00aabb;
+	border-right: 0;
+	border-bottom: 0;
+	margin-top: -10px;
+	margin-right: -20px;
 }
 
 .msgBy{
-    width: 93%;
+    text-transform: capitalize;
+    color: black;
+   
 }
 
 .rightAlign{
     text-align: right;
+}
+
+.no-show{
+    display: none;
+}
+
+.pressBackText{
+    margin-top: 100;
+    text-align: center;
+}
+
+.expandIcon{
+    margin-top: 15;
+    height: 60;
+}
+
+.goDown{
+    width: 45;
+    text-align: center;
+    padding-top: 5;
+    padding-left: 5;
+    color: rgb(53, 53, 53);
+    background-color: #fdf4e8;
+    border-radius: 25;
+}
+
+
+.goDown.noNewMsg{
+    width: 32;
+    height: 32;
+    padding-top: 3;
+    padding-left: 6;
+}
+
+.loadingMsg{
+    text-align: center;
 }

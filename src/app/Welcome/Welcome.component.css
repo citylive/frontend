@@ -89,6 +89,6 @@ TabStrip{
     font-size: 12vh;
 }
 
-TabStripItem:active {
-    color: rgb(6, 106, 236);
-} 
+TabStripItem:active Label {
+    color: #64ffdb;
+}
