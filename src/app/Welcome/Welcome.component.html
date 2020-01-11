@@ -29,13 +29,13 @@
     
 </StackLayout>
 
-<BottomNavigation *ngIf="!showLoader" (selectedIndexChanged)="onPageChange($event)" selectedIndex="0">
+<Tabs tabsPosition="bottom" *ngIf="!showLoader" (selectedIndexChanged)="onPageChange($event)" selectedIndex="0">
 
     <TabStrip >
-        <TabStripItem>
+        <TabStripItem >
             <Label [ngClass]="{'font-weight-bold': quesCount>0}" text="Home {{quesCount>0?'('+quesCount+')':''}}"></Label>
             <Image src="~/app/images/home.png"></Image>
-        </TabStripItem>
+        </TabStripItem >
         <TabStripItem class="special">
             <Label [ngClass]="{'font-weight-bold': msgCount>0}" text="Messages {{msgCount>0?'('+msgCount+')':''}}"></Label>
             <Image src="~/app/images/chat.png"></Image>
@@ -62,4 +62,4 @@
         </GridLayout>
     </TabContentItem>
 
-</BottomNavigation>
+</Tabs>
