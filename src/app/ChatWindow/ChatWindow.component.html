@@ -12,7 +12,10 @@
                     
                     <StackLayout [ngClass]="{'selfMsg': loggedInUser == msg.by,'othMsg': loggedInUser != msg.by}" class="msgCard">
                         <!-- Message Sender -->
-                        <Label 
+                        <Label textColor3
+                        [ngClass]="{'textColor1': ind % 3 == 0 ,
+                        'textColor2': ind % 3 == 1,
+                        'textColor3': ind % 3 == 2}"
                         [visibility]="loggedInUser == msg.by ? 'collapse' : 'visible'"  
                         class="msgBy font-weight-bold" text="{{msg.by}}"  fontSize="13">
                         </Label>
@@ -39,16 +42,17 @@
     <!-- Input Box -->
     <StackLayout orientation="horizontal" #textInp row="2" column="0" colSpan="2" class="msgBox">
             <Label class="hintTextMsg" text="{{ message.length > 0?'':'Type in a message'}}" textWrap="true"  fontSize="16"></Label>
-           <Image class="msgButtons sendIcon" src="~/app/images/send.png" (tap)="sendMsg()"></Image>
-           <Image class="msgButtons closeIcon" src="~/app/images/cross.png" (tap)="onCrossPress()"></Image>
+           <Image class="msgButtons sendIcon" src="~/app/images/sendnw.png" (tap)="sendMsg()"></Image>
+           <Image class="msgButtons closeIcon" src="~/app/images/exit.png" (tap)="onCrossPress()"></Image>
     </StackLayout>
 
+    <!-- input field -->
     <FlexboxLayout row="2" column="0" colSpan="2"  class="msgText">
         <TextView
         (tap)="textfieldTapped()"
         style.placeholderColor="#474747"
-        style.color="black" 
-        fontSize="13"
+        style.color="white" 
+        fontSize="15"
         [(ngModel)]='message'
         maxLength="100" 
         class="inputBox" 

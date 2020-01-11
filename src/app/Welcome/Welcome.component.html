@@ -13,7 +13,7 @@
 <ActionBar [title]="' Welcome to CityLive'" android.icon="~/app/images/town.png" android.iconVisibility="always" class="action-bar">
 </ActionBar>
 
-<StackLayout *ngIf="showLoader"class="LoadingPage">
+<StackLayout *ngIf="showLoader" class="LoadingPage">
     <Label class="liveText" fontSize="30" text="Going Live"></Label>
     <StackLayout orientation="horizontal" class="loader">
         
@@ -25,7 +25,7 @@
             
         
     </StackLayout>
-    
+    <Label *ngIf="showFinishing" class="gettingReady" fontSize="20" text="Getting your Profile ready..."></Label>
     
 </StackLayout>
 

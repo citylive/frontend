@@ -13,6 +13,12 @@
     font-family: 'SuezOne-Regular';
     margin-bottom: 10;
 }
+.gettingReady{
+    width: 80%;
+    text-align: center;
+    margin-top: 20;
+    
+}
 .loader{
     width: 175;
 }

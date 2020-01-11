@@ -6,6 +6,7 @@ import { QuestionStateService, IQuestion } from "../Services/question.state.serv
 import {map} from 'rxjs/operators'
 import { Subscription } from "rxjs";
 import { MsgCountStateService } from "../Services/message.count.state.service";
+import { MessageService } from "../Services/messages.service";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -27,6 +28,7 @@ export class WelcomeComponent implements OnInit{
         qst$;
         msgCt$;
         showLoader=true;
+        showFinishing=false;
 
         msgCountinited=false;
         msgCount=0;
@@ -36,7 +38,9 @@ export class WelcomeComponent implements OnInit{
         currIndex=0;
         
         
-    constructor(private ngZone:NgZone,private router:RouterExtensions,private msgCountState:MsgCountStateService,private authReg:AuthorizeRegisterService,private quesState:QuestionStateService) {
+    constructor(private ngZone:NgZone,private router:RouterExtensions,
+        private msgCountState:MsgCountStateService,private msgSvc:MessageService,
+        private authReg:AuthorizeRegisterService,private quesState:QuestionStateService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -71,10 +75,21 @@ export class WelcomeComponent implements OnInit{
        this.showLoader=true;
         var LS = require( "nativescript-localstorage" );
         this.loggedInUser = LS.getItem('LoggedInUser');
+
+        let isJustLoggedIn=LS.getItem('justLoggedIn');
+
+        if(isJustLoggedIn && isJustLoggedIn == 'justLoggedIn'){
+            this.subscribeToUserTopics();
+        }
+
+        LS.setItem('justLoggedIn', 'notJustLoggedIn');
         if(this.loggedInUser && this.loggedInUser!='' && this.loggedInUser!=null){
             this.setDeviceId();
             setTimeout(()=>{
-                this.showLoader=false;
+                if(isJustLoggedIn && isJustLoggedIn != 'justLoggedIn'){
+                    this.showLoader=false;
+                }
+                
             },2000);
         }
         else{
@@ -89,6 +104,26 @@ export class WelcomeComponent implements OnInit{
         // this.quesState.setFromStorage();
 
 
+    }
+
+
+    subscribeToUserTopics(){
+        this.showFinishing=true;
+        this.msgSvc.getTopics(this.loggedInUser).subscribe(data=>{
+            let topics=data.response;
+            let count=0;
+            topics.forEach(topicObj=>{
+                firebase.subscribeToTopic(topicObj.topic)
+                .then(topic=>{
+                    console.log("Subscribed to",topic);
+                    count++;
+                    if(count == topics.length){
+                        this.showLoader=false;
+                        this.showFinishing=true;
+                    }
+                });
+            })
+        });
     }
 
     onPageChange(event){

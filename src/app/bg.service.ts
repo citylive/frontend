@@ -23,10 +23,10 @@ class ForegroundService extends android.app.Service {
         return super.onUnbind(intent);
     }
  
-    // onDestroy() {
-    //     console.log('onDestroy')
-    //     this.stopForeground(true);
-    // }
+    onDestroy() {
+        console.log('onDestroy')
+        this.stopForeground(true);
+    }
 
     private getNotification() {
         const channel = new android.app.NotificationChannel(
@@ -37,7 +37,7 @@ class ForegroundService extends android.app.Service {
         const notificationManager = this.getSystemService(android.content.Context.NOTIFICATION_SERVICE) as android.app.NotificationManager;
         notificationManager.createNotificationChannel(channel);
         const builder = new android.app.Notification.Builder(this.getApplicationContext(), 'channel_01');
-        builder.setPriority(0xfffffffe);
+        builder.setPriority(0);
         builder.setContentTitle('Your City is Live');
         builder.setContentText('Just Updating your location for the latest updates');
 

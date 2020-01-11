@@ -45,7 +45,9 @@
             [(ngModel)]="pwd" 
             secure="true" 
             class="input" 
-            hint="Password" 
+            hint="Password"
+            returnKeyType="{{isLogin?'go':'next'}}"
+            (returnPress)="isLogin?onLoginRegister():''" 
             autocorrect="false" 
             autocapitalizationType="none"></TextField
             >

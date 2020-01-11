@@ -1,4 +1,15 @@
-<StackLayout class="profileTop">
+<!-- loader -->
+
+<StackLayout class="profileTop" *ngIf="loggingOut" row="0" column="0" rowSpan="2" colSpan="2" >
+    <ActivityIndicator busy="true" color="#34fdce" marginTop="200" width="100" height="100"></ActivityIndicator>
+    <Label class="logginOutMsg" text="Logging Out..." textWrap="true"  fontSize="20"></Label>
+</StackLayout>
+
+<StackLayout *ngIf="!loggingOut" class="profileTop">
+    
+    
+
+    <!-- Main page -->
 
     <StackLayout orientation="horizontal" class="profRowCard" > 
         <Image class="profIcon" src="~/app/images/usern.png"></Image>
@@ -34,4 +45,6 @@
 
 
     <Button text="Logout" (tap)="logOut()" class="btn btn-primary btn-active btnLogout" col="1"></Button>
+    <Button text="Change Live Status" (tap)="changeLiveStatus()" class="btn btn-primary btn-active btnLogout" col="1"></Button>
+
 </StackLayout>

@@ -3,6 +3,8 @@ import { RouterExtensions } from "nativescript-angular";
 import { AuthorizeRegisterService } from "../Services/authorize-register.service";
 import * as firebase from 'nativescript-plugin-firebase';
 import { EventData } from "tns-core-modules/ui/page/page";
+import { MessageService } from "../Services/messages.service";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -29,8 +31,9 @@ export class ProfileComponent implements OnInit {
     deviceId="";
 
     devIdEditable=false;
+    loggingOut=false;
     
-    constructor(private router:RouterExtensions,private userSvc:AuthorizeRegisterService) {
+    constructor(private router:RouterExtensions,private userSvc:AuthorizeRegisterService,private msgSvc:MessageService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -48,16 +51,66 @@ export class ProfileComponent implements OnInit {
        .then(token=>{
            this.deviceId=token;
        })
+
     }
+
+    changeLiveStatus(){
+            var LS = require( "nativescript-localstorage" );
+            let livePref = LS.getItem('livePref');
+                    
+            if(livePref != 'live' || livePref != 'notlive'){
+                let msg="To be LIVE always, a notification needs to be on always. You can click on the notification to force stop the app. You can always change your preference from the profile tab.\n\nFor Android 10+, please give access to location even when app is in background for best performance. Please change the permissions from settings if not done already."
+                dialogs.confirm({
+                    title: "Would you like to be LIVE always?",
+                    message: msg,
+                    okButtonText: "Stay LIVE",
+                    cancelButtonText: "No",
+                }).then(result => {
+                    // result argument is boolean
+                    if(result != undefined){
+                        if(result){
+                            LS.setItem('livePref','live');
+                        }
+                        else{
+                            LS.setItem('livePref','notlive');
+                        }
+                    }
+                    else{
+                        LS.setItem('livePref','notlive');
+                    }
+                    this.router.navigate(['/welcome'],{ clearHistory: true ,queryParams:{ livePref: result?'live':'notlive' } });
+                });
+            }
+        }
+
     logOut(){
         console.log('setting values');
-        this.LS.setItem('LoggedInUser','');
-        this.LS.setItem('currentQueries','');
-        this.LS.setItem('msgCountMap','');
-        this.LS.setItem('msgCountMapNotif','');
-        this.LS.setItem('newNotif','');
-        this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
-        this.router.navigate(['/login'],{ replaceUrl: true });
+        this.loggingOut=true;
+        this.msgSvc.getTopics(this.user.username).subscribe(data=>{
+            
+            let topics=data.response;
+            let count=0;
+            topics.forEach(topicObj=>{
+                firebase.unsubscribeFromTopic(topicObj.topic)
+                .then(topic=>{
+                    console.log("UnSubscribed to",topic);
+                    count++;
+                    if(count == topics.length){
+                        this.LS.setItem('LoggedInUser','');
+                        this.LS.setItem('currentQueries','');
+                        this.LS.setItem('msgCountMap','');
+                        this.LS.setItem('msgCountMapNotif','');
+                        this.LS.setItem('newNotif','');
+                        this.LS.setItem('livePref','');
+                        this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
+                        this.loggingOut=false;
+                        this.router.navigate(['/login'],{ clearHistory: true });
+                    }
+                });
+                
+            })
+        })
+        
     }
 
 }

@@ -28,7 +28,7 @@ export class AuthorizeRegisterService {
 
     updateLocation(lat:number,long:number,user:string){
         console.log(lat,long);
-        let url='./MockUps/true.json';
+        let url='https://citylive.free.beeceptor.com';
         // return this.http.getData(url);
         return of({
             response:"success"

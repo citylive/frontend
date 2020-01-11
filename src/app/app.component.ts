@@ -6,9 +6,10 @@ import { setInterval, clearInterval ,setTimeout} from "tns-core-modules/timer";
 import * as application from "tns-core-modules/application";
 import { HttpService } from "./Services/http.service";
 import { AuthorizeRegisterService } from "./Services/authorize-register.service";
-import { NavigationExtras } from "@angular/router";
+import { NavigationExtras, ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 import { QuestionStateService } from "./Services/question.state.service";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 
 import { Vibrate } from 'nativescript-vibrate';
 import { CardView } from '@nstudio/nativescript-cardview';
@@ -32,18 +33,43 @@ export class AppComponent implements OnInit,OnDestroy {
   }
 
   constructor(private ngZone: NgZone,
-    private authReg:AuthorizeRegisterService,private router:RouterExtensions,
+    private authReg:AuthorizeRegisterService,private router:RouterExtensions,private actRoute:ActivatedRoute,
     private quesState:QuestionStateService,private msgCountState:MsgCountStateService,private msgChatState:MsgChatStateService){
 
   }
 
   ngOnInit(): void {
 
+    this.actRoute.queryParams.subscribe(data=>{
+      if(!data.hasOwnProperty('liveref')){
+        console.log('Not Welcome link');
+      }
+      if(data.livePref == 'live'){
+        this.startForegroundService();
+      }
+      else if(data.livePref == 'notlive'){
+        this.stopForegroundService();
+      }
+      else if(data.livePref == 'login'){
+        this.getForeGroundPermission();
+      }
+    })
+
   
     this.startLocationWatcher();
-    this.startForegroundService();
+    // this.startForegroundService();
     this.quesState.setFromStorage();
     this.msgCountState.setFromStorage();
+
+    var LS = require( "nativescript-localstorage" );
+    let livePref = LS.getItem('livePref');
+    console.log('livepref value', livePref);
+            
+    if(livePref == 'live'){
+        this.startForegroundService();
+      }
+    
+
 
     firebase.init({
       showNotifications: true,
@@ -70,9 +96,40 @@ export class AppComponent implements OnInit,OnDestroy {
           })
 
       geolocation.enableLocationRequest(true,true)
-       .then(()=>{
+       .then((result)=>{
+         
         });
 
+        
+  }
+
+
+  getForeGroundPermission(){
+    var LS = require( "nativescript-localstorage" );
+    let msg="To be LIVE always, a notification needs to be on always. You can click on the notification to force stop the app. You can always change your preference from the profile tab.\n\nFor Android 10+, please give access to location even when app is in background for best performance. Please change the permissions from settings if not done already."
+        dialogs.confirm({
+              title: "Would you like to be LIVE always?",
+              message: msg,
+              okButtonText: "Stay LIVE",
+              cancelButtonText: "No",
+          }).then(result => {
+              // result argument is boolean
+              if(result != undefined){
+                  if(result){
+                    this.startForegroundService();
+                    LS.setItem('livePref','live');
+                  }
+                  else{
+                    LS.setItem('livePref','notlive');
+                  }
+              }
+              else{
+                LS.setItem('livePref','notlive');
+              }
+              
+          });
+     
+    
   }
 
   getCurrToken(){
@@ -112,17 +169,25 @@ export class AppComponent implements OnInit,OnDestroy {
     const id=context.startForegroundService(intent);
     }
 
+    private stopForegroundService() {
+      const context = application.android.context;
+      const intent = new android.content.Intent();
+      intent.setClassName(context, 'com.citylive.ver1.ForegroundService');
+      const id=context.stopService(intent);
+      }
+
   startLocationWatcher(){
     this.checkAndSetLocation()
 
     let id = setInterval(() => {
       this.checkAndSetLocation();
-    },1000*60*5);
+    },1000*60);
 
    
   }
 
   checkAndSetLocation(){
+    console.log('Fetching loc');
     if(geolocation){
       geolocation.getCurrentLocation({ desiredAccuracy: Accuracy.high})
       .then(location=>{
@@ -138,6 +203,7 @@ export class AppComponent implements OnInit,OnDestroy {
                     lon:location.longitude
                   };
                 }
+                // console.log('after restCall',data);
               });
             } 
           }
