@@ -21,9 +21,23 @@ export class QuestionStateService {
     quesList:BehaviorSubject<any>=new BehaviorSubject(this.newNotif);
     $quesList:Observable<any>=this.quesList.asObservable();
 
+    inited=false;
+
     constructor(){
         
-        this.$quesList.subscribe(data=>{});
+        this.$quesList.subscribe(data=>{
+            if(!this.inited){
+                this.inited=true;
+                return;
+            }
+            let quesStr:string=JSON.stringify(this.getAllNewQues());
+            let newNotifStr:string=JSON.stringify(this.getnewNotif());
+
+            var LS = require( "nativescript-localstorage" );
+                LS.setItem('currentQueries',quesStr);
+                LS.setItem('newNotif',newNotifStr);
+
+        });
     }
 
     setFromStorage(){

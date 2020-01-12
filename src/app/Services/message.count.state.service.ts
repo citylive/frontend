@@ -18,9 +18,23 @@ export class MsgCountStateService {
     quesList:BehaviorSubject<any>=new BehaviorSubject(this.newNotif);
     $quesList:Observable<any>=this.quesList.asObservable();
 
+    inited=false;
+
     constructor(){
         
-        this.$quesList.subscribe(data=>{});
+        this.$quesList.subscribe(data=>{
+            if(!this.inited){
+                this.inited=true;
+                return;
+            }
+            console.log('setdatattatata MSg')
+            let msgCountMapStr:string=JSON.stringify(Array.from(this.getAllMsgCount().entries()));
+            let newMsgNotifStr:string=JSON.stringify(this.getnewNotif());
+
+            var LS = require( "nativescript-localstorage" );
+                LS.setItem('msgCountMap',msgCountMapStr);
+                LS.setItem('msgCountMapNotif',newMsgNotifStr);
+        });
     }
 
     setFromStorage(){

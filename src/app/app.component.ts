@@ -242,18 +242,18 @@ export class AppComponent implements OnInit,OnDestroy {
   ngOnDestroy(){
     clearInterval(this.currTimer);
     console.log('destroyed');
-    let quesStr:string=JSON.stringify(this.quesState.getAllNewQues());
-    let newNotifStr:string=JSON.stringify(this.quesState.getnewNotif());
+  //   let quesStr:string=JSON.stringify(this.quesState.getAllNewQues());
+  //   let newNotifStr:string=JSON.stringify(this.quesState.getnewNotif());
 
-    let msgCountMapStr:string=JSON.stringify(Array.from(this.msgCountState.getAllMsgCount().entries()));
-    let newMsgNotifStr:string=JSON.stringify(this.msgCountState.getnewNotif());
+  //   let msgCountMapStr:string=JSON.stringify(Array.from(this.msgCountState.getAllMsgCount().entries()));
+  //   let newMsgNotifStr:string=JSON.stringify(this.msgCountState.getnewNotif());
 
-    var LS = require( "nativescript-localstorage" );
-    LS.setItem('currentQueries',quesStr);
-    LS.setItem('newNotif',newNotifStr);
+  //   var LS = require( "nativescript-localstorage" );
+  //   LS.setItem('currentQueries',quesStr);
+  //   LS.setItem('newNotif',newNotifStr);
 
-    LS.setItem('msgCountMap',msgCountMapStr);
-    LS.setItem('msgCountMapNotif',newMsgNotifStr);
+  //   LS.setItem('msgCountMap',msgCountMapStr);
+  //   LS.setItem('msgCountMapNotif',newMsgNotifStr);
+  // }
   }
-
 }
