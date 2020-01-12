@@ -14,6 +14,7 @@ export class MsgCountStateService {
     
     msgCountMap:Map<string,number>=new Map([]);
     newNotif=0;
+    lastRecTopics="";
     quesList:BehaviorSubject<any>=new BehaviorSubject(this.newNotif);
     $quesList:Observable<any>=this.quesList.asObservable();
 
@@ -64,8 +65,13 @@ export class MsgCountStateService {
             this.msgCountMap.set(topic,1);
         }
         this.newNotif++;
+        this.lastRecTopics=topic;
         this.quesList.next(this.newNotif);
        //console.log(newArrObj);
+   }
+
+   getCurrCount(topic:string){
+        return this.msgCountMap.get(topic);
    }
 
    remMsgTopic(topic:string){
@@ -80,10 +86,12 @@ export class MsgCountStateService {
    }
 
    resetMsgTopic(topic:string){
-    let mnCount=this.msgCountMap.has(topic)?this.msgCountMap.get(topic):0;
-    this.newNotif=this.newNotif-mnCount;
-    this.msgCountMap.set(topic,0);
-    this.quesList.next(this.newNotif);
+    if(this.msgCountMap.has(topic)){
+        this.newNotif=this.newNotif-this.msgCountMap.get(topic);
+        this.msgCountMap.set(topic,0);
+        this.quesList.next(this.newNotif);
+    }
+    
    }
 
    getnewNotif(){

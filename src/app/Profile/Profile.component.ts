@@ -89,13 +89,11 @@ export class ProfileComponent implements OnInit {
         this.msgSvc.getTopics(this.user.username).subscribe(data=>{
             
             let topics=data.response;
-            let count=0;
-            topics.forEach(topicObj=>{
+            topics.forEach((topicObj,index)=>{
                 firebase.unsubscribeFromTopic(topicObj.topic)
                 .then(topic=>{
                     console.log("UnSubscribed to",topic);
-                    count++;
-                    if(count == topics.length){
+                    if(index+1 == topics.length){
                         this.LS.setItem('LoggedInUser','');
                         this.LS.setItem('currentQueries','');
                         this.LS.setItem('msgCountMap','');

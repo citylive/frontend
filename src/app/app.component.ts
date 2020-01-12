@@ -32,6 +32,8 @@ export class AppComponent implements OnInit,OnDestroy {
     lon:0
   }
 
+  currTimer;
+
   constructor(private ngZone: NgZone,
     private authReg:AuthorizeRegisterService,private router:RouterExtensions,private actRoute:ActivatedRoute,
     private quesState:QuestionStateService,private msgCountState:MsgCountStateService,private msgChatState:MsgChatStateService){
@@ -177,13 +179,12 @@ export class AppComponent implements OnInit,OnDestroy {
       }
 
   startLocationWatcher(){
-    this.checkAndSetLocation()
+    this.checkAndSetLocation();
 
-    let id = setInterval(() => {
+    this.currTimer = setInterval(() => {
       this.checkAndSetLocation();
-    },1000*60);
+    },1000*60*5);
 
-   
   }
 
   checkAndSetLocation(){
@@ -239,6 +240,7 @@ export class AppComponent implements OnInit,OnDestroy {
 }
 
   ngOnDestroy(){
+    clearInterval(this.currTimer);
     console.log('destroyed');
     let quesStr:string=JSON.stringify(this.quesState.getAllNewQues());
     let newNotifStr:string=JSON.stringify(this.quesState.getnewNotif());

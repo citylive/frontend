@@ -77,62 +77,44 @@ export class MessageService {
             closed:false
         },
         {
-            topic:"soumyadip1234",
-            question:"This is a closed Question",
+            topic:"zsoumyadip1234",
+            question:"zThis is a closed Question",
             by:"sd",
             closed:true
         },
         {
-            topic:"soumyadip123",
-            question:"This is a Question",
+            topic:"xsoumyadip123",
+            question:"xThis is a Question",
             by:"soumyadc",
             closed:false
         },
         {
-            topic:"soumyadip12",
-            question:"This is a closed Question with very many line of question",
+            topic:"ysoumyadip12",
+            question:"yThis is a closed Question with very many line of question",
             by:"sd",
             closed:true
         },
         {
-            topic:"soumyadip1",
-            question:"This is a Question",
+            topic:"tsoumyadip1",
+            question:"tThis is a Question",
             by:"soumyadc",
             closed:false
         },
         {
-            topic:"soumyadip4",
-            question:"This is a closed Question",
+            topic:"vsoumyadip4",
+            question:"vThis is a closed Question",
             by:"sd",
             closed:true
         },
         {
-            topic:"soumyadip12",
-            question:"This is a closed Question with very many line of question",
+            topic:"usoumyadip12",
+            question:"uThis is a closed Question with very many line of question",
             by:"sd",
             closed:true
         },
         {
-            topic:"soumyadip1",
-            question:"This is a Question",
-            by:"soumyadc",
-            closed:false
-        },
-        {
-            topic:"soumyadip4",
-            question:"This is a closed Question",
-            by:"sd",
-            closed:true
-        },
-        {
-            topic:"soumyadip12",
-            question:"This is a closed Question with very many line of question",
-            by:"sd",
-            closed:true
-        },
-        {
-            topic:"soumyadip1",
-            question:"This is a Question",
+            topic:"wsoumyadip1",
+            question:"wThis is a Question",
             by:"soumyadc",
             closed:false
         },
@@ -141,7 +123,7 @@ export class MessageService {
             question:"This is a closed Question",
             by:"sd",
             closed:true
-        }]});
+        },]});
     }
 
     askQuestion(question:Question){

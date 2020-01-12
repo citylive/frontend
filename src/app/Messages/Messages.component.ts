@@ -23,11 +23,15 @@ import * as firebase from 'nativescript-plugin-firebase';
 export class MessagesComponent implements OnInit {
 
     items=[];
+    numbertopicsMap:Map<string,number>=new Map([]);
+    topicsMap:Map<number,any>=new Map([]);
     msgCt$;
     msgCtState$;
     loggedInUser="";
     start;
     end;
+
+    largeNumber=9999999;
 
     quesExpanded=true;
     discExpanded=true;
@@ -53,54 +57,95 @@ export class MessagesComponent implements OnInit {
 
        this.msgCt$.subscribe(data=>{
           this.ngZone.run(()=>{
-            this.setmsgCount();
+            // this.setmsgCount();
+            this.updateCount();
           })
           console.log('change happened');
        });
     }
 
     getMessageTopics(){
+        this.largeNumber = 9999999;
+
+        this.topicsMap = new Map([]);
+        this.numbertopicsMap = new Map([]);
         this.msgSvc.getTopics(this.loggedInUser).subscribe(messages=>{
             this.items=messages.response;
+            this.items.forEach((item,index)=>{
+                this.numbertopicsMap.set(item.topic,this.largeNumber)
+                this.topicsMap.set(this.largeNumber,item);
+                this.largeNumber--;
+                if(index+1 == this.items.length){
+                    this.setmsgCount();
+                }
+            })
          })
     }
 
     setmsgCount(){
        let msgCountMap=this.msgCountState.getAllMsgCount();
-          this.items=this.items.map(item => {
-             let count=msgCountMap.has(item.topic)?msgCountMap.get(item.topic):0;
-             return {...item,count:count};
-          });
+        //   this.items=this.items.map((item,index) => {
+        //      let count=msgCountMap.has(item.topic)?msgCountMap.get(item.topic):0;
+        //      console.log(index,this.items.length);
+        //      return {...item,count:count};
+             
+        //   });
+        msgCountMap.forEach((count,key) => {
+            let topicNum=this.numbertopicsMap.get(key)
+            let topic=this.topicsMap.get(topicNum);
+            let newTopic=Object.assign({},topic,{ count:count });
+            this.topicsMap.set(topicNum,newTopic);
+        });
       // console.log(this.msgCountState.getAllMsgCount());
     }
 
-    routeToChat(index){
+    updateCount(){
+        console.log('Updating count');
+        let key=this.msgCountState.lastRecTopics;
+        let topicNum=this.numbertopicsMap.get(key);
+        let topic=this.topicsMap.get(topicNum);
+        console.log('Updating count',topicNum,topic);
+        if(topicNum){
+            let count=this.msgCountState.getCurrCount(topic.topic);
+            let newTopic=Object.assign({},topic,{ count:count?count:0 });
+            this.topicsMap.delete(topicNum);
+            this.numbertopicsMap.set(key,this.largeNumber);
+            this.topicsMap.set(this.largeNumber,newTopic);
+            this.largeNumber--;
+        }
+        
+    }
+
+
+    routeToChat(key){
         if(this.selectedInd.size>0){
-            this.functionWhenLongPress(index);
+            this.functionWhenLongPress(key);
             return;
         }
-       this.msgCountState.resetMsgTopic(this.items[index].topic);
+        let topic=this.topicsMap.get(key).topic;
+        let ques=this.topicsMap.get(key).question;
+       this.msgCountState.resetMsgTopic(topic);
       const navigationExtras: NavigationExtras = {
           queryParams: {
-              topic: this.items[index].topic,
-              question:this.items[index].question
+              topic: topic,
+              question:ques
           }   
       };
       this.router.navigate(["/chat"], navigationExtras);
   }
 
 
-  functionWhenLongPress(index) {
+  functionWhenLongPress(key) {
     // your things to do when long pressed
     console.log("long press");
-    if(this.selectedInd.has(index)){
-        this.selectedInd.size==1?this.selectedInd.clear():this.selectedInd.delete(index);
+    if(this.selectedInd.has(key)){
+        this.selectedInd.size==1?this.selectedInd.clear():this.selectedInd.delete(key);
         
     }
     else{
         let vibrator = new Vibrate();
         vibrator.vibrate(50);
-        this.selectedInd.add(index);
+        this.selectedInd.add(key);
     }
     
   }
@@ -115,12 +160,13 @@ export class MessagesComponent implements OnInit {
         // result argument is boolean
         if(result != undefined){
             if(result){
-                this.selectedInd.forEach(index=>{
-                    this.msgSvc.unsubFromTopic(this.loggedInUser,this.items[index].topic).subscribe(data=>{
+                this.selectedInd.forEach(key=>{
+                    let topic=this.topicsMap.get(key).topic;
+                    this.msgSvc.unsubFromTopic(this.loggedInUser,topic).subscribe(data=>{
                         if(data.response === 'success'){
-                            firebase.unsubscribeFromTopic(this.items[index].topic)
+                            firebase.unsubscribeFromTopic(topic)
                             .then(()=>{
-                                this.selectedInd.delete(index);
+                                this.selectedInd.delete(key);
                                 if(this.selectedInd.size==0){
                                 this.getMessageTopics();
                             }

@@ -111,13 +111,11 @@ export class WelcomeComponent implements OnInit{
         this.showFinishing=true;
         this.msgSvc.getTopics(this.loggedInUser).subscribe(data=>{
             let topics=data.response;
-            let count=0;
-            topics.forEach(topicObj=>{
+            topics.forEach((topicObj,index)=>{
                 firebase.subscribeToTopic(topicObj.topic)
                 .then(topic=>{
-                    console.log("Subscribed to",topic);
-                    count++;
-                    if(count == topics.length){
+                    console.log("Subscribed to",topicObj.topic);
+                    if(index+1 == topics.length){
                         this.showLoader=false;
                         this.showFinishing=true;
                     }

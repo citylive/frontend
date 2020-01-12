@@ -31,18 +31,18 @@
         [visibility]="!quesExpanded ? 'collapse' : 'visible'"
         class="messageTop">
         <StackLayout>
-            <StackLayout [ngClass]="{'selected font-weight-bold': selectedInd.has(ind)}"
-             (tap)="routeToChat(ind)" 
-            (longPress)="functionWhenLongPress(ind)" 
-            [visibility]="item.by !== loggedInUser ? 'collapse' : 'visible'" orientation="horizontal"  
-            class="MessageCard own" *ngFor="let item of this.items;let ind = index"> 
+            <StackLayout [ngClass]="{'selected font-weight-bold': selectedInd.has(item.key)}"
+             (tap)="routeToChat(item.key)" 
+            (longPress)="functionWhenLongPress(item.key)" 
+            [visibility]="item.value.by !== loggedInUser ? 'collapse' : 'visible'" orientation="horizontal"  
+            class="MessageCard own" *ngFor="let item of topicsMap | keyvalue"> 
     
                 <StackLayout class="questionText">
-                    <Label  text="{{item.question}}" fontSize="16"></Label>
+                    <Label  text="{{item.value.question}}" fontSize="16"></Label>
                 </StackLayout>
                 <StackLayout class="noMessg">
-                    <Label *ngIf="item.count>0 && !selectedInd.has(ind)" class="font-weight-bold own noMessgTxt"  text="{{item.count}}" fontSize="15"></Label>
-                    <Label *ngIf="selectedInd.has(ind)" class="own noMessgTxt fas" text="&#xf00c;" fontSize="16"></Label>
+                    <Label *ngIf="item.value.count>0 && !selectedInd.has(ind)" class="font-weight-bold own noMessgTxt"  text="{{item.value.count}}" fontSize="15"></Label>
+                    <Label *ngIf="selectedInd.has(item.key)" class="own noMessgTxt fas" text="&#xf00c;" fontSize="16"></Label>
                 </StackLayout>
                 
             </StackLayout>
@@ -62,17 +62,19 @@
         [visibility]="!discExpanded? 'collapse' : 'visible'"
         class="messageTop">
         <StackLayout>
-            <StackLayout [ngClass]="{'selected font-weight-bold': selectedInd.has(ind)}"
-            (tap)="routeToChat(ind)" 
-            (longPress)="functionWhenLongPress(ind)" [visibility]="item.by === loggedInUser ? 'collapse' : 'visible'" orientation="horizontal" class="MessageCard" *ngFor="let item of this.items;let ind = index"> 
+            <StackLayout [ngClass]="{'selected font-weight-bold': selectedInd.has(item.key)}"
+            (tap)="routeToChat(item.key)" 
+            (longPress)="functionWhenLongPress(item.key)"
+             [visibility]="item.value.by === loggedInUser ? 'collapse' : 'visible'" 
+             orientation="horizontal" class="MessageCard" *ngFor="let item of topicsMap | keyvalue"> 
     
                 <StackLayout class="questionText">
-                    <Label  text="{{item.question}}" fontSize="16"></Label>
-                    <Label  text="by {{item.by}}" fontSize="12"></Label>
+                    <Label  text="{{item.value.question}}" fontSize="16"></Label>
+                    <Label  text="by {{item.value.by}}" fontSize="12"></Label>
                 </StackLayout>
                 <StackLayout class="noMessg">
-                    <Label *ngIf="item.count>0  && !selectedInd.has(ind)" class="font-weight-bold noMessgTxt"  text="{{item.count}}" fontSize="15"></Label>
-                    <Label *ngIf="selectedInd.has(ind)" class="noMessgTxt fas"  text="&#xf00c;" fontSize="16"></Label>
+                    <Label *ngIf="item.value.count>0  && !selectedInd.has(item.key)" class="font-weight-bold noMessgTxt"  text="{{item.value.count}}" fontSize="15"></Label>
+                    <Label *ngIf="selectedInd.has(item.key)" class="noMessgTxt fas"  text="&#xf00c;" fontSize="16"></Label>
                 </StackLayout>
                 
             </StackLayout>
