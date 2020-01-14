@@ -7,15 +7,19 @@ import { AnswerFormComponent } from "./AnswerForm/AnswerForm.component";
 import { ChatWindowComponent } from "./ChatWindow/ChatWindow.component";
 import { LoginRegisterComponent } from "./LoginRegister/LoginRegister.component";
 import { QuestionFormComponent } from "./QuestionForm/QuestionForm.component";
+import { LauncherComponent } from "./Launcher/Launcher.component";
+import { NoConnectivityComponent } from "./NoConnectivity/NoConnectivity.component";
 
 
 const routes: Routes = [
-    { path: "", redirectTo: "/welcome", pathMatch: "full" },
+    { path: "", redirectTo: "/launch", pathMatch: "full" },
     { path: "welcome", component: WelcomeComponent },
     { path: "answer", component: AnswerFormComponent },
     { path: "chat", component: ChatWindowComponent },
     { path: "login", component: LoginRegisterComponent },
     { path: "ask", component: QuestionFormComponent },
+    { path: "launch", component: LauncherComponent },
+    { path: "noConn", component: NoConnectivityComponent },
    
 ];
 

@@ -17,6 +17,18 @@ export class AuthorizeRegisterService {
 
     }
 
+    initCall(){
+        let url='login?username=radhe&password=admin'
+        return this.http.postData(url,{});
+    }
+
+    testEndPointCall(){
+        let url='user/all';
+        return this.http.getData(url);
+    }
+
+   
+
     registerUser(user:User){
         console.log(user);
         let url='./MockUps/true.json';
@@ -36,15 +48,16 @@ export class AuthorizeRegisterService {
     }
 
     checkCredentials(user,passwd){
-        return of({
-            response:"sd"
-        });
+        let url='login?username='+user+'&password='+passwd;
+        return this.http.postData(url,{});
+        // return of({
+        //     response:"radhe"
+        // });
     }
 
-    checkCredentialsWrong(){
-        return of({
-            response:"Invalid Username/Password"
-        });
+    doLogout(){
+        let url='logout';
+        return this.http.postData(url,{});
     }
 
     updateDeviceId(){
@@ -60,19 +73,29 @@ export class AuthorizeRegisterService {
     }
 
     setDeviceId(usernm,id){
-        return of({
-            response:"success"
-        });
+
+        let url='user/update/deviceId?userName='+usernm+'&deviceId='+id;
+        return this.http.putData(url,{});
+        // return of({
+        //     response:"success"
+        // });
     }
 
     getUser(usernm:string){
-        return of({
-            response:{
-                username:"soumyadc",
-                email:"soumya.c11@gmail.com",
-                currentLocation:"Kadubeesanahalli,Bangalore"
-            }
-        });
+        let url='user/find?userName='+usernm;
+        return this.http.getData(url);
+        // return of({
+        //     response:{
+        //         username:"soumyadc",
+        //         email:"soumya.c11@gmail.com",
+        //         currentLocation:"Kadubeesanahalli,Bangalore"
+        //     }
+        // });
+    }
+
+    getLocationName(lat:number,long:number){
+        // let url='https://geocode.xyz/'+lat+','+long+'?geoit=json';
+        return this.http.getLocationName(lat,long);
     }
 
 }

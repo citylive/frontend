@@ -20,6 +20,8 @@
 		android:icon="@drawable/icon"
 		android:label="@string/app_name"
 		android:theme="@style/AppTheme">
+		<meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_citylive_monoicon" />
+		<meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/my_special_green" />
 
 		<activity
 			android:launchMode="singleInstance"

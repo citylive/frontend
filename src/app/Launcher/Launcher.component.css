@@ -1,0 +1,14 @@
+.page {
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('~/app/images/citylineBG.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 15%;
+  }
+
+  .serverMsg{
+      width: 100%;
+      text-align: center;
+  }

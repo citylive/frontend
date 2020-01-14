@@ -1,11 +1,11 @@
 <ActionBar title="  CityLive Chat" android.icon="~/app/images/back.png" android.iconVisibility="always" (tap)="goBack()">
 </ActionBar>
 
-<GridLayout #scrollStack rows="{{messagesHgt>0?messagesHgt:'*'}},45,80,{{disclaimerHgt}}" columns="*,50" class="ChatPage">
+<GridLayout #scrollStack rows="{{messagesHgt>0?messagesHgt:'*'}},20,25,80,{{disclaimerHgt}}" columns="*,20,30" class="ChatPage">
 
     <!-- Messages Box -->
-    <StackLayout *ngIf="!loadingMsges" row="0" column="0" rowSpan="2" colSpan="2" class="quesMsgPart">
-        <Label class="quesLabel" textWrap="true" text="{{question}}"  fontSize="18"></Label>
+    <StackLayout *ngIf="!loadingMsges" row="0" column="0" rowSpan="3" colSpan="3" class="quesMsgPart">
+        <Label class="quesLabel" textWrap="true" text="{{question}}" marginTop="5"  fontSize="18"></Label>
         <ScrollView #scrollView class="msgFeedTop" (scroll)="onScroll($event)">
             <StackLayout>
                 <StackLayout *ngFor="let msg of this.messages;let ind = index"> 
@@ -13,9 +13,10 @@
                     <StackLayout [ngClass]="{'selfMsg': loggedInUser == msg.by,'othMsg': loggedInUser != msg.by}" class="msgCard">
                         <!-- Message Sender -->
                         <Label textColor3
-                        [ngClass]="{'textColor1': ind % 3 == 0 ,
-                        'textColor2': ind % 3 == 1,
-                        'textColor3': ind % 3 == 2}"
+                        [ngClass]="{'textColor1': msg.by.length % 4 == 0 ,
+                        'textColor2': msg.by.length % 4 == 1,
+                        'textColor3': msg.by.length % 4 == 2,
+                        'textColor4': msg.by.length % 4 == 3}"
                         [visibility]="loggedInUser == msg.by ? 'collapse' : 'visible'"  
                         class="msgBy font-weight-bold" text="{{msg.by}}"  fontSize="13">
                         </Label>
@@ -33,21 +34,21 @@
     </StackLayout>
 
     <!-- Loading Indicator -->
-    <StackLayout *ngIf="loadingMsges" row="0" column="0" rowSpan="2" colSpan="2" class="ChatPage">
+    <StackLayout *ngIf="loadingMsges" row="0" column="0" rowSpan="3" colSpan="3" class="ChatPage">
         <ActivityIndicator busy="true" color="#34fdce" marginTop="200" width="100" height="100"></ActivityIndicator>
         <Label class="loadingMsg" text="Loading messages..." textWrap="true"  fontSize="20"></Label>
     </StackLayout>
 
 
     <!-- Input Box -->
-    <StackLayout orientation="horizontal" #textInp row="2" column="0" colSpan="2" class="msgBox">
+    <StackLayout orientation="horizontal" #textInp row="3" column="0" colSpan="3" class="msgBox">
             <Label class="hintTextMsg" text="{{ message.length > 0?'':'Type in a message'}}" textWrap="true"  fontSize="16"></Label>
            <Image class="msgButtons sendIcon" src="~/app/images/sendnw.png" (tap)="sendMsg()"></Image>
            <Image class="msgButtons closeIcon" src="~/app/images/exit.png" (tap)="onCrossPress()"></Image>
     </StackLayout>
 
     <!-- input field -->
-    <FlexboxLayout row="2" column="0" colSpan="2"  class="msgText">
+    <FlexboxLayout row="3" column="0" colSpan="3"  class="msgText">
         <TextView
         (tap)="textfieldTapped()"
         style.placeholderColor="#474747"
@@ -63,16 +64,26 @@
     </FlexboxLayout>
 
 
-    <!-- Bottom scroller and unread count -->
-    <StackLayout *ngIf="!scrolledToBottom && !loadingMsges" [ngClass]="{'noNewMsg': unreadCount==0}" class="goDown" row="1" column="1" orientation="horizontal" margin="5" (tap)="scrollToBottom()">
-        <Label class="far" text="&#xf358;" textWrap="true"  fontSize="20"></Label>
-        <Label *ngIf="unreadCount>0" class="num" text="{{unreadCount>9?'9+':unreadCount}}" textWrap="true" margin="3" fontSize="12"></Label>
+    <!-- Bottom Scroll Arrow -->
+    <Image *ngIf="!scrolledToBottom && !loadingMsges" row="1" column="1" rowSpan="2" colSpan="2" margin="8"
+     class="downar" src="~/app/images/downar.png" (tap)="scrollToBottom()">
+    </Image>
+
+
+    <!-- Unread count -->
+    <StackLayout *ngIf="!scrolledToBottom && !loadingMsges && unreadCount>0" [ngClass]="{'noNewMsg': unreadCount==0}" class="goDown" row="1" column="1" orientation="horizontal"  (tap)="scrollToBottom()">
+        <!-- <Label class="far" text="&#xf358;" textWrap="true"  fontSize="20"></Label> -->
+            <Label class="num" text="{{unreadCount>9?'9+':unreadCount}}" textWrap="true" marginLeft="5.5" marginTop="1" fontSize="10"></Label>  
         
+        <!-- <Label  textWrap="true" margin="3" fontSize="12"></Label> -->
+              
     </StackLayout>
+
+  
 
     
     <!-- Expander when keyboard hidden -->
-    <StackLayout row="3" column="0" colSpan="2" height="{{disclaimerHgt}}" width="80%" >
+    <StackLayout row="4" column="0" colSpan="3" height="{{disclaimerHgt}}" width="80%" >
         <Label class="pressBackText" text="Show complete chatbox" textWrap="true"  fontSize="20"></Label>
         <Image class="expandIcon" src="~/app/images/down.png" (tap)="offKeyBoard()"></Image>
     </StackLayout>

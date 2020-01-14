@@ -21,6 +21,8 @@ import { RouteReuseStrategy } from "@angular/router";
 import { CacheRouteReuseStrategy } from "./Services/route-reuse.strategy";
 import { MsgCountStateService } from "./Services/message.count.state.service";
 import { MsgChatStateService } from "./Services/chat.message.state.service";
+import { LauncherComponent } from "./Launcher/Launcher.component";
+import { NoConnectivityComponent } from "./NoConnectivity/NoConnectivity.component";
 
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
@@ -48,7 +50,9 @@ import { MsgChatStateService } from "./Services/chat.message.state.service";
         WelcomeComponent,
         HomePageComponent,
         MessagesComponent,
-        ProfileComponent
+        ProfileComponent,
+        LauncherComponent,
+        NoConnectivityComponent
        
     ],
     providers: [

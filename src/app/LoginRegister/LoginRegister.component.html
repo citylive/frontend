@@ -2,7 +2,7 @@
 
     <StackLayout height="30%" class="image">
         <Label class="app-title" text="CityLive"></Label>
-        <Label class="app-title-small" text="CityLive" text="est. 2020"></Label>
+        <Label class="app-title-small" text="est. 2020"></Label>
     </StackLayout>
     
     <StackLayout class="form">
@@ -74,7 +74,8 @@
         </StackLayout> -->
 
     
-        <Button [text]="!isLogin?'Sign Up':'Login'" class="btn btn-primary login-button" (tap)="onLoginRegister()"></Button>
+        <Button *ngIf='!isCalling' [text]="!isLogin?'Sign Up':'Login'" class="btn btn-primary login-button" (tap)="onLoginRegister()"></Button>
+        <Button *ngIf='isCalling' isEnabled="false" [text]="!isLogin?'Signing Up...':'Logging in...'" class="btn btn-primary login-button" (tap)="onLoginRegister()"></Button>
     </StackLayout>
 
     <StackLayout orientation="horizontal" class="accOptions">

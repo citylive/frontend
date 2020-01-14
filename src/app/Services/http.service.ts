@@ -7,18 +7,26 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
     }
 )
 export class HttpService {
-    private serverUrl = "https://citylife.free.beeceptor.com";
+    private serverUrl = " https://citylive-server-qa.herokuapp.com/cityLive/";
 
     constructor(private http: HttpClient) { }
 
-    getData(url) {
+    getData(uri) {
+        let url=this.serverUrl+uri;
         let headers = this.createRequestHeader();
         return this.http.get(url, { headers: headers });
     }
 
-    postData(payload){
+    postData(uri,payload){
+        let url=this.serverUrl+uri;
         let headers = this.createRequestHeader();
-        return this.http.post(this.serverUrl,payload, { headers: headers });
+        return this.http.post(url,payload, { headers: headers });
+    }
+
+    putData(uri,payload){
+        let url=this.serverUrl+uri;
+        let headers = this.createRequestHeader();
+        return this.http.put(url,payload, { headers: headers });
     }
 
     private createRequestHeader() {
@@ -28,5 +36,13 @@ export class HttpService {
          });
 
         return headers;
+    }
+
+    getLocationName(lat:number,long:number){
+        let url='https://geocode.xyz/'+lat+','+long+'?geoit=json';
+        let headers = new HttpHeaders({
+            "Content-Type": "application/json",
+         });
+        return this.http.get(url, { headers: headers });
     }
 }

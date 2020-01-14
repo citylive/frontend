@@ -1,0 +1,13 @@
+<ActionBar>
+          <GridLayout rows="auto" columns="50, *" class="action-bar-title">
+            <Image row="0" col="0" src="~/app/images/icon.png" margin="3" marginTop="7" (tap)="onCancel()" class="thumb"></Image>
+            <Label row="0" col="1" class="font-weight-bold CityLiveActionBar" text="Welcome to CityLive" fontSize="19"></Label>
+           
+          </GridLayout>
+  </ActionBar>
+
+  <StackLayout class="page">
+    <ActivityIndicator busy="true" color="#34fdce" marginTop="200" width="100" height="100"></ActivityIndicator>
+    <Label class="serverMsg" text="Connecting to our servers..." marginTop="50" textWrap="true" color="#34fdce"  fontSize="20"></Label>
+    <Label class="serverMsg" text="Sometimes it may take upto a minute... Please be patient." marginTop="10" textWrap="true"  fontSize="12"></Label>
+</StackLayout>

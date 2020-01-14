@@ -19,6 +19,7 @@ import { AuthorizeRegisterService } from "../Services/authorize-register.service
 export class LoginRegisterComponent implements OnInit {
 
     isLogin=true;
+    isCalling=false;
     email='';
     pwd='';
     cnfpwd='';
@@ -58,22 +59,24 @@ export class LoginRegisterComponent implements OnInit {
                     toast.show();
                 return;
             }
-
+            this.isCalling=true;
             this.authRegSvc.checkCredentials(this.email,this.pwd).subscribe(data=>{
-                // this.authRegSvc.checkCredentialsWrong().subscribe(data=>{
-                if(data.response !== 'failure'){
+            // },error=>{
+                // if(error.status == 404){
                     const LS = require( "nativescript-localstorage" );
-                    LS.setItem('LoggedInUser', data.response);
+                    LS.setItem('LoggedInUser', this.email);
+                    LS.setItem('Password', this.pwd);
                     LS.setItem('IsAlreadyLoggedIn', 'loggedIn');
                     LS.setItem('justLoggedIn', 'justLoggedIn');
                     this.router.navigate(['/welcome'],{ clearHistory : true ,queryParams:{ livePref: 'login' }});
-                }
-                else{
+                
+                },error=>{
                     var Toast = require("nativescript-toast");
                     var toast = Toast.makeText("Invalid Credentials");
                     toast.show();
+                    this.isCalling=false;
                 }
-            })
+            );
         }
         else{
             console.log(this.email,this.pwd,this.usernm,this.cnfpwd);
@@ -90,11 +93,13 @@ export class LoginRegisterComponent implements OnInit {
                 return;
             }
             else{
+                this.isCalling=true;
                 this.authRegSvc.registerUser({email:this.email,username:this.usernm,password:this.pwd}).subscribe(data => {
                     if(data.response === 'success'){
                         var Toast = require("nativescript-toast");
                         var toast = Toast.makeText("Registered. Please Login to continue.");
                         toast.show();
+                        this.isCalling=false;
                         this.isLogin=true;
                         this.pwd='';
                     }
@@ -102,6 +107,7 @@ export class LoginRegisterComponent implements OnInit {
                         var Toast = require("nativescript-toast");
                         var toast = Toast.makeText(data.response);
                         toast.show();
+                        this.isCalling=false;
                     }
                 })
             }

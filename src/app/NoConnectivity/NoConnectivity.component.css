@@ -1,0 +1,29 @@
+.page {
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('~/app/images/citylineBG.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 15%;
+  }
+
+  .serverMsg{
+      width: 100%;
+      text-align: center;
+  }
+
+  .retryButton{
+    margin-top: 30;
+    height: 50;
+    width: 50%;
+    border-radius: 25;
+    margin-bottom: 4%;
+    border-color: azure;
+    border-width: 1;
+}
+
+.sadIcon{
+  width: 50%;
+  margin-top: 100;
+}

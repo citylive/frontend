@@ -10,6 +10,7 @@ import { NavigationExtras, ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 import { QuestionStateService } from "./Services/question.state.service";
 import * as dialogs from "tns-core-modules/ui/dialogs";
+import * as connectivity from "tns-core-modules/connectivity";
 
 import { Vibrate } from 'nativescript-vibrate';
 import { CardView } from '@nstudio/nativescript-cardview';
@@ -34,6 +35,11 @@ export class AppComponent implements OnInit,OnDestroy {
 
   currTimer;
 
+
+  type = connectivity.getConnectionType();
+
+    
+
   constructor(private ngZone: NgZone,
     private authReg:AuthorizeRegisterService,private router:RouterExtensions,private actRoute:ActivatedRoute,
     private quesState:QuestionStateService,private msgCountState:MsgCountStateService,private msgChatState:MsgChatStateService){
@@ -57,8 +63,28 @@ export class AppComponent implements OnInit,OnDestroy {
       }
     })
 
+    switch (this.type) {
+      case connectivity.connectionType.none:
+          console.log("No connection");
+          this.router.navigate(["/noConn"],{ clearHistory : true });
+          break;
+      default:
+          break;
+    }
+
+    connectivity.startMonitoring((newConnectionType) => {
+      switch (newConnectionType) {
+          case connectivity.connectionType.none:
+              console.log("Connection type changed to none.");
+              this.router.navigate(["/noConn"],{ clearHistory : true });
+              break;
+          default:
+              break;
+      }
+  });
+
+
   
-    this.startLocationWatcher();
     // this.startForegroundService();
     this.quesState.setFromStorage();
     this.msgCountState.setFromStorage();
@@ -101,7 +127,9 @@ export class AppComponent implements OnInit,OnDestroy {
        .then((result)=>{
          
         });
-
+    
+        this.startLocationWatcher();
+    
         
   }
 

@@ -25,6 +25,10 @@ Button.-primary {
     font-size: 18;
 }
 
+.ns-dark{
+    font-family: "Ubuntu-Regular";
+}
+
 .fa{
     font-family: "FontAwesome";
 }
@@ -39,3 +43,7 @@ Button.-primary {
     font-weight: 400;
 }
 
+.CityLiveActionBar{
+    text-align: left;
+    margin-left: 7;
+}

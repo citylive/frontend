@@ -5,6 +5,8 @@ import * as firebase from 'nativescript-plugin-firebase';
 import { EventData } from "tns-core-modules/ui/page/page";
 import { MessageService } from "../Services/messages.service";
 import * as dialogs from "tns-core-modules/ui/dialogs";
+import * as geolocation from "nativescript-geolocation";
+import { Accuracy } from "tns-core-modules/ui/enums/enums";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -23,10 +25,12 @@ export class ProfileComponent implements OnInit {
 
     LS = require( "nativescript-localstorage" );
     user={
-        username:"",
+        userName:"",
         email:"",
-        currentLocation:""
     }
+
+
+    locationName;
 
     deviceId="";
 
@@ -44,9 +48,18 @@ export class ProfileComponent implements OnInit {
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
        let usernm=this.LS.getItem('LoggedInUser');
-       this.userSvc.getUser(usernm).subscribe(data=>{
-           this.user=data.response;
+       this.userSvc.getUser(usernm).subscribe((data:any)=>{
+           this.user=data;
        })
+
+       geolocation.getCurrentLocation({ desiredAccuracy: Accuracy.high})
+       .then(location=>{
+           this.userSvc.getLocationName(location.latitude,location.longitude).subscribe((data:any)=>{
+                console.log('location',data);
+                this.locationName=data.staddress+' ,'+data.city+' ,'+data.prov;
+           })
+        });
+          
        firebase.getCurrentPushToken()
        .then(token=>{
            this.deviceId=token;
@@ -86,27 +99,30 @@ export class ProfileComponent implements OnInit {
     logOut(){
         console.log('setting values');
         this.loggingOut=true;
-        this.msgSvc.getTopics(this.user.username).subscribe(data=>{
+        this.msgSvc.getTopics(this.user.userName).subscribe(data=>{
             
             let topics=data.response;
-            topics.forEach((topicObj,index)=>{
-                firebase.unsubscribeFromTopic(topicObj.topic)
-                .then(topic=>{
-                    console.log("UnSubscribed to",topic);
-                    if(index+1 == topics.length){
-                        this.LS.setItem('LoggedInUser','');
-                        this.LS.setItem('currentQueries','');
-                        this.LS.setItem('msgCountMap','');
-                        this.LS.setItem('msgCountMapNotif','');
-                        this.LS.setItem('newNotif','');
-                        this.LS.setItem('livePref','');
-                        this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
-                        this.loggingOut=false;
-                        this.router.navigate(['/login'],{ clearHistory: true });
-                    }
-                });
-                
+            this.userSvc.doLogout().subscribe(data=>{
+                topics.forEach((topicObj,index)=>{
+                    firebase.unsubscribeFromTopic(topicObj.topic)
+                    .then(topic=>{
+                        console.log("UnSubscribed to",topic);
+                        if(index+1 == topics.length){
+                            this.LS.setItem('LoggedInUser','');
+                            this.LS.setItem('currentQueries','');
+                            this.LS.setItem('msgCountMap','');
+                            this.LS.setItem('msgCountMapNotif','');
+                            this.LS.setItem('newNotif','');
+                            this.LS.setItem('livePref','');
+                            this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
+                            this.loggingOut=false;
+                            this.router.navigate(['/login'],{ clearHistory: true });
+                        }
+                    });
+                    
+                })
             })
+            
         })
         
     }

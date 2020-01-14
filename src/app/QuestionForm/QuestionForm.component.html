@@ -18,8 +18,9 @@
 
     <!-- Location -->
     <StackLayout orientation="horizontal" class="location">
-        <Label fontSize="15" [text]=" 'Latitude- '+latitude"></Label>
-        <Label fontSize="15" [text]="'Longitude- '+longitude"></Label>
+        <Label class="fas" marginLeft="10" fontSize="15" text="&#xf3c5;"></Label>
+        <Label marginLeft="10" fontSize="15" [text]="locationName"></Label>
+        <!-- <Label fontSize="15" [text]="'Longitude- '+longitude"></Label> -->
     </StackLayout>
 
     <Button text="Ask Question" (tap)="askQuestion()" class="btn btn-primary btn-active askButton" col="1"></Button>

@@ -5,28 +5,30 @@
     <Label class="logginOutMsg" text="Logging Out..." textWrap="true"  fontSize="20"></Label>
 </StackLayout>
 
+
+<!-- Main page -->
 <StackLayout *ngIf="!loggingOut" class="profileTop">
     
     
 
-    <!-- Main page -->
+    
 
     <StackLayout orientation="horizontal" class="profRowCard" > 
         <Image class="profIcon" src="~/app/images/usern.png"></Image>
-        <Label class="profLabel" textWrap="true" text="{{user.username}}"  fontSize="18"></Label>
+        <Label class="profLabel" textWrap="true" text="{{user.userName}}"  fontSize="18"></Label>
  
          
     </StackLayout>
 
     <StackLayout orientation="horizontal" class="profRowCard"> 
         <Image class="profIcon" src="~/app/images/mail.png"></Image>
-        <Label class="profLabel" textWrap="true" text="{{user.email}}"  fontSize="18"></Label>
+        <Label class="profLabel" textWrap="true" text="{{user.email}}"  fontSize="16"></Label>
  
     </StackLayout>
 
     <StackLayout orientation="horizontal" class="profRowCard"> 
         <Image class="profIcon" src="~/app/images/pinn.png"></Image>
-        <Label class="profLabel" textWrap="true" text="{{user.currentLocation}}"  fontSize="18"></Label>
+        <Label class="profLabel location" textWrap="true" text="{{locationName}}"  fontSize="16"></Label>
   
     </StackLayout>
 
@@ -34,7 +36,7 @@
         <StackLayout orientation="horizontal" > 
             <Image class="profIcon" src="~/app/images/device.png"></Image>
             <StackLayout class="profLabel device" > 
-                <TextField [editable]="devIdEditable" (tap)="devIdEditable=true;" width=100% textWrap="true" text="{{deviceId}} "  fontSize="18"></TextField>
+                <TextField [editable]="devIdEditable" (tap)="devIdEditable=true;" width=100% textWrap="true" text="{{deviceId}} "  fontSize="16"></TextField>
                 <Label *ngIf="!devIdEditable" (tap)="devIdEditable=true;" textWrap="true" text="Tap to edit"  fontSize="12"></Label>
           
             </StackLayout>

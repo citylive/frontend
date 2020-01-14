@@ -14,8 +14,13 @@
   </ActionBar>
 
 
-  <ActionBar *ngIf="selectedInd.size==0" [title]="' Welcome to CityLive'" android.icon="~/app/images/town.png" android.iconVisibility="always" class="action-bar">
-  </ActionBar>
+<ActionBar *ngIf="selectedInd.size==0">
+    <GridLayout rows="auto" columns="50, *" class="action-bar-title">
+      <Image row="0" col="0" src="~/app/images/icon.png" margin="3" marginTop="7" (tap)="onCancel()" class="thumb"></Image>
+      <Label row="0" col="1" class="font-weight-bold CityLiveActionBar" text="Welcome to CityLive" fontSize="19"></Label>
+     
+    </GridLayout>
+</ActionBar>
 
 <StackLayout class="topMsg">
 

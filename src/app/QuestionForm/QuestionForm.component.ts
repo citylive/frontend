@@ -4,6 +4,7 @@ import { Accuracy } from "tns-core-modules/ui/enums";
 import { RouterExtensions } from "nativescript-angular";
 import { MessageService } from "../Services/messages.service";
 import { NavigationExtras } from "@angular/router";
+import { AuthorizeRegisterService } from "../Services/authorize-register.service";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -25,7 +26,9 @@ export class QuestionFormComponent implements OnInit {
     longitude;
     suggestionQuestions=[];
 
-    constructor(private router:RouterExtensions,private msgSvc:MessageService) {
+    locationName="";
+
+    constructor(private router:RouterExtensions,private msgSvc:MessageService,private userSvc:AuthorizeRegisterService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -41,8 +44,10 @@ export class QuestionFormComponent implements OnInit {
        .then(()=>{
             geolocation.getCurrentLocation({ desiredAccuracy: Accuracy.high})
             .then((location)=>{
-                this.latitude=location.latitude;
-                this.longitude=location.longitude
+                this.userSvc.getLocationName(location.latitude,location.longitude).subscribe((data:any)=>{
+                    console.log('location',data);
+                    this.locationName=data.staddress+' ,'+data.city+' ,'+data.prov;
+               })
             })
        });
        this.suggestionQuestions=suggestions;

@@ -110,6 +110,10 @@
     color: rgb(244, 255, 95);
 }
 
+.textColor4{
+    color: rgb(139, 86, 255);
+}
+
 .msgBy{
     text-transform: capitalize;
 }
@@ -133,21 +137,27 @@
 }
 
 .goDown{
-    width: 45;
+    height: 20;
+    width: 20;
     text-align: center;
-    padding-top: 5;
-    padding-left: 5;
+     /* padding-top: 5; */
+    /* padding-left: 5; */
+    padding-right: 2;
     color: rgb(53, 53, 53);
     background-color: #fdf4e8;
-    border-radius: 25;
+    border-radius: 10;
 }
 
 
-.goDown.noNewMsg{
+/* .goDown.noNewMsg{
     width: 32;
     height: 32;
     padding-top: 3;
     padding-left: 6;
+} */
+
+.num{
+    text-align: center;
 }
 
 .loadingMsg{

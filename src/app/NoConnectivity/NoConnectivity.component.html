@@ -1,0 +1,16 @@
+<ActionBar>
+    <GridLayout rows="auto" columns="50, *" class="action-bar-title">
+      <Image row="0" col="0" src="~/app/images/icon.png" margin="3" marginTop="7" (tap)="onCancel()" class="thumb"></Image>
+      <Label row="0" col="1" class="font-weight-bold CityLiveActionBar" text="Welcome to CityLive" fontSize="19"></Label>
+     
+    </GridLayout>
+</ActionBar>
+
+<StackLayout class="page">
+    <Image class="sadIcon" src="~/app/images/noConnection.png"></Image>
+    <Label class="serverMsg" text="No Connection. Please check Connectivity." marginTop="20" textWrap="true" color="#34fdce"  fontSize="18"></Label>
+    <Button *ngIf="showButton" text="Retry" (tap)="retryConnection()" class="btn btn-primary btn-active retryButton"></Button>
+    <Label *ngIf="!showButton" 
+    class="serverMsg" text="Connecting..." 
+    marginTop="10" textWrap="true"  fontSize="12"></Label>
+</StackLayout>

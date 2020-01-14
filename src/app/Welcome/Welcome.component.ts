@@ -135,17 +135,18 @@ export class WelcomeComponent implements OnInit{
     }
 
     setDeviceId(){
-        this.authReg.getDeviceId(this.loggedInUser).subscribe(data=>{
+        this.authReg.getUser(this.loggedInUser).subscribe((data:any)=>{
             firebase.getCurrentPushToken()
             .then(devId=>{
-                if(devId !== data.response){
+                if(devId !== data.deviceId){
                   this.authReg.setDeviceId(this.loggedInUser,devId).subscribe(data=>{
-                      console.log('Device Registered ',devId,this.loggedInUser);
-                      if(data.response !== 'success'){
+                    console.log('Device Registered ',devId,this.loggedInUser);
+                      
+                  },error=>{
                         var Toast = require("nativescript-toast");
                         var toast = Toast.makeText("Unable to Register Device.");
                         toast.show();
-                      } 
+                       
                   })
                 }
             }); 
