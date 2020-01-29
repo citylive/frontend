@@ -168,23 +168,33 @@ export class AppComponent implements OnInit,OnDestroy {
   }
 
   onReceivedMessage(message){
+    console.log(message.data);
           let vibrator = new Vibrate();
-          if(message.foreground){
-            vibrator.vibrate(500);
-          }
-          if(message.data.type === 'ques'){
+          
+          if(message.data.type === 'QUESTION'){
             console.log('is ques');
+            if(message.foreground){
+              vibrator.vibrate(500);
+            }
             this.quesState.addQues({
               question:message.data.question,
               by:message.data.by,
               topic:message.data.topic
             });
           }
-          else if(message.data.type === 'chat'){
+          else if(message.data.type === 'COUNT'){
+            var Toast = require("nativescript-toast");
+            var toast = Toast.makeText(message.data.message);
+            toast.show();
+          }
+          else if(message.data.type === 'CHAT'){
             if(this.msgChatState.currTopic == message.data.topic){
               this.msgChatState.addMsg(message.data.msg,message.data.by,message.data.time);
             }
             else{
+              if(message.foreground){
+                vibrator.vibrate(500);
+              }
               this.msgCountState.addMsgCount(message.data.topic);
             }
             
@@ -225,13 +235,13 @@ export class AppComponent implements OnInit,OnDestroy {
             let loggedInUser = LS.getItem('LoggedInUser');
             if(loggedInUser && loggedInUser!='' && loggedInUser!=null){
               this.authReg.updateLocation(location.latitude,location.longitude,loggedInUser).subscribe(data=>{
-                console.log(data.response);
-                if(data.response === 'success'){
-                  this.currLocation={
-                    lat:location.latitude,
-                    lon:location.longitude
-                  };
-                }
+                console.log("location updated");
+                // if(data.response === 'success'){
+                //   this.currLocation={
+                //     lat:location.latitude,
+                //     lon:location.longitude
+                //   };
+                // }
                 // console.log('after restCall',data);
               });
             } 

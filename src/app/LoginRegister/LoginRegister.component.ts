@@ -53,18 +53,18 @@ export class LoginRegisterComponent implements OnInit {
     onLoginRegister(){
         if(this.isLogin){
 
-            if(this.email == '' || this.pwd == ''){
+            if(this.usernm == '' || this.pwd == ''){
                 var Toast = require("nativescript-toast");
                     var toast = Toast.makeText("Fields can't be Empty!");
                     toast.show();
                 return;
             }
             this.isCalling=true;
-            this.authRegSvc.checkCredentials(this.email,this.pwd).subscribe(data=>{
+            this.authRegSvc.checkCredentials(this.usernm,this.pwd).subscribe(data=>{
             // },error=>{
                 // if(error.status == 404){
                     const LS = require( "nativescript-localstorage" );
-                    LS.setItem('LoggedInUser', this.email);
+                    LS.setItem('LoggedInUser', this.usernm);
                     LS.setItem('Password', this.pwd);
                     LS.setItem('IsAlreadyLoggedIn', 'loggedIn');
                     LS.setItem('justLoggedIn', 'justLoggedIn');
@@ -94,22 +94,20 @@ export class LoginRegisterComponent implements OnInit {
             }
             else{
                 this.isCalling=true;
-                this.authRegSvc.registerUser({email:this.email,username:this.usernm,password:this.pwd}).subscribe(data => {
-                    if(data.response === 'success'){
-                        var Toast = require("nativescript-toast");
+                this.authRegSvc.registerUser({email:this.email,username:this.usernm,password:this.pwd}).subscribe((data:any) => {
+                         var Toast = require("nativescript-toast");
                         var toast = Toast.makeText("Registered. Please Login to continue.");
                         toast.show();
                         this.isCalling=false;
                         this.isLogin=true;
                         this.pwd='';
-                    }
-                    else{
+                    },error=>{
                         var Toast = require("nativescript-toast");
-                        var toast = Toast.makeText(data.response);
+                        var toast = Toast.makeText(error.message);
                         toast.show();
                         this.isCalling=false;
                     }
-                })
+                );
             }
         }
         

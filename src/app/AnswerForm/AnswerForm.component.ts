@@ -3,6 +3,11 @@ import { RouterExtensions } from "nativescript-angular/router";
 import { NavigationExtras, ActivatedRoute } from "@angular/router";
 import { MessageService } from "../Services/messages.service";
 
+import * as application from "tns-core-modules/application";
+import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
+import { isAndroid } from "tns-core-modules/platform";
+
+
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
 * global app router module. Add the following object to the global array of routes:
@@ -44,22 +49,27 @@ export class AnswerFormComponent implements OnInit {
         this.quesBy=params.by;
         console.log(this.currentTopic);
        });
+       if (!isAndroid) {
+        return;
+      }
+      application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
+          data.cancel = true; // prevents default back button behavior
+          this.goBack();
+        
+      });
     }
 
     AnswerQuestion(){
         if(this.answer.length>0){
-            this.sendAnswer().subscribe(data=>{
-                if(data.response == "success"){
+            this.sendAnswer().subscribe((data:any)=>{
                     var Toast = require("nativescript-toast");
                     var toast = Toast.makeText("Answer submitted.");
                     toast.show();
                     this.goBack();
-                }
-                else{
-                    var Toast = require("nativescript-toast");
+            },error=>{
+                var Toast = require("nativescript-toast");
                     var toast = Toast.makeText("Unable to submit. Please try again!.");
                     toast.show();
-                }
             })
         }
         else{
@@ -76,18 +86,21 @@ export class AnswerFormComponent implements OnInit {
 
     toChat(){
         if(this.answer.length==0){
-            this.routeToChat();
+            this.msgSvc.subtoTopic(this.loggedInUser,this.currentTopic).subscribe(dta=>{
+                this.routeToChat();
+            })
         }
         else{
-            this.sendAnswer().subscribe(data=>{
-                if(data.response == "success"){
-                this.routeToChat();
-            }
-            else{
-                var Toast = require("nativescript-toast");
+            this.sendAnswer().subscribe((data:any)=>{
+                this.msgSvc.subtoTopic(this.loggedInUser,this.currentTopic).subscribe(dta=>{
+                    this.routeToChat();
+                })
+                
+            
+        },error=>{
+            var Toast = require("nativescript-toast");
                 var toast = Toast.makeText("Unable to submit. Please try again!.");
                 toast.show();
-            }
         }) 
         }
     }

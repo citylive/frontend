@@ -9,6 +9,7 @@
 .profRowCard{
     height: 100;
     width: 90%;
+    vertical-align: middle;
 }
 
 .profIcon{
@@ -23,6 +24,11 @@
 }
 
 .profLabel.device{
+    height: 70;
+}
+
+.profLabel.location{
+    margin-top: 20;
     height: 70;
 }
 

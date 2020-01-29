@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
+import { Component, OnInit, OnDestroy, NgZone, ViewChildren, ViewChild } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as firebase from 'nativescript-plugin-firebase';
 import { AuthorizeRegisterService } from "../Services/authorize-register.service";
@@ -7,6 +7,7 @@ import {map} from 'rxjs/operators'
 import { Subscription } from "rxjs";
 import { MsgCountStateService } from "../Services/message.count.state.service";
 import { MessageService } from "../Services/messages.service";
+import { MessagesComponent } from "../Messages/Messages.component";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -36,6 +37,8 @@ export class WelcomeComponent implements OnInit{
         quesCount=0;
 
         currIndex=0;
+
+        @ViewChild('messagesComp',{static:false})messagesComp:MessagesComponent;
         
         
     constructor(private ngZone:NgZone,private router:RouterExtensions,
@@ -109,12 +112,16 @@ export class WelcomeComponent implements OnInit{
 
     subscribeToUserTopics(){
         this.showFinishing=true;
-        this.msgSvc.getTopics(this.loggedInUser).subscribe(data=>{
-            let topics=data.response;
+        this.msgSvc.getTopics(this.loggedInUser).subscribe((data:any)=>{
+            let topics=data;
+            if(data.length == 0){
+                this.showLoader=false;
+                this.showFinishing=true;
+            }
             topics.forEach((topicObj,index)=>{
-                firebase.subscribeToTopic(topicObj.topic)
+                firebase.subscribeToTopic(topicObj.topicId.toString())
                 .then(topic=>{
-                    console.log("Subscribed to",topicObj.topic);
+                    console.log("Subscribed to",topicObj.topicId.toString());
                     if(index+1 == topics.length){
                         this.showLoader=false;
                         this.showFinishing=true;
@@ -128,14 +135,21 @@ export class WelcomeComponent implements OnInit{
         this.currIndex=event.newIndex;
         if(this.currIndex === 0){
             this.quesCount=0;
+            if(this.messagesComp){
+                this.messagesComp.goOutFromMessages();
+            }
         }
         else if(this.currIndex === 1){
             this.msgCount=0;
+            this.messagesComp.cometoMessages();
+        }
+        else{
+            this.messagesComp.goOutFromMessages();
         }
     }
 
     setDeviceId(){
-        this.authReg.getUser(this.loggedInUser).subscribe((data:any)=>{
+        this.authReg.getDeviceId(this.loggedInUser).subscribe((data:any)=>{
             firebase.getCurrentPushToken()
             .then(devId=>{
                 if(devId !== data.deviceId){

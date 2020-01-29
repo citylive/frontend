@@ -32,6 +32,7 @@
     "nativescript-keyboardshowing": "^1.0.2",
     "nativescript-localstorage": "^2.0.1",
     "nativescript-plugin-firebase": "^10.3.3",
+    "nativescript-sound": "^1.0.4",
     "nativescript-toast": "^2.0.0",
     "nativescript-ui-dataform": "^6.0.0",
     "nativescript-vibrate": "^3.0.0",

@@ -14,7 +14,8 @@
             style.placeholderColor="#ccccccee"
              [(ngModel)]="email" 
              class="input" 
-             [hint]="isLogin?'Email/UserName':'Email'" 
+             *ngIf="!isLogin" 
+             [hint]="'Email'" 
              keyboardType="email" 
              autocorrect="false" 
              autocapitalizationType="none"></TextField
@@ -29,7 +30,6 @@
             style.color="white" 
             style.placeholderColor="#ccccccee" 
             [(ngModel)]='usernm' 
-            *ngIf="!isLogin" 
             class="input" 
             hint="UserName" 
             autocorrect="false" 

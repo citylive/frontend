@@ -31,20 +31,32 @@ export class AuthorizeRegisterService {
 
     registerUser(user:User){
         console.log(user);
-        let url='./MockUps/true.json';
-        // return this.http.getData(url);
-        return of({
-            response:"success"
-        });
+        let url='user/signup';
+        let data={
+            "userName": user.username,
+            "firstName": "",
+            "lastName": "",
+            "email": user.email,
+            "password": user.password
+        }
+        return this.http.postData(url,data);
+            // return of({
+            //     response:"success"
+            // });
     }
 
     updateLocation(lat:number,long:number,user:string){
         console.log(lat,long);
-        let url='https://citylive.free.beeceptor.com';
-        // return this.http.getData(url);
-        return of({
-            response:"success"
-        });
+        let url='user/location';
+        let data={
+            "userName": user,
+            "latitude": lat,
+            "longitude": long
+        }
+        return this.http.putData(url,data);
+        // return of({
+        //     response:"success"
+        // });
     }
 
     checkCredentials(user,passwd){
@@ -67,9 +79,11 @@ export class AuthorizeRegisterService {
     }
 
     getDeviceId(usernm){
-        return of({
-            response:"dxVeB7oD6yI:APA91bFfbrWxZKZoY0XBmQ8TGHu2UMZQcg5GEKol1RBx_A5Cl3A_HHqo46UmBgb1rBEac4noQiY9vv5DvjR5ZFm32W-gr6qIMZ3xZnKzY3HBQODHKebMIWlnhwCff3KiFlj1dCSZEEHP"
-        });
+        let url='user/deviceId?userName='+usernm;
+        return this.http.getData(url);
+        // return of({
+        //     response:"dxVeB7oD6yI:APA91bFfbrWxZKZoY0XBmQ8TGHu2UMZQcg5GEKol1RBx_A5Cl3A_HHqo46UmBgb1rBEac4noQiY9vv5DvjR5ZFm32W-gr6qIMZ3xZnKzY3HBQODHKebMIWlnhwCff3KiFlj1dCSZEEHP"
+        // });
     }
 
     setDeviceId(usernm,id){

@@ -8,6 +8,10 @@ import * as dialogs from "tns-core-modules/ui/dialogs";
 import {screen} from "tns-core-modules/platform/platform"
 import { setInterval } from "tns-core-modules/timer/timer";
 
+import * as application from "tns-core-modules/application";
+import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
+import { isAndroid } from "tns-core-modules/platform";
+
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -52,6 +56,10 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
 
     loadingMsges=true;
 
+    sound = require("nativescript-sound");
+    tada;
+    
+
    
 
     @ViewChild("scrollView", { static: false }) scrollView: ElementRef;
@@ -77,6 +85,7 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
     //         data.cancel = true; // prevents default back button behavior   
     //   });
         console.log('Initing');
+        this.tada = this.sound.create("~/app/sounds/when.mp3");
         var LS = require( "nativescript-localstorage" );
         this.loggedInUser = LS.getItem('LoggedInUser');
 
@@ -99,13 +108,21 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
                 this.addNextMsg();
               })
            });
-        this.msgsvc.getAllMessages(this.currentTopic).subscribe(data=>{
-            this.messages=data.response;
+        this.msgsvc.getAllMessages(this.currentTopic).subscribe((data:any)=>{
+            this.messages=data;
             setTimeout(()=>{
                 this.scrollToBottom();
                 this.loadingMsges=false;
             },1500);
         })
+        if (!isAndroid) {
+            return;
+          }
+          application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
+              data.cancel = true; // prevents default back button behavior
+              this.goBack();
+            
+          });
     }
 
     ngAfterViewInit(){
@@ -139,9 +156,6 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
         
     }
 
-    onBackPressed(){
-        console.log("back");
-    }
 
     textfieldTapped(){
         this.disclaimerHgt=this.keyBoardHeight;
@@ -168,7 +182,11 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
     addNextMsg(){
         let newMsg=this.msgState.newMsg;
         console.log("new msg rec",newMsg);
-        if(newMsg.message.length>0 && newMsg.by != this.loggedInUser ){
+        if(newMsg.answer.length>0 && newMsg.userName != this.loggedInUser ){
+             // preload the audio file
+            
+            // play the sound (i.e. tap event handler)
+            this.tada.play();
             this.messages.push(newMsg);
             // this.scrollToBottom();
             if(this.scrolledToBottom){
@@ -199,35 +217,42 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
     }
 
     sendMsg(){
+        console.log(this.message,this.message.length);
         if(this.message.length == 0){
             var Toast = require("nativescript-toast");
             var toast = Toast.makeText("Can't send empty message");
             toast.show();
             return;
         }
-        this.msgsvc.addAnswer(this.loggedInUser,this.currentTopic,this.message).subscribe(data=>{
-            if(data.response != "success"){
-                var Toast = require("nativescript-toast");
-                var toast = Toast.makeText("Unable to submit. Please try again!.");
-                toast.show();
-            }
-            else{
+        let msg=this.message;
+        this.message="";
+        this.msgsvc.addAnswer(this.loggedInUser,this.currentTopic,msg).subscribe(data=>{
+            // if(data.response != "success"){
+            //     var Toast = require("nativescript-toast");
+            //     var toast = Toast.makeText("Unable to submit. Please try again!.");
+            //     toast.show();
+            // }
+            // else{
+                console.log("sent message");
                 let dateTime = new Date();
-                let dateStr=dateTime.toLocaleTimeString('en-US', { hour12: false }).slice(0,5);
                 this.messages.push({
-                    message:this.message,
-                    by:this.loggedInUser,
-                    time:dateStr
+                    answer:msg,
+                    userName:this.loggedInUser,
+                    time:dateTime
                 })
                     this.scrollToBottom();
-                this.message="";
-            }
+                // this.message="";
+            
+        },error=>{
+            var Toast = require("nativescript-toast");
+                var toast = Toast.makeText("Unable to submit. Please try again!.");
+                toast.show();
         })
     }
 
     unsubTopic(){
         this.msgsvc.unsubFromTopic(this.loggedInUser,this.currentTopic).subscribe(data=>{
-            if(data.response === 'success'){
+            // if(data.response === 'success'){
                 firebase.unsubscribeFromTopic(this.currentTopic)
                 .then(()=>{
                     console.log("unsubscribed");
@@ -238,14 +263,19 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
                 })
                 .catch(error=>{
                     console.log(error);
-                })
-            }
-            else{
-                var Toast = require("nativescript-toast");
+                });
+            // }
+            // else{
+            //     var Toast = require("nativescript-toast");
+            //     var toast = Toast.makeText("Unable to delete.Please try again later!");
+            //     toast.show();
+            // }
+        },error=>{
+            var Toast = require("nativescript-toast");
                 var toast = Toast.makeText("Unable to delete.Please try again later!");
                 toast.show();
-            }
-        });
+        }
+        );
     }
 
     ngOnDestroy(){
@@ -254,6 +284,6 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
     }
     
     goBack(){
-        this.router.navigateByUrl("/welcome");
+        this.router.navigateByUrl("/welcome",{ clearHistory : true });
     }
 }

@@ -6,6 +6,10 @@ import { MessageService } from "../Services/messages.service";
 import { NavigationExtras } from "@angular/router";
 import { AuthorizeRegisterService } from "../Services/authorize-register.service";
 
+import * as application from "tns-core-modules/application";
+import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
+import { isAndroid } from "tns-core-modules/platform";
+
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
 * global app router module. Add the following object to the global array of routes:
@@ -45,12 +49,22 @@ export class QuestionFormComponent implements OnInit {
             geolocation.getCurrentLocation({ desiredAccuracy: Accuracy.high})
             .then((location)=>{
                 this.userSvc.getLocationName(location.latitude,location.longitude).subscribe((data:any)=>{
+                    this.longitude=location.longitude;
+                    this.latitude=location.latitude;
                     console.log('location',data);
                     this.locationName=data.staddress+' ,'+data.city+' ,'+data.prov;
                })
             })
        });
        this.suggestionQuestions=suggestions;
+       if (!isAndroid) {
+        return;
+      }
+      application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
+          data.cancel = true; // prevents default back button behavior
+          this.goBack();
+        
+      });
     }
 
     goBack(){
@@ -67,21 +81,30 @@ export class QuestionFormComponent implements OnInit {
                 closed:false,
                 latitude:this.latitude,
                 longitude:this.longitude
-            }).subscribe(data=>{
+            }).subscribe((data:any)=>{
                 if(data.topicId){
-                    const navigationExtras: NavigationExtras = {
-                        queryParams: {
-                            topic: data.topicId,
-                            question:this.question
-                        }   
-                    };
-                    this.router.navigate(["/chat"], navigationExtras);
+                    this.msgSvc.subtoTopic(loggedInUser,data.topicId).subscribe(msg=>{
+                        console.log('subscribed',data.topicId)
+                        const navigationExtras: NavigationExtras = {
+                            queryParams: {
+                                topic: data.topicId,
+                                question:this.question
+                            }   
+                        };
+                        this.router.navigate(["/chat"], navigationExtras);
+                    })
+                    
                 }
                 else{
                     var Toast = require("nativescript-toast");
                     var toast = Toast.makeText("Unable to submit question. Please try again!");
                     toast.show();
                 }
+            },error=>{
+                console.log(error);
+                var Toast = require("nativescript-toast");
+                    var toast = Toast.makeText("Unable to submit question. Please try again!");
+                    toast.show();
             })
         }
         else{

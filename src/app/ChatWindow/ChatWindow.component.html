@@ -9,23 +9,25 @@
         <ScrollView #scrollView class="msgFeedTop" (scroll)="onScroll($event)">
             <StackLayout>
                 <StackLayout *ngFor="let msg of this.messages;let ind = index"> 
+
+                    <Label class="dateVal" *ngIf="ind == 0 || ((messages[ind-1].time  | date:'mediumDate') != (msg.time | date:'mediumDate'))" text="{{msg.time | date:'mediumDate'}}"  fontSize="12"></Label>
                     
-                    <StackLayout [ngClass]="{'selfMsg': loggedInUser == msg.by,'othMsg': loggedInUser != msg.by}" class="msgCard">
+                    <StackLayout [ngClass]="{'selfMsg': loggedInUser == msg.userName,'othMsg': loggedInUser != msg.userName}" class="msgCard">
                         <!-- Message Sender -->
                         <Label textColor3
-                        [ngClass]="{'textColor1': msg.by.length % 4 == 0 ,
-                        'textColor2': msg.by.length % 4 == 1,
-                        'textColor3': msg.by.length % 4 == 2,
-                        'textColor4': msg.by.length % 4 == 3}"
-                        [visibility]="loggedInUser == msg.by ? 'collapse' : 'visible'"  
-                        class="msgBy font-weight-bold" text="{{msg.by}}"  fontSize="13">
+                        [ngClass]="{'textColor1': msg.userName.length % 4 == 0 ,
+                        'textColor2': msg.userName.length % 4 == 1,
+                        'textColor3': msg.userName.length % 4 == 2,
+                        'textColor4': msg.userName.length % 4 == 3}"
+                        [visibility]="loggedInUser == msg.userName ? 'collapse' : 'visible'"  
+                        class="msgBy font-weight-bold" text="{{msg.userName}}"  fontSize="13">
                         </Label>
                         
                         <!-- Message text -->
-                        <Label class="msgMsg" textWrap="true" text="{{msg.message}}"  fontSize="16"></Label>
+                        <Label class="msgMsg" textWrap="true" text="{{msg.answer}}"  fontSize="16"></Label>
 
                         <!-- Message time -->
-                        <Label class="rightAlign" text="{{msg.time}}"  fontSize="10"></Label>
+                        <Label class="rightAlign" text="{{msg.time | date:'shortTime'}}"  fontSize="10"></Label>
                         
                     </StackLayout>
                 </StackLayout>

@@ -7,6 +7,8 @@ import * as dialogs from "tns-core-modules/ui/dialogs";
 import { Vibrate } from 'nativescript-vibrate';
 import * as firebase from 'nativescript-plugin-firebase';
 
+import {SwipeGestureEventData} from 'tns-core-modules/ui/gestures'
+
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
 * global app router module. Add the following object to the global array of routes:
@@ -35,6 +37,7 @@ export class MessagesComponent implements OnInit {
 
     quesExpanded=true;
     discExpanded=true;
+    showRefresh=false;
 
     selectedInd:Set<number>=new Set([]);
     
@@ -64,15 +67,30 @@ export class MessagesComponent implements OnInit {
        });
     }
 
+    cometoMessages(){
+        console.log('Come to messages');
+        this.showRefresh=true;
+    }
+
+    goOutFromMessages(){
+        this.showRefresh=false;
+        this.selectedInd=new Set([]);
+    }
+
+    onRefresh(){
+        this.getMessageTopics();
+    }
+
     getMessageTopics(){
         this.largeNumber = 9999999;
 
         this.topicsMap = new Map([]);
         this.numbertopicsMap = new Map([]);
-        this.msgSvc.getTopics(this.loggedInUser).subscribe(messages=>{
-            this.items=messages.response;
+        this.msgSvc.getTopics(this.loggedInUser).subscribe((messages:any)=>{
+            this.items=messages;
+            console.log('topics array received',messages,this.items,this.items.length)
             this.items.forEach((item,index)=>{
-                this.numbertopicsMap.set(item.topic,this.largeNumber)
+                this.numbertopicsMap.set(item.topicId.toString(),this.largeNumber)
                 this.topicsMap.set(this.largeNumber,item);
                 this.largeNumber--;
                 if(index+1 == this.items.length){
@@ -106,7 +124,7 @@ export class MessagesComponent implements OnInit {
         let topic=this.topicsMap.get(topicNum);
         console.log('Updating count',topicNum,topic);
         if(topicNum){
-            let count=this.msgCountState.getCurrCount(topic.topic);
+            let count=this.msgCountState.getCurrCount(topic.topicId.toString());
             let newTopic=Object.assign({},topic,{ count:count?count:0 });
             this.topicsMap.delete(topicNum);
             this.numbertopicsMap.set(key,this.largeNumber);
@@ -122,7 +140,7 @@ export class MessagesComponent implements OnInit {
             this.functionWhenLongPress(key);
             return;
         }
-        let topic=this.topicsMap.get(key).topic;
+        let topic=this.topicsMap.get(key).topicId.toString();
         let ques=this.topicsMap.get(key).question;
        this.msgCountState.resetMsgTopic(topic);
       const navigationExtras: NavigationExtras = {
@@ -150,6 +168,10 @@ export class MessagesComponent implements OnInit {
     
   }
 
+  onSwipe(args: SwipeGestureEventData) {
+    console.log("Swipe Direction: " + args.direction);
+}
+
   onDelete(){
     dialogs.confirm({
         title: "Delete Selected Discussions?",
@@ -161,9 +183,9 @@ export class MessagesComponent implements OnInit {
         if(result != undefined){
             if(result){
                 this.selectedInd.forEach(key=>{
-                    let topic=this.topicsMap.get(key).topic;
+                    let topic=this.topicsMap.get(key).topicId.toString();
                     this.msgSvc.unsubFromTopic(this.loggedInUser,topic).subscribe(data=>{
-                        if(data.response === 'success'){
+                        // if(data.response === 'success'){
                             firebase.unsubscribeFromTopic(topic)
                             .then(()=>{
                                 this.selectedInd.delete(key);
@@ -172,12 +194,16 @@ export class MessagesComponent implements OnInit {
                             }
                             })
 
-                        }
-                        else{
-                            var Toast = require("nativescript-toast");
+                        // }
+                        // else{
+                        //     var Toast = require("nativescript-toast");
+                        //     var toast = Toast.makeText("Unable to delete.Please try again later!");
+                        //     toast.show();
+                        // }
+                    },error=>{
+                        var Toast = require("nativescript-toast");
                             var toast = Toast.makeText("Unable to delete.Please try again later!");
                             toast.show();
-                        }
                     });
                   
                 })

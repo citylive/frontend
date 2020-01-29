@@ -10,9 +10,9 @@ import 'rxjs/add/observable/of';
 export class MsgChatStateService {
     
     newMsg={
-        message:"",
-        time:"",
-        by:""
+        answer:"",
+        time:new Date(),
+        userName:""
     };
     currTopic='';
     newMessage:BehaviorSubject<any>=new BehaviorSubject(this.newMsg);
@@ -25,11 +25,15 @@ export class MsgChatStateService {
 
     
    addMsg(msg:string,by:string,time:string){
+    //    let dt=new Date(time);
+    //    console.log('msgTime',dt);
+    //    dt.setTime(new Date(time).getTime() - new Date().getTimezoneOffset());
+    //    console.log('msgTime',dt);
        console.log("adding",msg);
         this.newMsg={
-            message:msg,
-            time:time,
-            by:by
+            answer:msg,
+            time:new Date(),
+            userName:by
         };
         this.newMessage.next(msg);
        //console.log(newArrObj);

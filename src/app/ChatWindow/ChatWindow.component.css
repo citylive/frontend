@@ -98,6 +98,17 @@
     padding-bottom: 1;
 }
 
+.dateVal{
+    width: 30%;
+    /* margin-left: 20%; */
+    background-color: blanchedalmond;
+    border-radius: 5;
+    color: black;
+    text-align: center;
+    margin-bottom: 6;
+    
+}
+
 .textColor1{
     color: rgb(255, 131, 43);
 }

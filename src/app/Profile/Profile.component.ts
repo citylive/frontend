@@ -99,12 +99,23 @@ export class ProfileComponent implements OnInit {
     logOut(){
         console.log('setting values');
         this.loggingOut=true;
-        this.msgSvc.getTopics(this.user.userName).subscribe(data=>{
+        this.msgSvc.getTopics(this.user.userName).subscribe((data:any)=>{
             
-            let topics=data.response;
+            let topics=data;
             this.userSvc.doLogout().subscribe(data=>{
+                if(topics.length == 0){
+                    this.LS.setItem('LoggedInUser','');
+                            this.LS.setItem('currentQueries','');
+                            this.LS.setItem('msgCountMap','');
+                            this.LS.setItem('msgCountMapNotif','');
+                            this.LS.setItem('newNotif','');
+                            this.LS.setItem('livePref','');
+                            this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
+                            this.loggingOut=false;
+                            this.router.navigate(['/login'],{ clearHistory: true });
+                }
                 topics.forEach((topicObj,index)=>{
-                    firebase.unsubscribeFromTopic(topicObj.topic)
+                    firebase.unsubscribeFromTopic(topicObj.topicId.toString())
                     .then(topic=>{
                         console.log("UnSubscribed to",topic);
                         if(index+1 == topics.length){

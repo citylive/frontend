@@ -15,10 +15,10 @@
 
 
 <ActionBar *ngIf="selectedInd.size==0">
-    <GridLayout rows="auto" columns="50, *" class="action-bar-title">
-      <Image row="0" col="0" src="~/app/images/icon.png" margin="3" marginTop="7" (tap)="onCancel()" class="thumb"></Image>
+    <GridLayout rows="auto" columns="50, *,40" class="action-bar-title">
+      <Image row="0" col="0" src="~/app/images/icon.png" margin="3" (tap)="onCancel()" class="thumb"></Image>
       <Label row="0" col="1" class="font-weight-bold CityLiveActionBar" text="Welcome to CityLive" fontSize="19"></Label>
-     
+      <Image *ngIf="showRefresh" row="0" col="2" src="~/app/images/refresh.png" margin="3" (tap)="onRefresh()" class="thumb"></Image>
     </GridLayout>
 </ActionBar>
 
@@ -39,7 +39,7 @@
             <StackLayout [ngClass]="{'selected font-weight-bold': selectedInd.has(item.key)}"
              (tap)="routeToChat(item.key)" 
             (longPress)="functionWhenLongPress(item.key)" 
-            [visibility]="item.value.by !== loggedInUser ? 'collapse' : 'visible'" orientation="horizontal"  
+            [visibility]="item.value.userName !== loggedInUser ? 'collapse' : 'visible'" orientation="horizontal"  
             class="MessageCard own" *ngFor="let item of topicsMap | keyvalue"> 
     
                 <StackLayout class="questionText">
@@ -70,12 +70,12 @@
             <StackLayout [ngClass]="{'selected font-weight-bold': selectedInd.has(item.key)}"
             (tap)="routeToChat(item.key)" 
             (longPress)="functionWhenLongPress(item.key)"
-             [visibility]="item.value.by === loggedInUser ? 'collapse' : 'visible'" 
+             [visibility]="item.value.userName === loggedInUser ? 'collapse' : 'visible'" 
              orientation="horizontal" class="MessageCard" *ngFor="let item of topicsMap | keyvalue"> 
     
                 <StackLayout class="questionText">
                     <Label  text="{{item.value.question}}" fontSize="16"></Label>
-                    <Label  text="by {{item.value.by}}" fontSize="12"></Label>
+                    <Label  text="by {{item.value.userName}}" fontSize="12"></Label>
                 </StackLayout>
                 <StackLayout class="noMessg">
                     <Label *ngIf="item.value.count>0  && !selectedInd.has(item.key)" class="font-weight-bold noMessgTxt"  text="{{item.value.count}}" fontSize="15"></Label>
