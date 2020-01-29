@@ -38,6 +38,7 @@ export class MessagesComponent implements OnInit {
     quesExpanded=true;
     discExpanded=true;
     showRefresh=false;
+    deleting=false;
 
     selectedInd:Set<number>=new Set([]);
     
@@ -182,6 +183,8 @@ export class MessagesComponent implements OnInit {
         // result argument is boolean
         if(result != undefined){
             if(result){
+                this.deleting=true;
+                
                 this.selectedInd.forEach(key=>{
                     let topic=this.topicsMap.get(key).topicId.toString();
                     this.msgSvc.unsubFromTopic(this.loggedInUser,topic).subscribe(data=>{
@@ -191,6 +194,7 @@ export class MessagesComponent implements OnInit {
                                 this.selectedInd.delete(key);
                                 if(this.selectedInd.size==0){
                                 this.getMessageTopics();
+                                this.deleting=false;
                             }
                             })
 

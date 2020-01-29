@@ -1,5 +1,5 @@
 
-<ActionBar *ngIf="selectedInd.size>0" title="Delete {{selectedInd.size}} Item(s)">
+<ActionBar *ngIf="selectedInd.size>0 && !deleting" title="Delete {{selectedInd.size}} Item(s)">
     <!-- <ActionItem (tap)="onDelete()"
         ios.systemIcon="16" ios.position="right" android.systemIcon="ic_menu_delete"
         text="Delete" android.position="actionBar"></ActionItem>
@@ -14,15 +14,15 @@
   </ActionBar>
 
 
-<ActionBar *ngIf="selectedInd.size==0">
-    <GridLayout rows="auto" columns="50, *,40" class="action-bar-title">
+<ActionBar *ngIf="selectedInd.size==0 || deleting">
+    <GridLayout rows="auto" columns="50, *,45" class="action-bar-title">
       <Image row="0" col="0" src="~/app/images/icon.png" margin="3" (tap)="onCancel()" class="thumb"></Image>
       <Label row="0" col="1" class="font-weight-bold CityLiveActionBar" text="Welcome to CityLive" fontSize="19"></Label>
-      <Image *ngIf="showRefresh" row="0" col="2" src="~/app/images/refresh.png" margin="3" (tap)="onRefresh()" class="thumb"></Image>
+      <Image *ngIf="showRefresh" row="0" col="2" src="~/app/images/refresh.png" margin="5" (tap)="onRefresh()" class="thumb"></Image>
     </GridLayout>
 </ActionBar>
 
-<StackLayout class="topMsg">
+<StackLayout *ngIf="!deleting" class="topMsg">
 
     <!-- Questions Header -->
     <StackLayout class="headMsg" orientation="horizontal">
@@ -86,4 +86,10 @@
             
         </StackLayout>
     </ScrollView>
+</StackLayout>
+
+
+<StackLayout *ngIf="deleting" class="topMsg">
+    <ActivityIndicator busy="true" color="#34fdce" marginTop="200" width="100" height="100"></ActivityIndicator>
+        <Label class="loadingMsg" text="Deleting discussions..." textWrap="true"  fontSize="20"></Label>
 </StackLayout>
