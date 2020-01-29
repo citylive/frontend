@@ -67,6 +67,12 @@ export class ProfileComponent implements OnInit {
 
     }
 
+    openMail(){
+        const utilsModule = require("tns-core-modules/utils/utils");
+        let emailTo="cityliveprod@gmail.com";
+        utilsModule.openUrl('mailto:'+emailTo);
+    }
+
     changeLiveStatus(){
             var LS = require( "nativescript-localstorage" );
             let livePref = LS.getItem('livePref');
@@ -95,6 +101,10 @@ export class ProfileComponent implements OnInit {
                 });
             }
         }
+
+
+
+
 
     logOut(){
         console.log('setting values');

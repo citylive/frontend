@@ -13,7 +13,7 @@
 }
 
 .profIcon{
-    height: 60;
+    height: 45;
     width: 20%;
     margin-right: 5%;
 }
@@ -36,7 +36,7 @@
     border-width: 0;
 }
 .btnLogout{
-    margin-top: 5%;
+    margin-bottom: 5%;
     width: 60%;
     border-color: white;
     border-width: 1;
@@ -45,4 +45,14 @@
 
 .logginOutMsg{
     text-align: center;
+}
+
+.accOptions{
+    width: 70%;
+    margin-left: 15%;
+    display: flex;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 15vh;
+    /* font-family: 'Suez One', serif; */
 }
