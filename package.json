@@ -36,6 +36,7 @@
     "nativescript-toast": "^2.0.0",
     "nativescript-ui-dataform": "^6.0.0",
     "nativescript-vibrate": "^3.0.0",
+    "nativescript-volume": "^1.0.7",
     "reflect-metadata": "~0.1.12",
     "rxjs": "^6.4.0",
     "rxjs-compat": "^6.5.4",

@@ -18,6 +18,10 @@ import { registerElement } from 'nativescript-angular';
 import { MsgCountStateService } from "./Services/message.count.state.service";
 import { MsgChatStateService } from "./Services/chat.message.state.service";
 
+import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
+import { isAndroid } from "tns-core-modules/platform";
+
+
 registerElement('CardView', () => CardView as any);
 
 
@@ -129,8 +133,25 @@ export class AppComponent implements OnInit,OnDestroy {
         });
     
         this.startLocationWatcher();
-    
+        this.setBackButton();
         
+  }
+
+
+  setBackButton(){
+    if (!isAndroid) {
+      return;
+    }
+    application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
+      
+      let notRedir=['/noConn','/welcome','/login','/launch'];
+      if(notRedir.indexOf(this.router.router.url) < 0){
+        data.cancel = true; // prevents default back button behavior
+        this.ngZone.run(()=>{
+          this.router.navigate(["/welcome"],{ clearHistory : true });
+        })
+      }
+  });
   }
 
 
@@ -170,17 +191,33 @@ export class AppComponent implements OnInit,OnDestroy {
   onReceivedMessage(message){
     console.log(message.data);
           let vibrator = new Vibrate();
-          
-          if(message.data.type === 'QUESTION'){
-            console.log('is ques');
-            if(message.foreground){
-              vibrator.vibrate(500);
-            }
-            this.quesState.addQues({
-              question:message.data.question,
-              by:message.data.by,
-              topic:message.data.topic
+
+          var LS = require( "nativescript-localstorage" );
+          let loggedInUser = LS.getItem('LoggedInUser');
+
+          if(message.data.type === 'QUESTION' && message.data.by != loggedInUser){
+            console.log('is ques',message);
+            if(!message.foreground){
+              this.ngZone.run(()=>{
+                const navigationExtras: NavigationExtras = {
+                    queryParams: {
+                      question:message.data.question,
+                      by:message.data.by,
+                      topic:message.data.topic
+                    },
+                };
+                this.router.navigate(["/answer"], navigationExtras);
             });
+            }
+            else{
+              vibrator.vibrate(500);
+              this.quesState.addQues({
+                question:message.data.question,
+                by:message.data.by,
+                topic:message.data.topic
+              });
+            }
+            
           }
           else if(message.data.type === 'COUNT'){
             var Toast = require("nativescript-toast");
@@ -188,7 +225,27 @@ export class AppComponent implements OnInit,OnDestroy {
             toast.show();
           }
           else if(message.data.type === 'CHAT'){
-            if(this.msgChatState.currTopic == message.data.topic){
+            if(!message.foreground){
+                this.ngZone.run(()=>{
+                      
+                      if(this.msgChatState.currTopic == message.data.topic){
+                        this.msgChatState.addMsg(message.data.msg,message.data.by,message.data.time,true);
+                      }
+                      else{
+                        let navigationExtras: NavigationExtras = {
+                          queryParams: {
+                              topic: message.data.topic,
+                              time: message.data.time,
+                              key:Math.random()
+                          }  
+                        };
+                        console.log(navigationExtras)
+                        this.router.navigate(["/chat"], navigationExtras);
+                      }
+                      
+                })
+            }
+            else if(this.msgChatState.currTopic == message.data.topic){
               this.msgChatState.addMsg(message.data.msg,message.data.by,message.data.time);
             }
             else{
@@ -221,7 +278,7 @@ export class AppComponent implements OnInit,OnDestroy {
 
     this.currTimer = setInterval(() => {
       this.checkAndSetLocation();
-    },1000*60*5);
+    },1000*60*2);
 
   }
 

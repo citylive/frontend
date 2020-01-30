@@ -8,6 +8,8 @@ import * as dialogs from "tns-core-modules/ui/dialogs";
 import {screen} from "tns-core-modules/platform/platform"
 import { setInterval } from "tns-core-modules/timer/timer";
 
+import { Volume } from 'nativescript-volume';
+
 import * as application from "tns-core-modules/application";
 import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
 import { isAndroid } from "tns-core-modules/platform";
@@ -26,7 +28,8 @@ import { isAndroid } from "tns-core-modules/platform";
     selector: "ChatWindow",
     moduleId: module.id,
     templateUrl: "./ChatWindow.component.html",
-    styleUrls: ["./ChatWindow.component.css"]
+    styleUrls: ["./ChatWindow.component.css"],
+    providers:[Volume]
 })
 export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
 
@@ -65,7 +68,9 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
     @ViewChild("scrollView", { static: false }) scrollView: ElementRef;
     @ViewChild("textInp", { static: false }) textInp: ElementRef;
 
-    constructor(private ngZone:NgZone,private route:ActivatedRoute,private router:RouterExtensions,private msgsvc:MessageService,private msgState:MsgChatStateService) {
+    constructor(private ngZone:NgZone,private route:ActivatedRoute,
+        private router:RouterExtensions,private msgsvc:MessageService,
+        private msgState:MsgChatStateService,private volume:Volume) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -90,8 +95,22 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
         this.loggedInUser = LS.getItem('LoggedInUser');
 
         this.route.queryParams.subscribe(params => {
-            this.question=params.question;
+            this.question=params.question?params.question:this.question;
             this.currentTopic= params.topic;
+            // if(params.time && params.time != ""){
+
+            //     let TmArr=params.time.split(' ');
+            //     let newVal=TmArr.join('T');
+            //     console.log(newVal);
+
+            //     let currDate=new Date(newVal+'Z');
+            //     let lastDate=new Date(this.messages[this.messages.length-1].time);
+
+            //     if(currDate > lastDate){
+            //         this.fetchMsgs();
+            //     }
+                
+            // }
             console.log(this.currentTopic);
             firebase.subscribeToTopic(this.currentTopic)
             .then(()=>{
@@ -108,6 +127,14 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
                 this.addNextMsg();
               })
            });
+
+
+        this.fetchMsgs();
+      
+    }
+
+    fetchMsgs(){
+        this.loadingMsges=true;
         this.msgsvc.getAllMessages(this.currentTopic).subscribe((data:any)=>{
             this.messages=data;
             setTimeout(()=>{
@@ -115,14 +142,6 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
                 this.loadingMsges=false;
             },1500);
         })
-        if (!isAndroid) {
-            return;
-          }
-          application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
-              data.cancel = true; // prevents default back button behavior
-              this.goBack();
-            
-          });
     }
 
     ngAfterViewInit(){
@@ -181,12 +200,22 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
 
     addNextMsg(){
         let newMsg=this.msgState.newMsg;
+        if(newMsg.reload){
+            if(this.messages.length >0 && newMsg.time > new Date(this.messages[this.messages.length-1].time)){
+                    this.fetchMsgs();
+            }      
+            return;   
+        }
         console.log("new msg rec",newMsg);
         if(newMsg.answer.length>0 && newMsg.userName != this.loggedInUser ){
              // preload the audio file
-            
+             let vol=this.volume.getVolume();
+             this.volume.setVolume(Math.min(10,vol));
             // play the sound (i.e. tap event handler)
             this.tada.play();
+            setTimeout(()=>{
+                this.volume.setVolume(vol);
+            },1000);
             this.messages.push(newMsg);
             // this.scrollToBottom();
             if(this.scrolledToBottom){

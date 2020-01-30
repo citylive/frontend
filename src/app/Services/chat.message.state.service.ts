@@ -12,7 +12,8 @@ export class MsgChatStateService {
     newMsg={
         answer:"",
         time:new Date(),
-        userName:""
+        userName:"",
+        reload:false
     };
     currTopic='';
     newMessage:BehaviorSubject<any>=new BehaviorSubject(this.newMsg);
@@ -24,16 +25,22 @@ export class MsgChatStateService {
     }
 
     
-   addMsg(msg:string,by:string,time:string){
+   addMsg(msg:string,by:string,time:string,reload?:boolean){
     //    let dt=new Date(time);
     //    console.log('msgTime',dt);
     //    dt.setTime(new Date(time).getTime() - new Date().getTimezoneOffset());
     //    console.log('msgTime',dt);
        console.log("adding",msg);
+        let TmArr=time.split(' ');
+        let newVal=TmArr.join('T');
+        console.log(newVal);
+        let currDate=new Date(newVal+'Z');
+        
         this.newMsg={
             answer:msg,
-            time:new Date(),
-            userName:by
+            time:currDate,
+            userName:by,
+            reload:reload
         };
         this.newMessage.next(msg);
        //console.log(newArrObj);

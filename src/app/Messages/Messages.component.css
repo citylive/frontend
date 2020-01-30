@@ -5,6 +5,11 @@
     background-position: center;
 }
 
+.delLoader{
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
 .headMsg{
     height: 40;
     width: 96%;

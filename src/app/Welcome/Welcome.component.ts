@@ -8,6 +8,8 @@ import { Subscription } from "rxjs";
 import { MsgCountStateService } from "../Services/message.count.state.service";
 import { MessageService } from "../Services/messages.service";
 import { MessagesComponent } from "../Messages/Messages.component";
+import * as geolocation from "nativescript-geolocation";
+import { Accuracy } from "tns-core-modules/ui/enums/enums";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -91,6 +93,7 @@ export class WelcomeComponent implements OnInit{
             setTimeout(()=>{
                 if(isJustLoggedIn && isJustLoggedIn != 'justLoggedIn'){
                     this.showLoader=false;
+                    this.checkAndSetLocation();
                 }
                 
             },2000);
@@ -117,6 +120,7 @@ export class WelcomeComponent implements OnInit{
             if(data.length == 0){
                 this.showLoader=false;
                 this.showFinishing=true;
+                this.checkAndSetLocation();
             }
             topics.forEach((topicObj,index)=>{
                 firebase.subscribeToTopic(topicObj.topicId.toString())
@@ -125,6 +129,7 @@ export class WelcomeComponent implements OnInit{
                     if(index+1 == topics.length){
                         this.showLoader=false;
                         this.showFinishing=true;
+                        this.checkAndSetLocation();
                     }
                 });
             })
@@ -169,7 +174,30 @@ export class WelcomeComponent implements OnInit{
         });
     }
 
-    
+    checkAndSetLocation(){
+        console.log('Fetching loc');
+        if(geolocation){
+          geolocation.getCurrentLocation({ desiredAccuracy: Accuracy.high})
+          .then(location=>{
+                var LS = require( "nativescript-localstorage" );
+                let loggedInUser = LS.getItem('LoggedInUser');
+                if(loggedInUser && loggedInUser!='' && loggedInUser!=null){
+                  this.authReg.updateLocation(location.latitude,location.longitude,loggedInUser).subscribe(data=>{
+                    console.log("location updated");
+                    // if(data.response === 'success'){
+                    //   this.currLocation={
+                    //     lat:location.latitude,
+                    //     lon:location.longitude
+                    //   };
+                    // }
+                    // console.log('after restCall',data);
+                  });
+                 
+              }
+          })
+        }
+      
+      }
 
     askQuestion(){
         this.router.navigate(['/ask']);

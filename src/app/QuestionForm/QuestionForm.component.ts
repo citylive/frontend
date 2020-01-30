@@ -57,14 +57,6 @@ export class QuestionFormComponent implements OnInit {
             })
        });
        this.suggestionQuestions=suggestions;
-       if (!isAndroid) {
-        return;
-      }
-      application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
-          data.cancel = true; // prevents default back button behavior
-          this.goBack();
-        
-      });
     }
 
     goBack(){
