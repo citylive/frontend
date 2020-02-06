@@ -94,7 +94,7 @@ export class HomePageComponent implements OnInit {
     }
     
     askQuestion(){
-      this.router.navigate(["/ask"]);
+      this.router.navigate(["/ask"],{clearHistory : true });
     }
 
     changeArr(){

@@ -12,6 +12,8 @@ import { QuestionStateService } from "./Services/question.state.service";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import * as connectivity from "tns-core-modules/connectivity";
 
+import {LocalNotifications} from "nativescript-local-notifications";
+
 import { Vibrate } from 'nativescript-vibrate';
 import { CardView } from '@nstudio/nativescript-cardview';
 import { registerElement } from 'nativescript-angular';
@@ -20,6 +22,7 @@ import { MsgChatStateService } from "./Services/chat.message.state.service";
 
 import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
 import { isAndroid } from "tns-core-modules/platform";
+import { MessageService } from "./Services/messages.service";
 
 
 registerElement('CardView', () => CardView as any);
@@ -39,6 +42,11 @@ export class AppComponent implements OnInit,OnDestroy {
 
   currTimer;
 
+  quesTimer;
+  chatTimer;
+
+  backPressedOnce=false;
+
 
   type = connectivity.getConnectionType();
 
@@ -46,11 +54,28 @@ export class AppComponent implements OnInit,OnDestroy {
 
   constructor(private ngZone: NgZone,
     private authReg:AuthorizeRegisterService,private router:RouterExtensions,private actRoute:ActivatedRoute,
-    private quesState:QuestionStateService,private msgCountState:MsgCountStateService,private msgChatState:MsgChatStateService){
+    private quesState:QuestionStateService,private msgCountState:MsgCountStateService,private msgChatState:MsgChatStateService,
+    private msgsvc:MessageService){
 
   }
 
   ngOnInit(): void {
+
+    LocalNotifications.hasPermission();
+    LocalNotifications.addOnMessageReceivedCallback(
+      (notification)=> {
+        console.log("ID: " + notification.id);
+        console.log("Title: " + notification.title);
+        console.log("Body: " + notification.body);
+        this.openChat(notification.id);
+       
+  }
+  ).then(()=>{
+        
+      }
+  )
+
+ 
 
     this.actRoute.queryParams.subscribe(data=>{
       if(!data.hasOwnProperty('liveref')){
@@ -124,6 +149,8 @@ export class AppComponent implements OnInit,OnDestroy {
       });
 
       firebase.addOnMessageReceivedCallback((message: firebase.Message) => {
+            console.log(this.router.router.url);
+                   
             this.onReceivedMessage(message);
           })
 
@@ -137,19 +164,82 @@ export class AppComponent implements OnInit,OnDestroy {
         
   }
 
+  openChat(topic,time?){
+    console.log("chat open");
+    this.ngZone.run(()=>{
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+            topic: topic,
+            time: time?time:new Date(),
+            key:Math.random()
+        }  
+      };
+      this.router.navigate(["/chat"], navigationExtras);
+  });
+  }
+
+
+  showNotif(title:string,by:string,content:string,ticker:number){
+    LocalNotifications.getScheduledIds().then((ids:number[])=>{
+        content=ids.indexOf(ticker) < 0? content : 'New Messages';
+        by=ids.indexOf(ticker) < 0? 'by ' + by : 'Click to open chat';
+        LocalNotifications.schedule([{
+          id:ticker,
+          title: title,
+          subtitle:by,
+          body: content,
+          priority:2,
+          ongoing: false, // makes the notification ongoing (Android only)
+          icon: 'res://ic_citylive_monoicon',
+          thumbnail: true,
+          channel: 'My Channel', // default: 'Channel'
+          sound: "~/app/sounds/when.mp3", // falls back to the default sound on Android
+          }]).then(
+            function(scheduledIds) {
+              console.log("Notification id(s) scheduled: " + JSON.stringify(scheduledIds));
+            },
+            function(error) {
+              console.log("scheduling error: " + error);
+            }
+        )
+    })
+    
+  }
+
 
   setBackButton(){
     if (!isAndroid) {
       return;
     }
     application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
-      
+      console.log('back pressed');
       let notRedir=['/noConn','/welcome','/login','/launch'];
-      if(notRedir.indexOf(this.router.router.url) < 0){
+      if(notRedir.indexOf(this.router.router.url.split('?')[0]) < 0){
+        console.log("back to welcome");
         data.cancel = true; // prevents default back button behavior
         this.ngZone.run(()=>{
-          this.router.navigate(["/welcome"],{ clearHistory : true });
+           this.router.navigate(["/welcome"],{ clearHistory : true ,queryParams:{lastRoute:this.router.router.url.split('?')[0] == '/chat' ? 'msg' :''}});
+         
+          
         })
+      }
+      else if(notRedir.indexOf(this.router.router.url.split('?')[0]) >= 0 && !this.backPressedOnce){
+        console.log("other",this.router.router.url.split('?')[0]);
+            data.cancel=true;
+            var Toast = require("nativescript-toast");
+            var toast = Toast.makeText("Press back again to exit");
+            toast.show();
+            this.backPressedOnce=true;
+            setTimeout(()=>{
+              this.backPressedOnce=false;
+            },2000);
+          
+      }
+      else{
+       
+          data.cancel=false;
+        
+        
       }
   });
   }
@@ -197,17 +287,34 @@ export class AppComponent implements OnInit,OnDestroy {
 
           if(message.data.type === 'QUESTION' && message.data.by != loggedInUser){
             console.log('is ques',message);
-            if(!message.foreground){
-              this.ngZone.run(()=>{
-                const navigationExtras: NavigationExtras = {
-                    queryParams: {
-                      question:message.data.question,
-                      by:message.data.by,
-                      topic:message.data.topic
-                    },
-                };
-                this.router.navigate(["/answer"], navigationExtras);
-            });
+            if(!message.foreground && this.router.router.url != '/launch'){
+                this.ngZone.run(()=>{
+                  const navigationExtras: NavigationExtras = {
+                      queryParams: {
+                        question:message.data.question,
+                        by:message.data.by,
+                        topic:message.data.topic
+                      },
+                  };
+                  this.router.navigate(["/answer"], navigationExtras);
+              });
+            }
+            else if(this.router.router.url == '/launch'){
+              this.quesTimer=setInterval(()=>{
+                if(this.router.router.url != '/launch'){
+                  clearInterval(this.quesTimer);
+                  this.ngZone.run(()=>{
+                    const navigationExtras: NavigationExtras = {
+                        queryParams: {
+                          question:message.data.question,
+                          by:message.data.by,
+                          topic:message.data.topic
+                        },
+                    };
+                    this.router.navigate(["/answer"], navigationExtras);
+                });
+                }
+              },500);
             }
             else{
               vibrator.vibrate(500);
@@ -225,25 +332,25 @@ export class AppComponent implements OnInit,OnDestroy {
             toast.show();
           }
           else if(message.data.type === 'CHAT'){
-            if(!message.foreground){
+            if(!message.foreground && this.router.router.url != '/launch'){
+              
                 this.ngZone.run(()=>{
-                      
-                      if(this.msgChatState.currTopic == message.data.topic){
+                     if(this.msgChatState.currTopic == message.data.topic){
                         this.msgChatState.addMsg(message.data.msg,message.data.by,message.data.time,true);
                       }
                       else{
-                        let navigationExtras: NavigationExtras = {
-                          queryParams: {
-                              topic: message.data.topic,
-                              time: message.data.time,
-                              key:Math.random()
-                          }  
-                        };
-                        console.log(navigationExtras)
-                        this.router.navigate(["/chat"], navigationExtras);
+                        this.openChat(message.data.topic,message.data.time);
                       }
                       
                 })
+            }
+            else if(this.router.router.url == '/launch'){
+              this.chatTimer=setInterval(()=>{
+                if(this.router.router.url != '/launch'){
+                  clearInterval(this.chatTimer);
+                  this.openChat(message.data.topic,message.data.time);
+                }
+              },500);
             }
             else if(this.msgChatState.currTopic == message.data.topic){
               this.msgChatState.addMsg(message.data.msg,message.data.by,message.data.time);
@@ -252,6 +359,13 @@ export class AppComponent implements OnInit,OnDestroy {
               if(message.foreground){
                 vibrator.vibrate(500);
               }
+              
+              this.msgsvc.getTopic(message.data.topic).subscribe((data:any)=>{
+                console.log(data);
+                let question=data.question;
+                this.showNotif(question,message.data.by,message.data.msg,+message.data.topic);
+            })
+              
               this.msgCountState.addMsgCount(message.data.topic);
             }
             

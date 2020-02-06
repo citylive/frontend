@@ -231,4 +231,14 @@ export class MessageService {
         // });
     }
 
+    getTopic(topic:number){
+
+        let url='topic?topicId='+topic;
+        return this.http.getData(url);
+        // console.log(usernm,topic);
+        // return of({
+        //     response:"success"
+        // });
+    }
+
 }

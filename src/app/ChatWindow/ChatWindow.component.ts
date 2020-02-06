@@ -13,6 +13,7 @@ import { Volume } from 'nativescript-volume';
 import * as application from "tns-core-modules/application";
 import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
 import { isAndroid } from "tns-core-modules/platform";
+import { MsgCountStateService } from "../Services/message.count.state.service";
 
 
 /* ***********************************************************
@@ -69,7 +70,7 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
     @ViewChild("textInp", { static: false }) textInp: ElementRef;
 
     constructor(private ngZone:NgZone,private route:ActivatedRoute,
-        private router:RouterExtensions,private msgsvc:MessageService,
+        private router:RouterExtensions,private msgCountState:MsgCountStateService,private msgsvc:MessageService,
         private msgState:MsgChatStateService,private volume:Volume) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
@@ -95,8 +96,12 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
         this.loggedInUser = LS.getItem('LoggedInUser');
 
         this.route.queryParams.subscribe(params => {
-            this.question=params.question?params.question:this.question;
-            this.currentTopic= params.topic;
+           // this.question=params.question?params.question:this.question;
+            if(this.currentTopic != params.topic){
+                this.currentTopic= params.topic;
+                this.fetchMsgs();
+            }
+            
             // if(params.time && params.time != ""){
 
             //     let TmArr=params.time.split(' ');
@@ -134,7 +139,12 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
     }
 
     fetchMsgs(){
+        this.msgCountState.resetMsgTopic(this.currentTopic);
         this.loadingMsges=true;
+        this.msgsvc.getTopic(this.currentTopic).subscribe((data:any)=>{
+            console.log(data);
+            this.question=data.question;
+        })
         this.msgsvc.getAllMessages(this.currentTopic).subscribe((data:any)=>{
             this.messages=data;
             setTimeout(()=>{
@@ -313,6 +323,6 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
     }
     
     goBack(){
-        this.router.navigateByUrl("/welcome",{ clearHistory : true });
+        this.router.navigate(["/welcome"],{ clearHistory : true , queryParams:{lastRoute: 'msg' } });
     }
 }

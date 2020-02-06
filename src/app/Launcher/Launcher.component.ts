@@ -36,7 +36,7 @@ export class LauncherComponent implements OnInit {
         let password = LS.getItem('Password');
         if(loggedInUser && loggedInUser!='' && loggedInUser!=null && password && password!='' && password!=null ){
         this.authServ.checkCredentials(loggedInUser,password).subscribe(data=>{
-                this.router.navigate(["/welcome"],{ clearHistory : true });
+                this.router.navigate(["/welcome"],{ clearHistory : true,queryParams:{lastRoute: 'launcher' } });
             },
             error=>{
                 this.router.navigate(['/login'],{ clearHistory: true });

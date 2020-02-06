@@ -16,7 +16,7 @@
 
 <ActionBar *ngIf="selectedInd.size==0 || deleting">
     <GridLayout rows="auto" columns="50, *,45" class="action-bar-title">
-      <Image row="0" col="0" src="~/app/images/newLogo.png" margin="3" (tap)="onCancel()" class="thumb"></Image>
+      <Image row="0" col="0" src="~/app/images/newLogo.png" margin="3" class="thumb"></Image>
       <Label row="0" col="1" class="font-weight-bold CityLiveActionBar" text="Welcome to CityLive" fontSize="19"></Label>
       <Image *ngIf="showRefresh" row="0" col="2" src="~/app/images/refresh.png" margin="5" (tap)="onRefresh()" class="thumb"></Image>
     </GridLayout>

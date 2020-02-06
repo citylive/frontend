@@ -34,7 +34,7 @@
     
 </StackLayout>
 
-<Tabs tabsPosition="bottom" *ngIf="!showLoader" (selectedIndexChanged)="onPageChange($event)" selectedIndex="0">
+<Tabs tabsPosition="bottom" *ngIf="!showLoader" (selectedIndexChanged)="onPageChange($event)" [selectedIndex]="currIndex">
 
     <TabStrip >
         <TabStripItem >

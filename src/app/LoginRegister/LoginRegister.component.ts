@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { AuthorizeRegisterService } from "../Services/authorize-register.service";
+import { NavigationExtras } from "@angular/router";
 
 
 /* ***********************************************************
@@ -38,7 +39,7 @@ export class LoginRegisterComponent implements OnInit {
         *************************************************************/
        const LS = require( "nativescript-localstorage" );
        if(LS.getItem('IsAlreadyLoggedIn') === 'loggedIn'){
-        this.router.navigate(['/welcome'],{ clearHistory : true ,queryParams:{ livePref: 'login' }});
+        this.router.navigate(['/welcome'],{ clearHistory : true ,queryParams:{lastRoute: 'login', livePref: 'login' }});
        }
     }
 
@@ -67,8 +68,7 @@ export class LoginRegisterComponent implements OnInit {
                     LS.setItem('LoggedInUser', this.usernm);
                     LS.setItem('Password', this.pwd);
                     LS.setItem('IsAlreadyLoggedIn', 'loggedIn');
-                    LS.setItem('justLoggedIn', 'justLoggedIn');
-                    this.router.navigate(['/welcome'],{ clearHistory : true ,queryParams:{ livePref: 'login' }});
+                    this.router.navigate(['/welcome'],{ clearHistory : true ,queryParams:{ lastRoute: 'login',livePref: 'login' }});
                 
                 },error=>{
                     var Toast = require("nativescript-toast");

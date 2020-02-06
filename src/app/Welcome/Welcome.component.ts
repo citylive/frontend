@@ -10,6 +10,7 @@ import { MessageService } from "../Services/messages.service";
 import { MessagesComponent } from "../Messages/Messages.component";
 import * as geolocation from "nativescript-geolocation";
 import { Accuracy } from "tns-core-modules/ui/enums/enums";
+import { ActivatedRoute } from "@angular/router";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -30,7 +31,7 @@ export class WelcomeComponent implements OnInit{
         loggedInUser;
         qst$;
         msgCt$;
-        showLoader=true;
+        showLoader=false;
         showFinishing=false;
 
         msgCountinited=false;
@@ -44,7 +45,7 @@ export class WelcomeComponent implements OnInit{
         
         
     constructor(private ngZone:NgZone,private router:RouterExtensions,
-        private msgCountState:MsgCountStateService,private msgSvc:MessageService,
+        private msgCountState:MsgCountStateService,private msgSvc:MessageService,private route:ActivatedRoute,
         private authReg:AuthorizeRegisterService,private quesState:QuestionStateService) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
@@ -77,21 +78,32 @@ export class WelcomeComponent implements OnInit{
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
-       this.showLoader=true;
-        var LS = require( "nativescript-localstorage" );
-        this.loggedInUser = LS.getItem('LoggedInUser');
+       var LS = require( "nativescript-localstorage" );
+       this.loggedInUser = LS.getItem('LoggedInUser');
+       this.route.queryParams.subscribe(params => {
+            if(params.lastRoute && params.lastRoute == 'launcher'){
+                this.initilalize(false);
+            }
+            else if(params.lastRoute && params.lastRoute == 'login'){
+                this.initilalize(true);
+                this.subscribeToUserTopics();
+            }
+            else if(params.lastRoute && params.lastRoute == 'msg'){
+                this.currIndex=1;
+            }
+       });
+        
+        // this.quesState.setFromStorage();
 
-        let isJustLoggedIn=LS.getItem('justLoggedIn');
 
-        if(isJustLoggedIn && isJustLoggedIn == 'justLoggedIn'){
-            this.subscribeToUserTopics();
-        }
+    }
 
-        LS.setItem('justLoggedIn', 'notJustLoggedIn');
+    initilalize(isJustLoggedIn){
+        this.showLoader=true;
         if(this.loggedInUser && this.loggedInUser!='' && this.loggedInUser!=null){
             this.setDeviceId();
             setTimeout(()=>{
-                if(isJustLoggedIn && isJustLoggedIn != 'justLoggedIn'){
+                if(!isJustLoggedIn){
                     this.showLoader=false;
                     this.checkAndSetLocation();
                 }
@@ -106,10 +118,6 @@ export class WelcomeComponent implements OnInit{
             this.LS.setItem('IsAlreadyLoggedIn', 'loggedOut');
             this.router.navigate(['/login'],{ replaceUrl: true });
         }
-        
-        // this.quesState.setFromStorage();
-
-
     }
 
 
@@ -146,10 +154,14 @@ export class WelcomeComponent implements OnInit{
         }
         else if(this.currIndex === 1){
             this.msgCount=0;
+            if(this.messagesComp){
             this.messagesComp.cometoMessages();
+            }
         }
         else{
+            if(this.messagesComp){
             this.messagesComp.goOutFromMessages();
+            }
         }
     }
 
@@ -200,6 +212,6 @@ export class WelcomeComponent implements OnInit{
       }
 
     askQuestion(){
-        this.router.navigate(['/ask']);
+        this.router.navigate(['/ask',{clearHistory : true }]);
     }
 }

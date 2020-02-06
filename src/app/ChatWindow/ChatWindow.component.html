@@ -1,4 +1,12 @@
-<ActionBar title="  CityLive Chat" android.icon="~/app/images/back.png" android.iconVisibility="always" (tap)="goBack()">
+<!-- <ActionBar title="  CityLive Chat" android.icon="~/app/images/back.png" android.iconVisibility="always" (tap)="goBack()">
+</ActionBar> -->
+
+<ActionBar>
+    <GridLayout rows="auto" columns="40, *,50" class="action-bar-title">
+        <Image row="0" col="0" src="~/app/images/back.png" margin="3" (tap)="goBack()" class="thumb"></Image>
+      <Label row="0" col="1" class="font-weight-bold CityLiveActionBar" text="CityLive Chat" fontSize="19"></Label>
+      <Image row="0" col="2" src="~/app/images/exit.png" (tap)="onCrossPress()" margin="3" marginRight="5" class="thumb"></Image>
+    </GridLayout>
 </ActionBar>
 
 <GridLayout #scrollStack rows="{{messagesHgt>0?messagesHgt:'*'}},20,25,80,{{disclaimerHgt}}" columns="*,20,30" class="ChatPage">
@@ -46,7 +54,7 @@
     <StackLayout orientation="horizontal" #textInp row="3" column="0" colSpan="3" class="msgBox">
             <Label class="hintTextMsg" text="{{ message.length > 0?'':'Type in a message'}}" textWrap="true"  fontSize="16"></Label>
            <Image class="msgButtons sendIcon" src="~/app/images/sendnw.png" (tap)="sendMsg()"></Image>
-           <Image class="msgButtons closeIcon" src="~/app/images/exit.png" (tap)="onCrossPress()"></Image>
+           <!-- <Image class="msgButtons closeIcon" src="~/app/images/exit.png" (tap)="onCrossPress()"></Image> -->
     </StackLayout>
 
     <!-- input field -->
