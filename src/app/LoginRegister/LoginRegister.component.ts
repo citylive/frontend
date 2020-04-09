@@ -20,12 +20,17 @@ import { NavigationExtras } from "@angular/router";
 export class LoginRegisterComponent implements OnInit {
 
     isLogin=true;
+    otpSent=false;
     isCalling=false;
     email='';
     pwd='';
     cnfpwd='';
     usernm='';
     otp='';
+
+    formHgt=300;
+    logoHgt=200;
+
 
     constructor(private router:RouterExtensions,private authRegSvc:AuthorizeRegisterService) {
         /* ***********************************************************
@@ -37,9 +42,20 @@ export class LoginRegisterComponent implements OnInit {
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
-       const LS = require( "nativescript-localstorage" );
+       this.setformHgt();
+        const LS = require( "nativescript-localstorage" );
        if(LS.getItem('IsAlreadyLoggedIn') === 'loggedIn'){
         this.router.navigate(['/welcome'],{ clearHistory : true ,queryParams:{lastRoute: 'login', livePref: 'login' }});
+       }
+    }
+
+    setformHgt(){
+        const platformModule = require("tns-core-modules/platform");
+        this.logoHgt=160;
+        this.formHgt=Math.min(platformModule.screen.mainScreen.heightDIPs-370,450);
+       if(this.formHgt<330){
+           this.formHgt=330;
+           this.logoHgt=0;
        }
     }
 
@@ -49,6 +65,15 @@ export class LoginRegisterComponent implements OnInit {
         this.usernm='';
         this.email='';
         this.cnfpwd='';
+        this.otpSent=false;
+    }
+
+    onFocus(){
+        this.logoHgt=0;
+    }
+
+    onBlur(){
+        this.setformHgt();
     }
 
     onLoginRegister(){
@@ -80,29 +105,50 @@ export class LoginRegisterComponent implements OnInit {
         }
         else{
             console.log(this.email,this.pwd,this.usernm,this.cnfpwd);
+            var Toast = require("nativescript-toast");
+                        
             if(this.email == '' || this.pwd == '' || this.usernm == '' || this.cnfpwd == ''){
-                var Toast = require("nativescript-toast");
                 var toast = Toast.makeText("Fields can't be blank");
                 toast.show();
                 return;
             }
             else if(this.pwd != this.cnfpwd){
-                var Toast = require("nativescript-toast");
-                var toast = Toast.makeText("Passwords don't match");
+               var toast = Toast.makeText("Passwords don't match");
                 toast.show();
                 return;
             }
+            else if(!this.otpSent){
+                this.authRegSvc.sendOTP({email:this.email,username:this.usernm,password:this.pwd}).subscribe((data:any)=>{
+                    if(data.Status == "OTP-SENT"){
+                        var toast = Toast.makeText("OTP Sent to mail id");
+                        toast.show();
+                        this.otpSent=true;
+                    }
+                    else if(data.Status == "USER_EXISTS"){
+                        var toast = Toast.makeText("Username altready exists");
+                        toast.show();
+                    }
+                    else if(data.Status == "EMAIL_EXISTS"){
+                        var toast = Toast.makeText("Email already in use");
+                        toast.show();
+                    }
+                },
+                error=>{
+                    var toast = Toast.makeText("Unable to send OTP. Please try again!");
+                        toast.show();
+                })
+                
+            }
             else{
                 this.isCalling=true;
-                this.authRegSvc.registerUser({email:this.email,username:this.usernm,password:this.pwd}).subscribe((data:any) => {
-                         var Toast = require("nativescript-toast");
-                        var toast = Toast.makeText("Registered. Please Login to continue.");
+                this.authRegSvc.registerUser({email:this.email,username:this.usernm,password:this.pwd},this.otp).subscribe((data:any) => {
+                       var toast = Toast.makeText("Registered. Please Login to continue.");
                         toast.show();
                         this.isCalling=false;
                         this.isLogin=true;
                         this.pwd='';
+                        this.otpSent=false;
                     },error=>{
-                        var Toast = require("nativescript-toast");
                         var toast = Toast.makeText(error.message);
                         toast.show();
                         this.isCalling=false;

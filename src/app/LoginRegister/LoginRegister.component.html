@@ -1,17 +1,36 @@
-<FlexboxLayout class="page">
+<ActionBar>
+    <GridLayout rows="50" columns="50, *" marginTop="8" class="action-bar-title">
+      <Image row="0" col="0" src="~/app/images/newLogo.png" margin="3" class="thumb"></Image>
+      <Label row="0" col="1" class="font-weight-bold CityLiveActionBar" text="Welcome to CityLive" fontSize="19"></Label>
+     
+    </GridLayout>
+</ActionBar>
 
-    <StackLayout height="30%" class="image">
-        <!-- <Label class="app-title" text="CityLive"></Label>
-        <Label class="app-title-small" text="est. 2020"></Label> -->
-        <Image row="0" col="0" src="~/app/images/newLogo.png" margin="10" class="thumb"></Image>
-      
-    </StackLayout>
-    
-    <StackLayout class="form">
+<FlexboxLayout class="loginPage">
+
+        
+    <StackLayout marginTop="50" [height]="formHgt" class="form">
+                
         <StackLayout class="input-field">
             <TextField
-            style.fontSize="15vh"
-            style.height="35vh"
+            [editable]="!otpSent" 
+            style.fontSize="15"
+            style.height="35"
+            style.color="white" 
+            style.placeholderColor="#ccccccee" 
+            [(ngModel)]='usernm' 
+            class="input" 
+            hint="UserName" 
+            autocorrect="false" 
+            autocapitalizationType="none"></TextField
+            >
+        </StackLayout>
+
+        <StackLayout class="input-field">
+            <TextField
+            [editable]="!otpSent"
+            style.fontSize="15"
+            style.height="35"
             style.color="white" 
             style.placeholderColor="#ccccccee"
              [(ngModel)]="email" 
@@ -23,25 +42,12 @@
              autocapitalizationType="none"></TextField
                 >
         </StackLayout>
-
-        
-        <StackLayout class="input-field">
-            <TextField 
-            style.fontSize="15vh"
-            style.height="35vh"
-            style.color="white" 
-            style.placeholderColor="#ccccccee" 
-            [(ngModel)]='usernm' 
-            class="input" 
-            hint="UserName" 
-            autocorrect="false" 
-            autocapitalizationType="none"></TextField>
-        </StackLayout>
         
         <StackLayout class="input-field">
             <TextField
-            style.fontSize="15vh"
-            style.height="35vh"
+            [editable]="!otpSent"
+            style.fontSize="15"
+            style.height="35"
             style.color="white" 
             style.placeholderColor="#ccccccee" 
             [(ngModel)]="pwd" 
@@ -51,23 +57,45 @@
             returnKeyType="{{isLogin?'go':'next'}}"
             (returnPress)="isLogin?onLoginRegister():''" 
             autocorrect="false" 
-            autocapitalizationType="none"></TextField
+            autocapitalizationType="none"
+            ></TextField
             >
         </StackLayout>
 
         <StackLayout class="input-field">
-            <TextField 
-            style.fontSize="15vh"
-            style.height="35vh"
+            <TextField
+            [editable]="!otpSent" 
+            style.fontSize="15"
+            style.height="35"
             style.color="white" 
             style.placeholderColor="#ccccccee"
             [(ngModel)]='cnfpwd' 
             secure="true" 
-            *ngIf="!isLogin" 
+            *ngIf="!isLogin && !otpSent" 
             class="input" 
             hint="Confirm Password" 
             autocorrect="false" 
-            autocapitalizationType="none"></TextField>
+            autocapitalizationType="none"
+            ></TextField
+            >
+        </StackLayout>
+
+        <StackLayout class="input-field">
+            <TextField
+            #otpInp 
+            style.fontSize="15"
+            style.height="35"
+            style.color="white" 
+            style.placeholderColor="#ccccccee"
+            [(ngModel)]='otp' 
+            secure="true" 
+            *ngIf="!isLogin && otpSent" 
+            class="input" 
+            hint="Enter OTP"
+            autocorrect="false" 
+            autocapitalizationType="none"
+            ></TextField
+            >
         </StackLayout>
 
 
@@ -76,14 +104,21 @@
         </StackLayout> -->
 
     
-        <Button *ngIf='!isCalling' [text]="!isLogin?'Sign Up':'Login'" class="btn btn-primary login-button" (tap)="onLoginRegister()"></Button>
+        <Button *ngIf='!isCalling' [text]="!isLogin? (otpSent?'Sign Up':'Send OTP'):'Login'" class="btn btn-primary login-button" (tap)="onLoginRegister()"></Button>
         <Button *ngIf='isCalling' isEnabled="false" [text]="!isLogin?'Signing Up...':'Logging in...'" class="btn btn-primary login-button" (tap)="onLoginRegister()"></Button>
     </StackLayout>
 
-    <StackLayout orientation="horizontal" class="accOptions">
+    <StackLayout height="50" orientation="horizontal" class="accOptions">
         <Label [text]="isLogin?'Don’t have an account?':'Already have an account?'"></Label>
         <Label class="font-weight-bold" fontAttributes="Bold" [text]="isLogin?' Sign Up':' Login'" (tap)="loginRegToogle()"></Label>
     </StackLayout>
     
+
+    <StackLayout [height]="logoHgt" class="image">
+        <!-- <Label class="app-title" text="CityLive"></Label>
+        <Label class="app-title-small" text="est. 2020"></Label> -->
+        <Image row="0" col="0" src="~/app/images/newLogo.png" class="thumb"></Image>
+      
+    </StackLayout>
 
 </FlexboxLayout>

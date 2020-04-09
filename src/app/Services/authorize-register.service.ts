@@ -29,13 +29,11 @@ export class AuthorizeRegisterService {
 
    
 
-    registerUser(user:User){
+    registerUser(user:User,otp:string){
         console.log(user);
-        let url='user/signup';
+        let url='user/signup?otp='+otp;
         let data={
             "userName": user.username,
-            "firstName": "",
-            "lastName": "",
             "email": user.email,
             "password": user.password
         }
@@ -43,6 +41,17 @@ export class AuthorizeRegisterService {
             // return of({
             //     response:"success"
             // });
+    }
+
+    sendOTP(user:User){
+        console.log(user);
+        let url='generateOtp';
+        let data={
+            "userName": user.username,
+            "email": user.email,
+        }
+        return this.http.postData(url,data);
+           
     }
 
     updateLocation(lat:number,long:number,user:string){
