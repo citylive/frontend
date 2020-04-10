@@ -161,7 +161,7 @@ export class ChatWindowComponent implements OnInit,OnDestroy,AfterViewInit {
 
 
     keyboardSizer(){
-        console.log("Sizing Keyboardd",screen.mainScreen.widthDIPs);
+        console.log("Sizing Keyboardd",screen.mainScreen.widthDIPs,screen.mainScreen.heightDIPs);
         this.keyBoardHeight=Math.min(Math.round(screen.mainScreen.widthDIPs*0.85),450);
     }
 

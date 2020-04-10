@@ -50,6 +50,38 @@ export class AppComponent implements OnInit,OnDestroy {
 
   type = connectivity.getConnectionType();
 
+  backPressListener=(data: AndroidActivityBackPressedEventData) => {
+    console.log('back pressed');
+    let notRedir=['/noConn','/welcome','/login','/launch'];
+    if(notRedir.indexOf(this.router.router.url.split('?')[0]) < 0){
+      console.log("back to welcome");
+      data.cancel = true; // prevents default back button behavior
+      this.ngZone.run(()=>{
+         this.router.navigate(["/welcome"],{ clearHistory : true ,queryParams:{lastRoute:this.router.router.url.split('?')[0] == '/chat' ? 'msg' :''}});
+       
+        
+      })
+    }
+    else if(notRedir.indexOf(this.router.router.url.split('?')[0]) >= 0 && !this.backPressedOnce){
+      console.log("other",this.router.router.url.split('?')[0]);
+          data.cancel=true;
+          var Toast = require("nativescript-toast");
+          var toast = Toast.makeText("Press back again to exit");
+          toast.show();
+          this.backPressedOnce=true;
+          setTimeout(()=>{
+            this.backPressedOnce=false;
+          },2000);
+        
+    }
+    else{
+     
+        data.cancel=false;
+      
+      
+    }
+};
+
     
 
   constructor(private ngZone: NgZone,
@@ -211,37 +243,8 @@ export class AppComponent implements OnInit,OnDestroy {
     if (!isAndroid) {
       return;
     }
-    application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
-      console.log('back pressed');
-      let notRedir=['/noConn','/welcome','/login','/launch'];
-      if(notRedir.indexOf(this.router.router.url.split('?')[0]) < 0){
-        console.log("back to welcome");
-        data.cancel = true; // prevents default back button behavior
-        this.ngZone.run(()=>{
-           this.router.navigate(["/welcome"],{ clearHistory : true ,queryParams:{lastRoute:this.router.router.url.split('?')[0] == '/chat' ? 'msg' :''}});
-         
-          
-        })
-      }
-      else if(notRedir.indexOf(this.router.router.url.split('?')[0]) >= 0 && !this.backPressedOnce){
-        console.log("other",this.router.router.url.split('?')[0]);
-            data.cancel=true;
-            var Toast = require("nativescript-toast");
-            var toast = Toast.makeText("Press back again to exit");
-            toast.show();
-            this.backPressedOnce=true;
-            setTimeout(()=>{
-              this.backPressedOnce=false;
-            },2000);
-          
-      }
-      else{
-       
-          data.cancel=false;
-        
-        
-      }
-  });
+    
+    application.android.on(AndroidApplication.activityBackPressedEvent,this.backPressListener );
   }
 
 
@@ -450,6 +453,10 @@ export class AppComponent implements OnInit,OnDestroy {
 
   ngOnDestroy(){
     clearInterval(this.currTimer);
+    if(isAndroid){
+      application.android.off(AndroidApplication.activityBackPressedEvent,this.backPressListener );
+    }
+    
     console.log('destroyed');
   //   let quesStr:string=JSON.stringify(this.quesState.getAllNewQues());
   //   let newNotifStr:string=JSON.stringify(this.quesState.getnewNotif());

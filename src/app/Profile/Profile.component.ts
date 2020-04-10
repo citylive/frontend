@@ -36,6 +36,9 @@ export class ProfileComponent implements OnInit {
 
     devIdEditable=false;
     loggingOut=false;
+
+    labelHgt=75;
+    marginTop=0;
     
     constructor(private router:RouterExtensions,private userSvc:AuthorizeRegisterService,private msgSvc:MessageService) {
         /* ***********************************************************
@@ -51,6 +54,10 @@ export class ProfileComponent implements OnInit {
        this.userSvc.getUser(usernm).subscribe((data:any)=>{
            this.user=data;
        })
+
+       const platformModule = require("tns-core-modules/platform");
+        this.labelHgt=(Math.min(platformModule.screen.mainScreen.heightDIPs-320,375))/5;
+        this.marginTop=Math.max(platformModule.screen.mainScreen.heightDIPs-850,0);
 
        geolocation.getCurrentLocation({ desiredAccuracy: Accuracy.high})
        .then(location=>{

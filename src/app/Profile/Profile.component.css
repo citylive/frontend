@@ -7,29 +7,31 @@
 }
 
 .profRowCard{
-    height: 75;
+    /* height: 100; */
     width: 90%;
     vertical-align: middle;
+    /* border-color: white;
+      border-width: 3; */
 }
 
 .profIcon{
-    height: 45;
+    /* height: 45; */
     width: 20%;
     margin-right: 5%;
 }
 
 .profLabel{
-    height: 30;
+    /* height: 50; */
     width: 75%;
 }
 
 .profLabel.device{
-    height: 70;
+    /* height: 70; */
 }
 
 .profLabel.location{
-    margin-top: 20;
-    height: 70;
+    /* margin-top: 20; */
+    /* height: 70; */
 }
 
 .profLabel.device TextField{
@@ -53,5 +55,7 @@
     display: flex;
     justify-content: center;
     color: #64ffdb;
+    /* border-color: white;
+      border-width: 3; */
     /* font-family: 'Suez One', serif; */
 }

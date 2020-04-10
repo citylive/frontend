@@ -9,7 +9,7 @@
 <FlexboxLayout class="loginPage">
 
         
-    <StackLayout marginTop="50" [height]="formHgt" class="form">
+    <StackLayout marginTop="20" [height]="formHgt" class="form">
                 
         <StackLayout class="input-field">
             <TextField
@@ -54,6 +54,7 @@
             secure="true" 
             class="input" 
             hint="Password"
+            keyboardType="url"
             returnKeyType="{{isLogin?'go':'next'}}"
             (returnPress)="isLogin?onLoginRegister():''" 
             autocorrect="false" 
@@ -72,7 +73,8 @@
             [(ngModel)]='cnfpwd' 
             secure="true" 
             *ngIf="!isLogin && !otpSent" 
-            class="input" 
+            class="input"
+            keyboardType="url" 
             hint="Confirm Password" 
             autocorrect="false" 
             autocapitalizationType="none"
@@ -92,6 +94,7 @@
             *ngIf="!isLogin && otpSent" 
             class="input" 
             hint="Enter OTP"
+            keyboardType="number"
             autocorrect="false" 
             autocapitalizationType="none"
             ></TextField

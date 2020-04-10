@@ -6,7 +6,7 @@
 }
 
 .midPartAns{
-    margin-top: 5%;
+    margin-top: 10;
 }
 
 .ansBox{
@@ -21,6 +21,13 @@
     padding: 5;
 }
 
+
+.thumb{
+    height: 140;
+    width: 140;
+    margin: 10;
+  }
+  
 .charCount{
     width: 90%;
     text-align: right;

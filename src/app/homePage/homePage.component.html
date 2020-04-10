@@ -43,7 +43,7 @@
 
 
     <!-- questionsPage -->
-    <ScrollView *ngIf="showQues" class="FeedTop">
+    <ScrollView [height]="feedHgt" *ngIf="showQues" class="FeedTop">
         <StackLayout>
             <StackLayout orientation="horizontal" class="QuesCard" (tap)="changeArr()" *ngFor="let item of this.pendingQuestions;let ind = index"> 
                 <StackLayout (tap)="answerQuestion(ind)" class="questionText">
@@ -57,7 +57,7 @@
 
 
     <!-- feed/Ad page -->
-    <ScrollView *ngIf="!showQues" class="FeedTop">
+    <ScrollView [height]="feedHgt" *ngIf="!showQues" class="FeedTop">
         <StackLayout>
             <StackLayout orientation="horizontal" class="AdCard" (tap)="changeArr()" *ngFor="let item of this.userAds">
                 <Image class="imageAd" stretch="aspectFill" src="{{item.imgUrl}}"></Image>

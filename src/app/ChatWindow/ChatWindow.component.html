@@ -59,7 +59,7 @@
 
     <!-- input field -->
     <FlexboxLayout row="3" column="0" colSpan="3"  class="msgText">
-        <TextView
+        <TextField
         (tap)="textfieldTapped()"
         style.placeholderColor="#474747"
         style.color="white" 
@@ -68,9 +68,10 @@
         maxLength="100" 
         class="inputBox" 
         hint=""
+        keyboardType="email" 
         autocorrect="false" 
         autocapitalizationType="none">
-        </TextView>
+        </TextField>
     </FlexboxLayout>
 
 

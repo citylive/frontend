@@ -5,8 +5,8 @@
 
     
 
-    <StackLayout class="midPartAns">
-        <Label class="ques" [text]="question+' ?'" textWrap="true" fontSize="18"></Label>
+    <StackLayout height="350" class="midPartAns">
+        <Label class="ques" [text]="question+' ?'" textWrap="true" fontSize="17"></Label>
         <Label class="quesby" [text]="'by '+quesBy"></Label>
         <!-- QuestionBox -->
         <TextView
@@ -22,6 +22,13 @@
 
         <Button text="Answer Question" (tap)="AnswerQuestion()" class="btn btn-primary btn-active ansButton" col="1"></Button>
         <Button text="{{answer.length>0?'Answer in Chat':'Join Chat'}}" (tap)="toChat()" class="btn btn-primary btn-active ansButton" col="1"></Button>
+    </StackLayout>
+
+    <StackLayout height="160" class="image">
+        <!-- <Label class="app-title" text="CityLive"></Label>
+        <Label class="app-title-small" text="est. 2020"></Label> -->
+        <Image row="0" col="0" src="~/app/images/newLogo.png" class="thumb"></Image>
+      
     </StackLayout>
     
 </StackLayout>

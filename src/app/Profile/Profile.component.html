@@ -13,43 +13,43 @@
 
     
 
-    <StackLayout orientation="horizontal" class="profRowCard" > 
-        <Image class="profIcon" src="~/app/images/usern.png"></Image>
-        <Label class="profLabel" textWrap="true" text="{{user.userName}}"  fontSize="18"></Label>
+    <StackLayout [marginTop]="marginTop" [height]="labelHgt" orientation="horizontal" class="profRowCard" > 
+        <Image class="profIcon" [height]="labelHgt-20"  src="~/app/images/usern.png"></Image>
+        <Label class="profLabel" [height]="labelHgt-20" paddingTop="20" textWrap="true" text="{{user.userName}}"  fontSize="17"></Label>
  
          
     </StackLayout>
 
-    <StackLayout orientation="horizontal" class="profRowCard"> 
-        <Image class="profIcon" src="~/app/images/mail.png"></Image>
-        <Label class="profLabel" textWrap="true" text="{{user.email}}"  fontSize="16"></Label>
+    <StackLayout [height]="labelHgt" orientation="horizontal" class="profRowCard"> 
+        <Image class="profIcon" [height]="labelHgt-20" src="~/app/images/mail.png"></Image>
+        <Label class="profLabel" [height]="labelHgt-20" paddingTop="20" textWrap="true" text="{{user.email}}"  fontSize="17"></Label>
  
     </StackLayout>
 
-    <StackLayout orientation="horizontal" class="profRowCard"> 
-        <Image class="profIcon" src="~/app/images/pinn.png"></Image>
-        <Label class="profLabel location" textWrap="true" text="{{locationName}}"  fontSize="16"></Label>
+    <StackLayout [height]="labelHgt" orientation="horizontal" class="profRowCard"> 
+        <Image class="profIcon" [height]="labelHgt-20" src="~/app/images/pinn.png"></Image>
+        <Label class="profLabel location" [height]="labelHgt-20" paddingTop="20" textWrap="true" text="{{locationName}}"  fontSize="16"></Label>
   
     </StackLayout>
 
-    <ScrollView class="profRowCard">
+    <!-- <ScrollView [height]="labelHgt" class="profRowCard">
         <StackLayout orientation="horizontal" > 
-            <Image class="profIcon" src="~/app/images/device.png"></Image>
-            <StackLayout class="profLabel device" > 
+            <Image class="profIcon" [height]="labelHgt-20" src="~/app/images/device.png"></Image>
+            <StackLayout [height]="labelHgt" class="profLabel device" > 
                 <TextField [editable]="devIdEditable" (tap)="devIdEditable=true;" width=100% textWrap="true" text="{{deviceId}} "  fontSize="16"></TextField>
-                <Label *ngIf="!devIdEditable" (tap)="devIdEditable=true;" textWrap="true" text="Tap to edit"  fontSize="12"></Label>
+                <Label (tap)="devIdEditable=!devIdEditable;" textWrap="true" [text]="!devIdEditable?'Tap to edit':'Done Editing'"  fontSize="12"></Label>
           
             </StackLayout>
         </StackLayout>
-    </ScrollView>
+    </ScrollView> -->
     
 
 
 
-    <Button text="Logout" (tap)="logOut()" class="btn btn-primary btn-active btnLogout" col="1"></Button>
-    <Button text="Change Live Status" (tap)="changeLiveStatus()" class="btn btn-primary btn-active btnLogout" col="1"></Button>
+    <Button height="50" text="Logout" (tap)="logOut()" class="btn btn-primary btn-active btnLogout" col="1"></Button>
+    <Button height="50" text="Change Live Status" (tap)="changeLiveStatus()" class="btn btn-primary btn-active btnLogout" col="1"></Button>
 
-    <StackLayout class="accOptions">
+    <StackLayout height="50" class="accOptions">
         <Label style="text-align: center;" text="Have some Problem?" fontSize="14"></Label>
         <Label style="text-align: center;" class="font-weight-bold" text="Contact Us" (tap)="openMail()" fontSize="16"></Label>
     </StackLayout>

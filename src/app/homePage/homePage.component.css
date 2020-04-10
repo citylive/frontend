@@ -5,21 +5,21 @@
     background-position: center;
 }
 .buttonsTop{
-    height: 22%;
+    height: 140;
 }
 
 .headerBar{
     padding-left: 10%;
-    height: 4%;
+    height: 30;
     color: #64ffdb;
 }
 .FeedTop{
-    height: 72%;
+    /* height: 72%; */
     /* background-color: white; */
 }
 
 .QuesCard{
-    height: 100vh;
+    /* height: 100vh; */
     width: 95%;
     margin: 8vh;
     margin-bottom: 0;
@@ -31,7 +31,7 @@
 
 .QuesCard.topitem{
     width: 46%;
-    height: 110vh;
+    /* height: 110vh; */
     border-radius: 5vh;
     margin: 0 2% ;
     padding-left: 0vh;

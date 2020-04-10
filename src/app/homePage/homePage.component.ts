@@ -31,6 +31,8 @@ export class HomePageComponent implements OnInit {
     showQues=false;
     newNotif=-1;
 
+    feedHgt=300;
+
     constructor(private ngZone: NgZone ,private quesState:QuestionStateService, private msgSvc:MessageService,private router:RouterExtensions) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
@@ -52,6 +54,10 @@ export class HomePageComponent implements OnInit {
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
        console.log('init home');
+
+       const platformModule = require("tns-core-modules/platform");
+        this.feedHgt=platformModule.screen.mainScreen.heightDIPs-320;
+        // console.log("heigth",platformModule.screen.mainScreen.heightDIPs);
 
        this.qst$=this.quesState.$quesList;
 
